@@ -1,0 +1,69 @@
+@CHARSET "UTF-8";
+#content_T {
+	position: absolute;
+	left: 143px;
+	top: 18px;
+	width: 557px;
+	height: 334px;
+	z-index: 1;
+	background-color: #0066FF;
+}
+#title_T {
+	position: absolute;
+	left: 82px;
+	top: 30px;
+	width: 418px;
+	height: 43px;
+	z-index: 2;
+	background-color: #009966;
+	font-size: 36px;
+	font-weight: bold;
+	color: #FFF;
+	text-align: center;
+}
+#logo_L {
+	position: absolute;
+	left: 487px;
+	top: 305px;
+	width: 57px;
+	height: 23px;
+	z-index: 3;
+	color: #FFF;
+	font-weight: bold;
+	text-align: center;
+}
+#Inf_Name {
+	position: absolute;
+	left: 73px;
+	top: 148px;
+	width: 303px;
+	height: 30px;
+	z-index: 2;
+	text-align: left;
+	color: #FFF;
+}
+#Inf_age {
+	position: absolute;
+	left: 73px;
+	top: 220px;
+	width: 303px;
+	height: 30px;
+	z-index: 2;
+	color: #FFF;
+}
+#butt_B {
+	position: absolute;
+	left: 421px;
+	top: 222px;
+	width: 66px;
+	height: 28px;
+	z-index: 3;
+}
+#butt_B2 {
+	position: absolute;
+	left: 418px;
+	top: 146px;
+	width: 66px;
+	height: 28px;
+	z-index: 3;
+}
