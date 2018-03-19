@@ -16,7 +16,7 @@ public class DownLoadFile {
     public static void downloadFile(String urlStr, String savePath) {
         try{
             URL url = new URL(urlStr);
-            HttpURLConnection conn = (HttpURLConnection)url.openConnection();
+            HttpURLConnection conn = (HttpURLConnection)url.openConnection(); 
             conn.setConnectTimeout(500000);
             //防止屏蔽程序抓取而返回403错误  
             conn.setRequestProperty("User-Agent", "Mozilla/4.0 (compatible; MSIE 5.0; Windows NT; DigExt)");  
