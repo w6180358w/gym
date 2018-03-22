@@ -9,341 +9,481 @@
 	<c:set value="${fn:split(rootUrl,';')[0] }" var="rootUrl"
 		scope="application" />
 </c:if>
+
 <!DOCTYPE html>
 <html>
 <head>
-<title>首页</title>
-<head>
-<meta charset="utf-8">
-<title>
-</title>
-<meta name="description" content="">
-<meta name="author" content="">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-
-<link rel="stylesheet" type="text/css" media="screen" href="${rootUrl }css/bootstrap.min.css">
-<link rel="stylesheet" type="text/css" media="screen" href="${rootUrl }css/font-awesome.min.css">
-<link rel="stylesheet" type="text/css" media="screen" href="${rootUrl }css/smartadmin-production-plugins.min.css">
-<link rel="stylesheet" type="text/css" media="screen" href="${rootUrl }css/smartadmin-production.min.css">
-<link rel="stylesheet" type="text/css" media="screen" href="${rootUrl }css/smartadmin-skins.min.css">
-<link rel="stylesheet" type="text/css" media="screen" href="${rootUrl }css/add-app-class.css">
-
-<style>
-body, h1, h2, h3, h4, h5, h6, hr, p, blockquote, dl, dt, dd, ul, ol, li, pre, form, legend, button, input, textarea, th, td {
-	margin: 0;
-	padding: 0;
-}
-body, html {
-	background: #f1f1f3;
-	background-image: none;
-}
-h1, h2, h3, h4, h5, h6 {
-	font-size: 100%;
-}
-address, cite, dfn, em, var {
-	font-style: normal;
-}
-code, kbd, pre, samp {
-	font-family: couriernew, courier, monospace;
-}
-ul, ol {
-	list-style: none;
-}
-a {
-	text-decoration: none;
-	color: blue;
-}
-a:hover {
-	text-decoration: underline;
-}
-legend {
-	color: #000;
-}
-img {
-	border: 0;
-}
-button, input, select, textarea {
-	font-size: 100%;
-}
-table {
-	border-collapse: collapse;
-	border-spacing: 0;
-}
-html, body {
-	height: 100%;
-}
-.smart-form .checkbox i, .smart-form .icon-append, .smart-form .icon-prepend, .smart-form .input input, .smart-form .radio i, .smart-form .select select, .smart-form .textarea textarea, .smart-form .toggle i {
-	border-radius: 4px;
-}
-.login-logo {
-	margin-top: 30px;
-	margin-bottom:20px;
-}
-footer {
-	background-color: parent;
-	height: auto;
-}
-#login {
-	width: 350px;
-	min-height: 255px;
-	position:absolute;
-	top:50%;
-	left:50%;
-	margin:-250px 0 0 -175px;
-}
-.login-bg{
-	background-color: rgba(240,240,240,0.9);
-	background-color: #f0f0f0\0;
-	border-radius: 10px;
-	-moz-border-radius: 10px;
-	box-shadow: 0px 0px 8px #aaa;
-}
-.login-top{
-	background:#0e4470;
-	text-align:center;
-	color:#FFF;
-	height:42px;
-	line-height:42px;
-	border-radius: 10px 10px 0 0;
-	-moz-border-radius: 10px 10px 0 0;
-	font-size:16px;
-}
-form {
-	margin: 50px 40px;
-	background:#FFF;
-	border-radius: 0 0 10px 10px;
-	-moz-border-radius: 0 0 10px 10px;
-	padding:0 30px;
-}
-input#btn {
-	color: #fff;
-	width: 100px;
-	height: 25px;
-	margin: 5px 0 5px 65px;
-	-moz-border-radius: 3px;
-	border-radius: 3px;
-	background-color: #3355dd;
-	border: 0px;
-	box-shadow: inset 0px 10px 8px rgba(255,255,255,0.5), inset 0px 5px 4px rgba(255,255,255,0.7), 0px 0px 5px #33f;
-}
-input#btn:hover {
-	color: #fff;
-	width: 100px;
-	height: 25px;
-	margin: 5px 0 5px 65px;
-	-moz-border-radius: 3px;
-	border-radius: 3px;
-	background-color: #3355dd;
-	border: 0px;
-	box-shadow: inset 0px 10px 8px rgba(255,255,255,0.5);
-}
-#reflection {
-	background: url(/img/adconnecthelp/bg2.jpg);
-	height: 36px;
-	opacity: 0.7;
-	filter: alpha(opacity='70');
-	-moz-border-radius: 5px;
-	border-radius: 5px;
-}
-#lay {
-	height: 36px;
-	position: relative;
-	bottom: 36px;
-	background-image: -moz-linear-gradient(center bottom, rgb(255,255,255) 20%, rgba(255,255,255,0) 90%);
-	background-image: -o-linear-gradient(rgba(255,255,255,0) 10%, rgb(255,255,255) 30%);
-	background-image: -webkit-gradient(linear, left bottom, left top, color-stop(0.20, rgb(255,255,255)), color-stop(0.90, rgba(255,255,255,0)));
-filter: progid:DXImageTransform.Microsoft.Gradient(gradientType=0, startColor=0, EndColorStr=#000000);
-	-moz-border-radius: 5px;
-	border-radius: 5px;
-}
-.btn-fts{
-	padding:8px 0;
-	width:100%; 
-	text-align:center; 
-	margin-top:10px;
-}
-.btn-login {
-  color: #fff;
-  background-color: #29ae9b;
-  border-color: #29ae9b;
-}
-.btn-login:hover,
-.btn-login:focus,
-.btn-login.focus,
-.btn-login:active,
-.btn-login.active,
-.open > .dropdown-toggle.btn-login {
-  color: #fff;
-  background-color: #1fbfa7;
-  border-color: #1fbfa7;
-}
-.btn-login:active,
-.btn-login.active,
-.open > .dropdown-toggle.btn-login {
-  background-image: none;
-}
-.btn-login.disabled,
-.btn-login[disabled],
-fieldset[disabled] .btn-login,
-.btn-login.disabled:hover,
-.btn-login[disabled]:hover,
-fieldset[disabled] .btn-login:hover,
-.btn-login.disabled:focus,
-.btn-login[disabled]:focus,
-fieldset[disabled] .btn-login:focus,
-.btn-login.disabled.focus,
-.btn-login[disabled].focus,
-fieldset[disabled] .btn-login.focus,
-.btn-login.disabled:active,
-.btn-login[disabled]:active,
-fieldset[disabled] .btn-login:active,
-.btn-login.disabled.active,
-.btn-login[disabled].active,
-fieldset[disabled] .btn-login.active {
-  background-color: #29ae9b;
-  border-color: #29ae9b;
-}
-.btn-login .badge {
-  color: #29ae9b;
-  background-color: #29ae9b;
-}
-.color-login{
-	color:#3b88be;
-}
-.smart-form footer {
-    border-top: 0px solid rgba(0, 0, 0, 0.1);
-	margin-top:0;
-	margin-bottom:5px;
-}
-@media only screen and (max-width: 767px){
-#login {
-	width: 280px;
-	margin:-200px 0 0 -140px;
-}
-form {
-	padding:0 10px;
-}
-.login-top{
-	height:36px;
-	line-height:36px;
-	font-size:14px;
-}
-.smart-form fieldset {
-	padding: 10px 5px 5px 5px;
-}
-.smart-form footer {
-	padding: 7px 5px 7px 5px;
-}
-.smart-form .label {
-	margin-bottom: 3px;
-}
-.mar-b-10 {
-	margin-bottom: 5px;
-}
-.btn-fts{
-	padding:4px 0;
-	margin-top:6px;
-}
-.smart-form .btn {
-	margin-bottom: 10px;
-}
-}
-</style>
+    <title>北京化工大学场馆预约系统</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="${rootUrl }css/bootstrap.min.css">
+    <link rel="stylesheet" href="${rootUrl }css/style.css">
+    <script src="js/jquery-3.2.1.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <!--引用百度地图API-->
+    <style type="text/css">
+        html,body{margin:0;padding:0;}
+        .iw_poi_title {color:#CC5522;font-size:14px;font-weight:bold;overflow:hidden;padding-right:13px;white-space:nowrap}
+        .iw_poi_content {font:12px arial,sans-serif;overflow:visible;padding-top:4px;white-space:-moz-pre-wrap;word-wrap:break-word}
+    </style>
+    <script type="text/javascript" src="http://api.map.baidu.com/api?key=&v=1.1&services=true"></script>
 </head>
-<body>
-  <div id="login">
-    <div class="login-bg">
-    <div class="login-top">用户管理</div>
-    <form action="${rootUrl }index/doLogin.do" id="login-form" method="post" class="smart-form client-form">
-      <fieldset>
-        <label class="label">
-          用户名<%=request.getAttribute("code") %>
-        </label>
-        <label class="input mar-b-10"> <i class="icon-append fa fa-user"></i>
-          <input type="text" name="userName"/>
-          <b class="tooltip tooltip-top-right"><i class="fa fa-user txt-color-teal"></i> 请输入您的用户名</b></label>
-        <label class="label">
-         密码
-        </label>
-        <label class="input mar-b-10"> <i class="icon-append fa fa-lock"></i>
-          <input type="password" name="password" />
-          <b class="tooltip tooltip-top-right"><i class="fa fa-lock txt-color-teal"></i> 请输入您的密码</b> </label>
-        <div class="row" style="margin:0;">
-          <div class="col-xs-8" style="padding-top:3px;">
-            <label class="checkbox">
-              <input type="checkbox" name="remember" checked="checked">
-              <i></i>记住用户名</label>
-          </div>
-        </div>
-        <div class="row" style="margin:0;">
-        	<div class="col-xs-12">
-            	<button id="btn" type="submit" onclick="javascript:login()" class="btn btn-login btn-fts" style="" data-loading-text="登录中... ">
-                登陆
-                </button>
+<body style="width: 100%;height: 100%">
+<style>
+    body{
+        background:url(${rootUrl }images/background.jpg) top left;
+        background-size:100% 100%;
+    }
+</style>
+
+
+<div class="container">
+    <div class="row">
+        <div class="log-box">
+            <div id="logo" class="log">
+                <a href="${rootUrl }index.jsp"><img src="${rootUrl }images/buct.jpg" class="img-responsive" /></a>
+                <!--<a href="###">手机版</a>-->
+                <!--<span >&nbsp;|&nbsp;</span>-->
+                <!--<a href="###">意见反馈</a>-->
             </div>
         </div>
-      </fieldset>
-      <footer class="hidden-xs"><i><span class="color-login">提示:</span>为了达到最佳浏览效果，请使用Chrome、Firefox、IE9.0及以上版本浏览器。</i></footer>
-    </form>
     </div>
-  </div>
-  <div id="reflection" style="display:none">&nbsp;</div>
-  <div id="lay" style="display:none"></div>
+    <div class="row">
+        <div>
+            <ul class="nav nav-tabs">
+                <li class="active"><a href="#">首页</a></li>
+                <li><a href="${rootUrl }html/stadium.jsp">场馆</a></li>
+                <li><a href="${rootUrl }html/appointment.jsp">场地预约</a></li>
+                <li><a href="${rootUrl }html/map.jsp">地图</a></li>
+                <li style="float: right"><a href="html/phone.jsp">手机预约</a> </li>
+            </ul>
+        </div>
+    </div>
+</div>
+<div id="nav-main" style="overflow: auto;width: 100%"></div>
+<br>
+<div class="container">
+    <!--<div class="row">-->
+        <!--<div class="log-box">-->
+            <!--<div id="logo" class="log">-->
+                <!--<a href="index.jsp"><img src="images/buct.jpg" class="img-responsive" /></a>-->
+                    <!--&lt;!&ndash;<a href="###">手机版</a>&ndash;&gt;-->
+                    <!--&lt;!&ndash;<span >&nbsp;|&nbsp;</span>&ndash;&gt;-->
+                    <!--&lt;!&ndash;<a href="###">意见反馈</a>&ndash;&gt;-->
+            <!--</div>-->
+        <!--</div>-->
+        <!--<div id="nav-main">-->
+            <!--<ul class="nav nav-tabs">-->
+                <!--<li class="active"><a href="#">首页</a></li>-->
+                <!--<li><a href="#">场馆</a></li>-->
+                <!--<li><a href="#">场地预约</a></li>-->
+                <!--<li><a href="#">地图</a></li>-->
+            <!--</ul>-->
+        <!--</div>-->
+    <!--</div>-->
+    <div class="row">
+        <div id="myCarousel" class="carousel slide">
+            <!-- 轮播（Carousel）指标 -->
+            <ol class="carousel-indicators">
+                <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
+                <li data-target="#myCarousel" data-slide-to="1"></li>
+                <li data-target="#myCarousel" data-slide-to="2"></li>
+            </ol>
+            <!-- 轮播（Carousel）项目 -->
+            <div class="carousel-inner">
+                <div class="item active">
+                    <img src="${rootUrl }images/a.jpg" alt="First slide" >
+                </div>
+                <div class="item">
+                    <img src="${rootUrl }images/a.jpg" alt="Second slide">
+                </div>
+                <div class="item">
+                    <img src="${rootUrl }images/a.jpg" alt="Third slide">
+                </div>
+            </div>
+            <!--&lt;!&ndash; 轮播（Carousel）导航 &ndash;&gt;-->
+            <!--<a class="carousel-control left" href="#myCarousel"-->
+               <!--data-slide="prev">&lsaquo;-->
+            <!--</a>-->
+            <!--<a class="carousel-control right" href="#myCarousel"-->
+               <!--data-slide="next">&rsaquo;-->
+            <!--</a>-->
+        </div>
+    </div>
+    <div class="clear"></div>
+    <br>
+    <div class="row">
+        <div class="col-md-12">
+            <marquee id="affiche" align="left" behavior="scroll" bgcolor="#ECF5FF" direction="left" loop="-1" scrollamount="10" scrolldelay="10" onMouseOut="this.start()" onMouseOver="this.stop()">
+                <font size="6" style="height: auto">
+                    2017-09-11 南足球场将举行入学典礼。       2017-09-23 西篮球场将举行院篮球比赛
+                </font>
+            </marquee>
+        </div>
+    </div>
+    <br>
+    <!--场馆预约和百度地图-->
+    <div class="row">
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <h3 class="panel-title">场地情况</h3>
+            </div>
+            <div class="panel-body">
+                <div class="row">
+                    <!--场地预约-->
+                    <div class="col-md-6">
+                        <div>
+                            <select>
+                                <option value ="请选择">请选择场地</option>
+                                <option value ="北体育场">北体育场</option>
+                                <option value ="南体育场">南体育场</option>
+                                <option value="西体育场">西体育场</option>
+                                <option value="东体育场">东体育场</option>
+                            </select>
+                            <select>
+                                <option value ="请选择">请选择运动</option>
+                                <option value ="羽毛球">羽毛球</option>
+                                <option value ="篮球">篮球</option>
+                                <option value="足球">足球</option>
+                                <option value="网球">网球</option>
+                            </select>
+                            <a href="###"><span class="label label-info" style="font-size: 16px">查询</span></a>
+                            <div class="btn-group" style="float: right">
+                                <button type="button" class="btn btn-default">上一天</button>
+                                <button type="button" class="btn btn-default">今天</button>
+                                <button type="button" class="btn btn-default">下一天</button>
+                            </div>
+                        </div>
+                        <div style="overflow-x: auto; overflow-y: auto; height: 300px; width:100%;">
+                            <table class="table" width="732px" align="center" cellspacing="0">
+                                <tbody>
+                                <th>2017-09-09</th><th>开放时间</th><th>详情</th><th>操作</th>
+                                <tr><td>北篮球场</td><td>06:30-08:30</td><td>9余9<td><span class="label label-info ">预约</span></td></tr>
+                                <tr><td>北篮球场</td><td>06:30-08:30</td><td>9余9<td><span class="label label-info ">预约</span></td></tr>
+                                <tr><td>北篮球场</td><td>06:30-08:30</td><td>9余9<td><span class="label label-info ">预约</span></td></tr>
+                                <tr><td>北篮球场</td><td>06:30-08:30</td><td>9余9<td><span class="label label-info ">预约</span></td></tr>
+                                <tr><td>北篮球场</td><td>06:30-08:30</td><td>9余9<td><span class="label label-info ">预约</span></td></tr>
+                                <tr><td>北篮球场</td><td>06:30-08:30</td><td>9余9<td><span class="label label-info ">预约</span></td></tr>
+                                <tr><td>北篮球场</td><td>06:30-08:30</td><td>9余9<td><span class="label label-info ">预约</span></td></tr>
+                                <tr><td>北篮球场</td><td>06:30-08:30</td><td>9余9<td><span class="label label-info ">预约</span></td></tr>
+                                <tr><td>北篮球场</td><td>06:30-08:30</td><td>9余9<td><span class="label label-info ">预约</span></td></tr>
+                                <tr><td>北篮球场</td><td>06:30-08:30</td><td>9余9<td><span class="label label-info ">预约</span></td></tr>
+                                <tr><td>北篮球场</td><td>06:30-08:30</td><td>9余9<td><span class="label label-info ">预约</span></td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <!--百度地图-->
+                    <div class="col-md-6">
+                        <div class="centertitle">
+                            <p><span class="label label-info" style="font-size: 20px">体育馆分布</span></p>
+                        </div>
+                        <div style="overflow-x: auto; overflow-y: auto; height: 300px; width:100%;">
+                            <div style="width:550px;height:300px;border:#ccc solid 1px;" id="dituContent"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!--场馆通知相关-->
+    <div class="row">
+        <div class="row">
+            <!--场馆通知-->
+            <div class="col-md-6">
+                <div class="panel panel-primary">
+                    <div class="panel-heading">
+                        <h3 class="panel-title"><a href="###"><span class="badge pull-right">MORE</span></a>场馆通知</h3>
+                    </div>
+                    <div class="panel-body">
+                        <div class="row">
+                            <ul class="list-group">
+                                <li class="list-group-item">
+                                    <b>[篮球场]</b>
+                                    <a href="####">2017年秋季学期篮球球学期场预定通知</a>
+                                    <span class="badge" style="float:right">2017-07-06</span>
+                                </li>
+                                <li class="list-group-item">
+                                    <b>[篮球场]</b>
+                                    <a href="####">2017年秋季学期篮球球学期场预定通知</a>
+                                    <span class="badge" style="float:right">2017-07-06</span>
+                                </li>
+                                <li class="list-group-item">
+                                    <b>[篮球场]</b>
+                                    <a href="####">2017年秋季学期篮球球学期场预定通知</a>
+                                    <span class="badge" style="float:right">2017-07-06</span>
+                                </li>
+                                <li class="list-group-item">
+                                    <b>[篮球场]</b>
+                                    <a href="####">2017年秋季学期篮球球学期场预定通知</a>
+                                    <span class="badge" style="float:right">2017-07-06</span>
+                                </li>
+                                <li class="list-group-item">
+                                    <b>[篮球场]</b>
+                                    <a href="####">2017年秋季学期篮球球学期场预定通知</a>
+                                    <span class="badge" style="float:right">2017-07-06</span>
+                                </li>
+                                <li class="list-group-item">
+                                    <b>[篮球场]</b>
+                                    <a href="####">2017年秋季学期篮球球学期场预定通知</a>
+                                    <span class="badge" style="float:right">2017-07-06</span>
+                                </li>
+                            </ul>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="panel panel-primary">
+                    <div class="panel-heading">
+                        <h3 class="panel-title"><a href="###"><span class="badge pull-right">MORE</span></a>健身房通知</h3>
+                    </div>
+                    <div class="panel-body">
+                        <div class="row">
+                            <ul class="list-group">
+                                <li class="list-group-item">
+                                    <b>[篮球场]</b>
+                                    <a href="####">2017年秋季学期篮球球学期场预定通知</a>
+                                    <span class="badge" style="float:right">2017-07-06</span>
+                                </li>
+                                <li class="list-group-item">
+                                    <b>[篮球场]</b>
+                                    <a href="####">2017年秋季学期篮球球学期场预定通知</a>
+                                    <span class="badge" style="float:right">2017-07-06</span>
+                                </li>
+                                <li class="list-group-item">
+                                    <b>[篮球场]</b>
+                                    <a href="####">2017年秋季学期篮球球学期场预定通知</a>
+                                    <span class="badge" style="float:right">2017-07-06</span>
+                                </li>
+                                <li class="list-group-item">
+                                    <b>[篮球场]</b>
+                                    <a href="####">2017年秋季学期篮球球学期场预定通知</a>
+                                    <span class="badge" style="float:right">2017-07-06</span>
+                                </li>
+                                <li class="list-group-item">
+                                    <b>[篮球场]</b>
+                                    <a href="####">2017年秋季学期篮球球学期场预定通知</a>
+                                    <span class="badge" style="float:right">2017-07-06</span>
+                                </li>
+                                <li class="list-group-item">
+                                    <b>[篮球场]</b>
+                                    <a href="####">2017年秋季学期篮球球学期场预定通知</a>
+                                    <span class="badge" style="float:right">2017-07-06</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!--场馆动态相关-->
+    <div class="row">
+        <div class="row">
+            <!--场馆通知-->
+            <div class="col-md-6">
+                <div class="panel panel-primary">
+                    <div class="panel-heading">
+                        <h3 class="panel-title"><a href="###"><span class="badge pull-right">MORE</span></a>场馆动态</h3>
+                    </div>
+                    <div class="panel-body">
+                        <div class="col-md-6">
+                                <img src="images/onepiece.jpg" width="300">
+                        </div>
+                        <div class="col-md-6">
+                            <div class="row">
+                                <ul class="list-group">
+                                    <li class="list-group-item">
+                                        <b>[篮球场]</b>
+                                        <a href="####">2017年秋季学期篮球球学期场预定通知</a>
+                                        <span class="badge" style="float:right">2017-07-06</span>
+                                    </li>
+                                    <li class="list-group-item">
+                                        <b>[篮球场]</b>
+                                        <a href="####">2017年秋季学期篮球球学期场预定通知</a>
+                                        <span class="badge" style="float:right">2017-07-06</span>
+                                    </li>
+                                    <li class="list-group-item">
+                                        <b>[篮球场]</b>
+                                        <a href="####">2017年秋季学期篮球球学期场预定通知</a>
+                                        <span class="badge" style="float:right">2017-07-06</span>
+                                    </li>
+                                    <li class="list-group-item">
+                                        <b>[篮球场]</b>
+                                        <a href="####">2017年秋季学期篮球球学期场预定通知</a>
+                                        <span class="badge" style="float:right">2017-07-06</span>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="panel panel-primary">
+                    <div class="panel-heading">
+                        <h3 class="panel-title"><a href="###"><span class="badge pull-right">MORE</span></a>培训信息</h3>
+                    </div>
+                    <div class="panel-body">
+                        <div class="row">
+                            <ul class="list-group">
+                                <li class="list-group-item">
+                                    <b>[篮球场]</b>
+                                    <a href="####">2017年秋季学期篮球球学期场预定通知</a>
+                                    <span class="badge" style="float:right">2017-07-06</span>
+                                </li>
+                                <li class="list-group-item">
+                                    <b>[篮球场]</b>
+                                    <a href="####">2017年秋季学期篮球球学期场预定通知</a>
+                                    <span class="badge" style="float:right">2017-07-06</span>
+                                </li>
+                                <li class="list-group-item">
+                                    <b>[篮球场]</b>
+                                    <a href="####">2017年秋季学期篮球球学期场预定通知</a>
+                                    <span class="badge" style="float:right">2017-07-06</span>
+                                </li>
+                                <li class="list-group-item">
+                                    <b>[篮球场]</b>
+                                    <a href="####">2017年秋季学期篮球球学期场预定通知</a>
+                                    <span class="badge" style="float:right">2017-07-06</span>
+                                </li>
+                                <li class="list-group-item">
+                                    <b>[篮球场]</b>
+                                    <a href="####">2017年秋季学期篮球球学期场预定通知</a>
+                                    <span class="badge" style="float:right">2017-07-06</span>
+                                </li>
+                                <li class="list-group-item">
+                                    <b>[篮球场]</b>
+                                    <a href="####">2017年秋季学期篮球球学期场预定通知</a>
+                                    <span class="badge" style="float:right">2017-07-06</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<!--页脚版权信息-->
+<div>
+    <footer>
+        <button type="button" class="btn btn-primary " style="width: 100%">
+            <span class="glyphicon">北京化工大学© 版权所有  &nbsp;&nbsp;主办部门：北京化工大学信息中心</span>
+        </button>
+    </footer>
+</div>
+</body>
+<script>
+    $(function() {
+        // 初始化轮播
+        $("#myCarousel").carousel('cycle');
+    });
+</script>
 <script type="text/javascript">
-	window.onload = function(){
-		var form = document.getElementById('login-form');
-		form.ucode.value =  getCookieValue("ucode");		
-		form.password.value = getCookieValue("password");
-	}
-	<%
-		Object code = session.getAttribute("code");
-		if(code!=null && code.equals(false)){
-			%>
-				alert("用户名或密码错误");
-			<%
-		}
-	%>
-	function login(){			
-		var form = document.getElementById('login-form');		
-		if(form.remember.checked){
-			var day = 7*24;
-			var ucode = form.ucode.value;
-			var password = form.password.value;
-			setCookie("ucode",ucode,day,"/");
-       		setCookie("password",password,day,"/");
-		}else{
-			deleteCookie("ucode","/");
-			deleteCookie("password","/");
-		}					
-		return true;
-	}
-	
-	function setCookie(key,value,hours,path){
-		var key = escape(key);
-		var value = escape(value);
-		var expires = new Date();
-		expires.setTime(expires.getTime() + hours*3600000);
-		_expires = (typeof hours) == "string" ? "" : ";expires=" + expires.toUTCString();		
-		document.cookie = key + "=" + value + _expires + path;
-	}
-	
-	function getCookieValue(key){
-		var key = escape(key);
-		var allcookies = document.cookie; 		   
-		key += "=";
-		var pos = allcookies.indexOf(key);    
-		if (pos != -1){                                             
-	        var start = pos + key.length;                  
-	        var end = allcookies.indexOf(";",start);        
-	        if (end == -1) end = allcookies.length;       
-	        var value = allcookies.substring(start,end); 
-	        return unescape(value);                          
-         }else 
-         	return "";           
-	}
-	
-	function deleteCookie(key,path){	
-		setCookie(key,null,0,"/");       		
-	}
+    //创建和初始化地图函数：
+    function initMap(){
+        createMap();//创建地图
+        setMapEvent();//设置地图事件
+        addMapControl();//向地图添加控件
+        addMarker();//向地图中添加marker
+    }
+
+    //创建地图函数：
+    function createMap(){
+        var map = new BMap.Map("dituContent");//在百度地图容器中创建一个地图
+        var point = new BMap.Point(116.427638,39.977918);//定义一个中心点坐标
+        map.centerAndZoom(point,17);//设定地图的中心点和坐标并将地图显示在地图容器中
+        window.map = map;//将map变量存储在全局
+    }
+
+    //地图事件设置函数：
+    function setMapEvent(){
+        map.enableDragging();//启用地图拖拽事件，默认启用(可不写)
+        map.enableScrollWheelZoom();//启用地图滚轮放大缩小
+        map.enableDoubleClickZoom();//启用鼠标双击放大，默认启用(可不写)
+        map.enableKeyboard();//启用键盘上下左右键移动地图
+    }
+
+    //地图控件添加函数：
+    function addMapControl(){
+        //向地图中添加缩放控件
+        var ctrl_nav = new BMap.NavigationControl({anchor:BMAP_ANCHOR_TOP_LEFT,type:BMAP_NAVIGATION_CONTROL_LARGE});
+        map.addControl(ctrl_nav);
+        //向地图中添加比例尺控件
+        var ctrl_sca = new BMap.ScaleControl({anchor:BMAP_ANCHOR_BOTTOM_LEFT});
+        map.addControl(ctrl_sca);
+    }
+
+    //标注点数组
+    var markerArr = [{title:"足球场",content:"足球场",point:"116.425464|39.978623",isOpen:0,icon:{w:21,h:21,l:0,t:0,x:6,lb:5}}
+        ,{title:"篮球场",content:"篮球场",point:"116.425841|39.977766",isOpen:0,icon:{w:21,h:21,l:0,t:0,x:6,lb:5}}
+        ,{title:"篮球场2",content:"篮球场2",point:"116.428896|39.977683",isOpen:0,icon:{w:21,h:21,l:0,t:0,x:6,lb:5}}
+        ,{title:"网球场",content:"网球场",point:"116.425805|39.977393",isOpen:0,icon:{w:21,h:21,l:0,t:0,x:6,lb:5}}
+    ];
+    //创建marker
+    function addMarker(){
+        for(var i=0;i<markerArr.length;i++){
+            var json = markerArr[i];
+            var p0 = json.point.split("|")[0];
+            var p1 = json.point.split("|")[1];
+            var point = new BMap.Point(p0,p1);
+            var iconImg = createIcon(json.icon);
+            var marker = new BMap.Marker(point,{icon:iconImg});
+            var iw = createInfoWindow(i);
+            var label = new BMap.Label(json.title,{"offset":new BMap.Size(json.icon.lb-json.icon.x+10,-20)});
+            marker.setLabel(label);
+            map.addOverlay(marker);
+            label.setStyle({
+                borderColor:"#808080",
+                color:"#333",
+                cursor:"pointer"
+            });
+
+            (function(){
+                var index = i;
+                var _iw = createInfoWindow(i);
+                var _marker = marker;
+                _marker.addEventListener("click",function(){
+                    this.openInfoWindow(_iw);
+                });
+                _iw.addEventListener("open",function(){
+                    _marker.getLabel().hide();
+                });
+                _iw.addEventListener("close",function(){
+                    _marker.getLabel().show();
+                });
+                label.addEventListener("click",function(){
+                    _marker.openInfoWindow(_iw);
+                });
+                if(!!json.isOpen){
+                    label.hide();
+                    _marker.openInfoWindow(_iw);
+                }
+            })()
+        }
+    }
+    //创建InfoWindow
+    function createInfoWindow(i){
+        var json = markerArr[i];
+        var iw = new BMap.InfoWindow("<b class='iw_poi_title' title='" + json.title + "'>" + json.title + "</b><div class='iw_poi_content'>"+json.content+"</div>");
+        return iw;
+    }
+    //创建一个Icon
+    function createIcon(json){
+        var icon = new BMap.Icon("${rootUrl }images/mark.png", new BMap.Size(json.w,json.h),{imageOffset: new BMap.Size(-json.l,-json.t),infoWindowOffset:new BMap.Size(json.lb+5,1),offset:new BMap.Size(json.x,json.h)})
+        return icon;
+    }
+
+    initMap();//创建和初始化地图
 </script>
 </html>

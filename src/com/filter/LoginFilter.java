@@ -38,7 +38,7 @@ public class LoginFilter implements Filter{
 			chain.doFilter(servletRequest, servletResponse);
 			return;
 		}
-		if(uri.equals(servletRequest.getContextPath()+"/user/home.do") ){
+		/*if(uri.equals(servletRequest.getContextPath()+"/user/home.do") ){
 			if(userName==null || "".equals(userName)) {
 				servletResponse.sendRedirect(servletRequest.getContextPath()+"/index.jsp");
 				return;
@@ -55,8 +55,8 @@ public class LoginFilter implements Filter{
 			chain.doFilter(servletRequest, servletResponse);
 		} else {
 			servletResponse.sendRedirect(servletRequest.getContextPath()+"/user/home.do");
-		}
-		
+		}*/
+		chain.doFilter(servletRequest, servletResponse);
 	}
 
 	@Override
