@@ -85,8 +85,9 @@
                 <ul class="nav nav-tabs">
                     <li><a href="../index.jsp">首页</a></li>
                     <li class="active"><a href="#">场馆</a></li>
-                    <li><a href="appointment.jsp">场地预约</a></li>
-                    <li><a href="map.jsp">地图</a></li>
+                <li><a href="${rootUrl }html/appointment.jsp">场地预约</a></li>
+                <li><a href="${rootUrl }user/home.do">用户管理</a></li>
+                <li><a href="${rootUrl }gym/home.do">场地管理</a></li>
                 </ul>
             </div>
         </div>

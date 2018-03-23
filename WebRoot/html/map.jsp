@@ -7,7 +7,7 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <%
-	List<User> userList = (List<User>)request.getAttribute("userList");
+	List<Gym> GymList = (List<Gym>)request.getAttribute("GymList");
 %>
 <c:url value="/" var="rootUrl" scope="application"></c:url>
 <c:if test="${fn:contains(rootUrl,';jsession')}">
@@ -56,7 +56,8 @@
 <div id="nav-main" style="overflow: auto;width: 100%"></div>
 <br>
 <div class="container">
-    <article class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+    <!-- MAIN PANEL -->
+		<article class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
 			<div id="myTable" class="col-xs-12 jarviswidget jarviswidget-color-blueDark">
 							<header> <span>&nbsp;&nbsp;<i class="fa fa-table"></i>&nbsp;&nbsp;
 								<h2>
@@ -80,25 +81,25 @@
 										width="100%"  >
 										<thead>
 											<tr>
-												<th>姓名</th>
-												<th>加入时间</th>
-												<th>推荐人</th>
-												<th>是否会员</th>
+												<th>场馆名称</th>
+												<th>场馆类型</th>
+												<th>可预约时间</th>
+												<th>预约金额(小时)</th>
 												<th>操作</th>
 											</tr>
 										</thead>
 										<tbody>
-										<%for(int i =0;userList!=null && i<userList.size();i++){
-											User user = userList.get(i);
+										<%for(int i =0;GymList!=null && i<GymList.size();i++){
+											Gym gym = GymList.get(i);
 										%>
 											<tr>
-												<td><%=user.getName() %></td>
-												<td><%=user.getAddTime() %></td>
-												<td><%=user.getRec() %></td>
-												<td><%=user.getVip()==0?"否":"是" %></td>
+												<td><%=gym.getName() %></td>
+												<td><%=gym.getStatus() %></td>
+												<td><%=gym.getType() %></td>
+												<td><%=gym.getOnTime() %></td>
 												<td>
-												<button class="btn btn-primary btn-sm" onclick="update('<%=user.getId() %>');">修改</button>
-												<button class="btn btn-primary btn-sm" onclick="isDel('<%=user.getId() %>');">删除</button>
+												<button class="btn btn-primary btn-sm" onclick="update('<%=gym.getId() %>');">修改</button>
+												<button class="btn btn-primary btn-sm" onclick="isDel('<%=gym.getId() %>');">删除</button>
 													
 												</td>
 											</tr>
@@ -114,8 +115,8 @@
 				</article>
 		<!-- END MAIN PANEL -->
 		<!-- 弹出窗口 -->
-		<div id="userDialog" style="display:none;margin:0;">
-			<form id ="userForm" class="form-horizontal" method="post" onSubmit="return check()" >
+		<div id="GymDialog" style="display:none;margin:0;">
+			<form id ="GymForm" class="form-horizontal" method="post" onSubmit="return check()" >
 				<fieldset>
 				<input type="hidden" name="id" id="id" ></input>
 					<div class="form-group">
@@ -154,7 +155,7 @@
 			</div>
 		</div>
 		
-		<script src="${rootUrl}js/jquery-2.1.1.min.js"></script>
+		<script src="${rootUrl}js/jquery-3.2.1.min.js"></script>
 		<script src="${rootUrl}js/jquery.validate.min.js"></script>
 		<script src="${rootUrl}js/jquery-ui-1.10.3.min.js"></script>
 		<script src="${rootUrl}js/jquery.dataTables.min.js"></script>
@@ -165,10 +166,10 @@
 	var isEdit = false;
     //将form转为AJAX提交
 	function ajaxSubmit() {
-		var form = document.getElementById("userForm");
+		var form = document.getElementById("GymForm");
 		var dataPara = getFormJson(form);
    		$.ajax({
-       		url: isEdit?"${rootUrl}user/update.do":"${rootUrl}user/save.do",
+       		url: isEdit?"${rootUrl}Gym/update.do":"${rootUrl}Gym/save.do",
        		type: "post",
        		data: dataPara,
        		dataType:"json",
@@ -185,7 +186,7 @@
 
 	function del(id) {
 		$.ajax({
-       		url: "${rootUrl}user/del.do?id="+id,
+       		url: "${rootUrl}Gym/del.do?id="+id,
        		type: "get",
        		dataType:"json",
        		success: function(data){
@@ -201,7 +202,7 @@
 	
 	function update(id){
 		$.ajax({
-       		url: "${rootUrl}user/get.do?id="+id,
+       		url: "${rootUrl}Gym/get.do?id="+id,
        		type: "get",
        		dataType:"json",
        		success: function(data){
@@ -215,14 +216,14 @@
 			} 
    		});
 		isEdit = false;
-		$("#userDialog").dialog("open");
+		$("#GymDialog").dialog("open");
 	}
-	function setForm(user){
-		$("#id").val(user["id"]);
-		$("#name").val(user["name"]);
-		$("#addTime").val(user["addTime"]);
-		$("#rec").val(user["rec"]);
-		$("#vip").val(user["vip"]);
+	function setForm(Gym){
+		$("#id").val(Gym["id"]);
+		$("#name").val(Gym["name"]);
+		$("#addTime").val(Gym["addTime"]);
+		$("#rec").val(Gym["rec"]);
+		$("#vip").val(Gym["vip"]);
 	}
 	//将form中的值转换为键值对。
 	function getFormJson(frm) {
@@ -249,7 +250,7 @@
 
 	$(document).ready(function() {
 		$("#adds").validate();
-		$("#userForm").validate();
+		$("#GymForm").validate();
 		/* BASIC ;*/
 		
 		$('#datatable_col_reorder').dataTable({
@@ -263,13 +264,13 @@
 				"fnClick":function(nButton, oConfig, oFlash){
 					isEdit = false;
 					setForm({});
-					$("#userDialog").dialog("open");
+					$("#GymDialog").dialog("open");
 				}
 			}],
 			},
 			"autoWidth" : true
 		}); 
-		$("#userDialog").dialog({
+		$("#GymDialog").dialog({
 			autoOpen : false,
 			modal : true,
 			height:350, 

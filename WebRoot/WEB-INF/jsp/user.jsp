@@ -14,18 +14,50 @@
 	<c:set value="${fn:split(rootUrl,';')[0] }" var="rootUrl"
 		scope="application" />
 </c:if>
-<!DOCTYPE html>
-<html lang="en-us">
-<link rel="stylesheet" type="text/css" media="screen" href="${rootUrl }css/bootstrap.min.css">
-<link rel="stylesheet" type="text/css" media="screen" href="${rootUrl }css/font-awesome.min.css">
-<link rel="stylesheet" type="text/css" media="screen" href="${rootUrl }css/smartadmin-production-plugins.min.css">
-<link rel="stylesheet" type="text/css" media="screen" href="${rootUrl }css/smartadmin-production.min.css">
-<link rel="stylesheet" type="text/css" media="screen" href="${rootUrl }css/smartadmin-skins.min.css">
-<link rel="stylesheet" type="text/css" media="screen" href="${rootUrl }css/add-app-class.css">
 
-	<body id="myBody">
-		<!-- MAIN PANEL -->
-		<article class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="../css/bootstrap.min.css">
+    <link rel="stylesheet" href="../css/style.css">
+        <link rel="stylesheet" type="text/css" media="screen" href="${rootUrl }css/smartadmin-production-plugins.min.css">
+    <link rel="stylesheet" type="text/css" media="screen" href="${rootUrl }css/jquery-ui.css">
+    <link rel="stylesheet" type="text/css" media="screen" href="${rootUrl }css/add-app-class.css">
+    <script src="../js/jquery-3.2.1.min.js"></script>
+    <script src="../js/bootstrap.min.js"></script>
+    <title>北京化工大学场馆地图</title>
+</head>
+
+<body>
+<div class="container">
+    <div class="row">
+        <div class="log-box">
+            <div id="logo" class="log">
+                <a href="../index.html"><img src="../images/buct.jpg" class="img-responsive" /></a>
+                <!--<a href="###">手机版</a>-->
+                <!--<span >&nbsp;|&nbsp;</span>-->
+                <!--<a href="###">意见反馈</a>-->
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div>
+            <ul class="nav nav-tabs">
+                <li><a href="${rootUrl }index.jsp">首页</a></li>
+                <li><a href="${rootUrl }html/stadium.jsp">场馆</a></li>
+                <li><a href="${rootUrl }gym/appointment.do">场地预约</a></li>
+                <li class="active"><a href="${rootUrl }user/home.do">用户管理</a></li>
+                <li><a href="${rootUrl }gym/home.do">场地管理</a></li>
+            </ul>
+        </div>
+    </div>
+</div>
+<div id="nav-main" style="overflow: auto;width: 100%"></div>
+<br>
+<div class="container">
+    <article class="col-xs-12 col-sm-12 col-md-12 col-lg-12" style="height:100%">
 			<div id="myTable" class="col-xs-12 jarviswidget jarviswidget-color-blueDark">
 							<header> <span>&nbsp;&nbsp;<i class="fa fa-table"></i>&nbsp;&nbsp;
 								<h2>
@@ -295,6 +327,14 @@
 						
 	});
 </script>
-	</body>
-
+</div>
+<!--页脚版权信息-->
+<div>
+    <footer>
+        <button type="button" class="btn btn-primary " style="width: 100%">
+            <span class="glyphicon">北京化工大学© 版权所有  &nbsp;&nbsp;主办部门：北京化工大学信息中心</span>
+        </button>
+    </footer>
+</div>
+</body>
 </html>

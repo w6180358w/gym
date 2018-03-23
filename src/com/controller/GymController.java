@@ -42,6 +42,18 @@ public class GymController {
 		//返回到指定页面
 		return "gym";		
 	}
+	
+	@RequestMapping("/appointment.do")
+	public String appointment(HttpServletRequest request,
+			HttpServletResponse response){
+		//获取所有场地的信息
+		List<Gym> gymList = this.gymService.getAll();
+		//将所有场地信息存入request中  在jsp中展现
+		request.setAttribute("GymList", gymList);
+		//返回到指定页面
+		return "appointment";		
+	}
+	
 	@RequestMapping("/all.do")
 	public String all(HttpServletRequest request,
 			HttpServletResponse response){

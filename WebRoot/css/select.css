@@ -1,0 +1,51 @@
+.gym_select {
+            padding: 10px;
+            border: 1px solid #ddd;
+            text-align: center;
+}
+
+
+.select-box-container {
+	-webkit-touch-callout: none;
+	-webkit-user-select: none;
+	-khtml-user-select: none;
+	-moz-user-select: none;
+	 -ms-user-select: none;
+	user-select: none;
+}
+
+.select-box-container .toggle-all-container {
+    margin-bottom: 25px;
+}
+
+.select-item {
+    display: inline-block;
+    width: 25px;
+    height: 15px;
+    text-align: center;
+    line-height: 10px;
+    font-size: 12px;
+    border: 1px solid #ccc;
+    margin-right: 10px;
+    margin-bottom: 10px;
+    cursor: pointer;
+}
+.select-item.selected,
+.select-item.temp-selected {
+    background-color: #ddd;
+}
+.select-box-dashed {
+    position: absolute;
+    display: none;
+    width: 0px;
+    height: 0px;
+    padding: 0px;
+    margin: 0px;
+    border: 1px dashed #0099ff;
+    background-color: #c3d5ed;
+    opacity: 0.5;
+    filter: alpha(opacity=50);
+    font-size: 0px;
+    z-index: 99999;
+    pointer-events: none;
+}

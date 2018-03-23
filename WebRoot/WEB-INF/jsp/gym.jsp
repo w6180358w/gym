@@ -14,17 +14,51 @@
 	<c:set value="${fn:split(rootUrl,';')[0] }" var="rootUrl"
 		scope="application" />
 </c:if>
-<!DOCTYPE html>
-<html lang="en-us">
-<link rel="stylesheet" type="text/css" media="screen" href="${rootUrl }css/bootstrap.min.css">
-<link rel="stylesheet" type="text/css" media="screen" href="${rootUrl }css/font-awesome.min.css">
-<link rel="stylesheet" type="text/css" media="screen" href="${rootUrl }css/smartadmin-production-plugins.min.css">
-<link rel="stylesheet" type="text/css" media="screen" href="${rootUrl }css/smartadmin-production.min.css">
-<link rel="stylesheet" type="text/css" media="screen" href="${rootUrl }css/smartadmin-skins.min.css">
-<link rel="stylesheet" type="text/css" media="screen" href="${rootUrl }css/add-app-class.css">
 
-	<body id="myBody">
-		<!-- MAIN PANEL -->
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="../css/bootstrap.min.css">
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" type="text/css" media="screen" href="${rootUrl }css/smartadmin-production-plugins.min.css">
+    <link rel="stylesheet" type="text/css" media="screen" href="${rootUrl }css/jquery-ui.css">
+    <link rel="stylesheet" type="text/css" media="screen" href="${rootUrl }css/add-app-class.css">
+    <link rel="stylesheet" type="text/css" media="screen" href="${rootUrl }css/select.css">
+    <script src="../js/jquery-3.2.1.min.js"></script>
+    <script src="../js/bootstrap.min.js"></script>
+    <title>北京化工大学场馆地图</title>
+</head>
+
+<body>
+<div class="container">
+    <div class="row">
+        <div class="log-box">
+            <div id="logo" class="log">
+                <a href="../index.html"><img src="../images/buct.jpg" class="img-responsive" /></a>
+                <!--<a href="###">手机版</a>-->
+                <!--<span >&nbsp;|&nbsp;</span>-->
+                <!--<a href="###">意见反馈</a>-->
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div>
+            <ul class="nav nav-tabs">
+                <li><a href="${rootUrl }index.jsp">首页</a></li>
+                <li><a href="${rootUrl }html/stadium.jsp">场馆</a></li>
+                <li><a href="${rootUrl }html/appointment.jsp">场地预约</a></li>
+                <li><a href="${rootUrl }user/home.do">用户管理</a></li>
+                <li class="active"><a href="${rootUrl }gym/home.do">场地管理</a></li>
+            </ul>
+        </div>
+    </div>
+</div>
+<div id="nav-main" style="overflow: auto;width: 100%"></div>
+<br>
+<div class="container">
+    <!-- MAIN PANEL -->
 		<article class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
 			<div id="myTable" class="col-xs-12 jarviswidget jarviswidget-color-blueDark">
 							<header> <span>&nbsp;&nbsp;<i class="fa fa-table"></i>&nbsp;&nbsp;
@@ -52,7 +86,7 @@
 												<th>场馆名称</th>
 												<th>场馆类型</th>
 												<th>可预约时间</th>
-												<th>预约金额(小时)</th>
+												<th>预约金额(元)</th>
 												<th>操作</th>
 											</tr>
 										</thead>
@@ -62,9 +96,9 @@
 										%>
 											<tr>
 												<td><%=gym.getName() %></td>
-												<td><%=gym.getStatus() %></td>
 												<td><%=gym.getType() %></td>
 												<td><%=gym.getOnTime() %></td>
+												<td><%=gym.getMoney() %></td>
 												<td>
 												<button class="btn btn-primary btn-sm" onclick="update('<%=gym.getId() %>');">修改</button>
 												<button class="btn btn-primary btn-sm" onclick="isDel('<%=gym.getId() %>');">删除</button>
@@ -88,30 +122,48 @@
 				<fieldset>
 				<input type="hidden" name="id" id="id" ></input>
 					<div class="form-group">
-						<label class="col-xs-2 txt-al-mar-pad">姓名</label>
+						<label class="col-xs-2 txt-al-mar-pad">体育馆名称</label>
 						<div class="col-xs-10">
-							<input class="form-control" type="text" name="name" id="name">
+							<input class="form-control" name="name" id="name" required>
 						</div>
 					</div>
 					<div class="form-group">
-						<label class="col-xs-2 txt-al-mar-pad">加入时间</label>
+						<label class="col-xs-2 txt-al-mar-pad">体育馆类型</label>
 						<div class="col-xs-10">
-							<input class="form-control" type="text" name="addTime" id="addTime">
+							<input class="form-control" name="type" id="type" required>
 						</div>
 					</div>
 					<div class="form-group">
-						<label class="col-xs-2 txt-al-mar-pad">推荐人</label>
+						<label class="col-xs-2 txt-al-mar-pad">状态</label>
 						<div class="col-xs-10">
-							<input class="form-control" type="text" name="rec" id="rec">
-						</div>
-					</div>
-					<div class="form-group">
-						<label class="col-xs-2 txt-al-mar-pad">是否会员</label>
-						<div class="col-xs-10">
-							<select class="form-control" name="vip" id="vip">
-								<option value=1>是</option>
-								<option value=0>否</option>
+							<select class="form-control" name="status" id="status" required>
+								<option value=1>可用</option>
+								<option value=0>不可用</option>
 							</select>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-xs-2 txt-al-mar-pad">可预约时间</label>
+						<div class="col-xs-10">
+							<div class="toggle-all-container">
+               					<div class="gym_select select-box-container">
+							        <div class="toggle-all-container">
+							            <a href="javascript:void(0);" class="btn btn-md btn-default toggle-all-btn">全选/取消全选</a>
+							        </div>
+						        </div>
+						    </div>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-xs-2 txt-al-mar-pad">价格（元）</label>
+						<div class="col-xs-10">
+							<input type="number" class="form-control" name="money" id="money" required min=0.01>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-xs-2 txt-al-mar-pad">描述</label>
+						<div class="col-xs-10">
+							<textarea class="form-control" name="desc" id="desc" required></textarea>
 						</div>
 					</div>
 				</fieldset>
@@ -123,21 +175,30 @@
 			</div>
 		</div>
 		
-		<script src="${rootUrl}js/jquery-3.2.1.min.js"></script>
+		<script src="${rootUrl}js/jquery-2.1.1.min.js"></script>
 		<script src="${rootUrl}js/jquery.validate.min.js"></script>
 		<script src="${rootUrl}js/jquery-ui-1.10.3.min.js"></script>
 		<script src="${rootUrl}js/jquery.dataTables.min.js"></script>
 		<script src="${rootUrl}js/dataTables.colVis.min.js"></script>
 		<script src="${rootUrl}js/dataTables.tableTools.min.js"></script>
 		<script src="${rootUrl}js/dataTables.bootstrap.min.js"></script>
+		<script src="${rootUrl}js/select.js"></script>
 		<script>
 	var isEdit = false;
+	var box;
     //将form转为AJAX提交
 	function ajaxSubmit() {
 		var form = document.getElementById("GymForm");
 		var dataPara = getFormJson(form);
+		if(dataPara["onTime"]==null || dataPara["onTime"]==""){
+			alert("请添加预约时间！");
+			return;
+		}
+		if(!$(form).valid()){
+			return;
+		}
    		$.ajax({
-       		url: isEdit?"${rootUrl}Gym/update.do":"${rootUrl}Gym/save.do",
+       		url: isEdit?"${rootUrl}gym/update.do":"${rootUrl}gym/save.do",
        		type: "post",
        		data: dataPara,
        		dataType:"json",
@@ -154,7 +215,7 @@
 
 	function del(id) {
 		$.ajax({
-       		url: "${rootUrl}Gym/del.do?id="+id,
+       		url: "${rootUrl}gym/del.do?id="+id,
        		type: "get",
        		dataType:"json",
        		success: function(data){
@@ -170,11 +231,10 @@
 	
 	function update(id){
 		$.ajax({
-       		url: "${rootUrl}Gym/get.do?id="+id,
+       		url: "${rootUrl}gym/get.do?id="+id,
        		type: "get",
        		dataType:"json",
        		success: function(data){
-       			console.log(data);
 				if(data.code==0 && data.data!=null){
 					setForm(data.data);	
 					isEdit = true;
@@ -189,9 +249,12 @@
 	function setForm(Gym){
 		$("#id").val(Gym["id"]);
 		$("#name").val(Gym["name"]);
-		$("#addTime").val(Gym["addTime"]);
-		$("#rec").val(Gym["rec"]);
-		$("#vip").val(Gym["vip"]);
+		$("#desc").val(Gym["desc"]);
+		$("#type").val(Gym["type"]);
+		$("#status").val(Gym["status"]);
+		$("#money").val(Gym["money"]);
+		box.reset();
+		box.setValues(Gym["onTime"]==null?[]:Gym["onTime"].split(","));
 	}
 	//将form中的值转换为键值对。
 	function getFormJson(frm) {
@@ -207,6 +270,7 @@
             	o[this.name] = this.value || '';
         	}
     	});
+    	o["onTime"] = box.getValues().join();
     	return o;
 	}
 	function isDel(id){
@@ -217,9 +281,7 @@
 	}
 
 	$(document).ready(function() {
-		$("#adds").validate();
 		$("#GymForm").validate();
-		/* BASIC ;*/
 		
 		$('#datatable_col_reorder').dataTable({
 			"sDom" : "<'dt-toolbar'<'col-xs-6 col-sm-6'f><'col-sm-6 col-xs-6 hidden-xs'T>r>"
@@ -241,8 +303,8 @@
 		$("#GymDialog").dialog({
 			autoOpen : false,
 			modal : true,
-			height:350, 
-			width:640, 
+			height:580, 
+			width:680, 
 			buttons : [{
 				html : "取消",
 				"class" : "btn btn-default btn-sm",
@@ -281,7 +343,6 @@
 						
 		});
 		
-		
 		$.datepicker.regional["zh-CN"] = { closeText: "关闭", prevText: "&#x3c;上月", nextText: "下月&#x3e;", currentText: "今天", monthNames: ["一月", "二月", "三月", "四月", "五月", "六月", "七月", "八月", "九月", "十月", "十一月", "十二月"], monthNamesShort: ["一", "二", "三", "四", "五", "六", "七", "八", "九", "十", "十一", "十二"], dayNames: ["星期日", "星期一", "星期二", "星期三", "星期四", "星期五", "星期六"], dayNamesShort: ["周日", "周一", "周二", "周三", "周四", "周五", "周六"], dayNamesMin: ["日", "一", "二", "三", "四", "五", "六"], weekHeader: "周", dateFormat: "yy-mm-dd", firstDay: 1, isRTL: !1, showMonthAfterYear: !0, yearSuffix: "年" }
         $.datepicker.setDefaults($.datepicker.regional["zh-CN"]);
 		$('#addTime').datepicker({
@@ -292,9 +353,46 @@
 				$('#addTime').datepicker('option', '', selectedDate);
 			}
 		});
-						
+		box = initSelectBox('.gym_select',
+				[
+					{value:1,text:1},
+					{value:2,text:2},
+					{value:3,text:3},
+					{value:4,text:4},
+					{value:5,text:5},
+					{value:6,text:6},
+					{value:7,text:7},
+					{value:8,text:8},
+					{value:9,text:9},
+					{value:10,text:10},
+					{value:11,text:11},
+					{value:12,text:12},
+					{value:13,text:13},
+					{value:14,text:14},
+					{value:15,text:15},
+					{value:16,text:16},
+					{value:17,text:17},
+					{value:18,text:18},
+					{value:19,text:19},
+					{value:20,text:20},
+					{value:21,text:21},
+					{value:22,text:22},
+					{value:23,text:23},
+					{value:24,text:24},
+				],
+				function(a){
+			console.log(a);
+		});	
 	});
 </script>
-	</body>
-
+</div>
+<!--页脚版权信息-->
+<div>
+    <footer>
+        <button type="button" class="btn btn-primary " style="width: 100%">
+            <span class="glyphicon">北京化工大学© 版权所有  &nbsp;&nbsp;主办部门：北京化工大学信息中心</span>
+        </button>
+    </footer>
+</div>
+</body>
 </html>

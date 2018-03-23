@@ -28,23 +28,13 @@
     </style>
     <script type="text/javascript" src="http://api.map.baidu.com/api?key=&v=1.1&services=true"></script>
 </head>
-<body style="width: 100%;height: 100%">
-<style>
-    body{
-        background:url(${rootUrl }images/background.jpg) top left;
-        background-size:100% 100%;
-    }
-</style>
-
+<body>
 
 <div class="container">
     <div class="row">
         <div class="log-box">
             <div id="logo" class="log">
                 <a href="${rootUrl }index.jsp"><img src="${rootUrl }images/buct.jpg" class="img-responsive" /></a>
-                <!--<a href="###">手机版</a>-->
-                <!--<span >&nbsp;|&nbsp;</span>-->
-                <!--<a href="###">意见反馈</a>-->
             </div>
         </div>
     </div>
@@ -54,8 +44,8 @@
                 <li class="active"><a href="#">首页</a></li>
                 <li><a href="${rootUrl }html/stadium.jsp">场馆</a></li>
                 <li><a href="${rootUrl }html/appointment.jsp">场地预约</a></li>
-                <li><a href="${rootUrl }html/map.jsp">地图</a></li>
-                <li style="float: right"><a href="html/phone.jsp">手机预约</a> </li>
+                <li><a href="${rootUrl }user/home.do">用户管理</a></li>
+                <li><a href="${rootUrl }gym/home.do">场地管理</a></li>
             </ul>
         </div>
     </div>
