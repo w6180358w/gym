@@ -41,7 +41,7 @@ public class Gym extends BaseModel{
 	public void setName(String name) {
 		this.name = name;
 	}
-	@Column(name = "desc")
+	@Column(name = "description")
 	public String getDesc() {
 		return desc;
 	}

@@ -14,7 +14,7 @@ import com.model.base.BaseModel;
  *
  */
 @Entity
-@Table(name = "order")
+@Table(name = "gym_order")
 public class Order extends BaseModel{
 
 	private Long id;		//id
@@ -60,7 +60,7 @@ public class Order extends BaseModel{
 	public void setStatus(String status) {
 		this.status = status;
 	}
-	@Column(name = "key")
+	@Column(name = "wechat_key")
 	public String getKey() {
 		return key;
 	}
