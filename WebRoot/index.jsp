@@ -45,6 +45,7 @@
                 <li><a href="${rootUrl }html/stadium.jsp">场馆</a></li>
                 <li><a href="${rootUrl }html/appointment.jsp">场地预约</a></li>
                 <li><a href="${rootUrl }user/home.do">用户管理</a></li>
+                <li><a href="${rootUrl }gymType/home.do">场地类型管理</a></li>
                 <li><a href="${rootUrl }gym/home.do">场地管理</a></li>
             </ul>
         </div>

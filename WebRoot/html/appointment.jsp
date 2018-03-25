@@ -45,6 +45,7 @@
                     <li><a href="stadium.jsp">场馆</a></li>
                     <li class="active"><a href="#">场地预约</a></li>
                 	<li><a href="${rootUrl }user/home.do">用户管理</a></li>
+                	<li><a href="${rootUrl }gymType/home.do">场地类型管理</a></li>
                 	<li><a href="${rootUrl }gym/home.do">场地管理</a></li>
                 </ul>
             </div>
@@ -59,6 +60,8 @@
                     <h2 id="section-1" class="panel-title">当前位置：场地预约</h2>
                 </div>
                 <div class="panel-body">
+               	 	<label>场馆类型选择：</label>
+                    <ul class="nav nav-pills" id="param-gym-type"></ul>
                     <label>场馆选择：</label>
                     <ul class="nav nav-pills" id="param-gym"></ul>
                     <label>日期选择：<font color="red">注：只显示当日和明日场馆预约情况</font></label>
@@ -167,12 +170,23 @@ function getStatus(index,gym,orderMap){
 //初始化搜索条件中场馆信息
 function initParamGym(data){
 	var pg = $("#param-gym");
-	
+	pg.empty();
 	pg.append($('<li class="active"><a href="javascript:void(0);">不限</a></li>').on("click",gymclick));
 	
 	var gym = data.gym;
 	for(var i=0;i<gym.length;i++){
 		pg.append($('<li><a href="javascript:void(0);" value='+gym[i]["id"]+'>'+gym[i]["name"]+'</a></li>').on("click",gymclick));
+	}
+}
+//初始化搜索条件中场馆信息
+function initParamGymType(data){
+	var pg = $("#param-gym-type");
+	
+	pg.append($('<li class="active"><a href="javascript:void(0);">不限</a></li>').on("click",gymTypeclick));
+	
+	var gym = data;
+	for(var i=0;i<gym.length;i++){
+		pg.append($('<li><a href="javascript:void(0);" value='+gym[i]["id"]+'>'+gym[i]["name"]+'</a></li>').on("click",gymTypeclick));
 	}
 }
 //初始化搜索条件中日期信息
@@ -183,6 +197,15 @@ function initParamDay(){
 		day.append($('<li><a href="javascript:void(0);" value='+dayData[i]+'>'+dayData[i]+'</a></li>').on("click",dayclick));
 	}
 	day.find("li").first().click();
+}
+//搜索条件中点击场馆事件
+function gymTypeclick(){
+	var li = $(this);
+	li.siblings().removeClass("active");
+	li.addClass("active");
+	param["gymType"] = li.find("a").attr("value");
+	param["gymId"] = null;
+	search(true);
 }
 //搜索条件中点击场馆事件
 function gymclick(){
@@ -221,7 +244,7 @@ function labelClick(){
     }
 }
 var time = [6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,1,2,3,4,5];//预约时间
-var param = {gymId:null,onDay:null};//搜索参数
+var param = {gymId:null,onDay:null,gymType:null};//搜索参数
 var orderParam = [];//预约参数（前端）
 var gymStatus = {
 	"on":{css:'primary',name:'可预约'},
@@ -234,6 +257,21 @@ $(document).ready(function() {
 	//初始化搜索条件  刚进页面只传日期
 	initParamDay();
 	search(true);
+	
+	$.ajax({
+   		url: "${rootUrl}gymType/all.do",
+   		type: "get",
+   		dataType:"json",
+   		contentType: "application/json",
+   		success: function(data){
+   			console.log(data);
+			if(data.code==0 && data.data!=null){
+				initParamGymType(data.data);
+			}else{
+				alert("查询失败");
+			}
+		} 
+	});
 	
 	$("#sendOrder").on("click",function(){
 		var param = toParam(orderParam);
@@ -349,6 +387,7 @@ function search(initSearch){
 				//场馆预约列表
 				initGym(data.data);	
 				if(initSearch){
+					console.log("init")
 					//初始化场馆搜索列表
 					initParamGym(data.data);
 				}

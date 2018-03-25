@@ -57,9 +57,9 @@ public class GymServiceImpl implements GymService{
 
 	@SuppressWarnings({ "unchecked", "deprecation" })
 	@Override
-	public Map<String, Object> getData(String onDay,Long gymId) {
+	public Map<String, Object> getData(String onDay,Long gymId,String gymType) {
 		Map<String, Object> result = new HashMap<String, Object>();
-		result.put("gym", getByParam(null, gymId));
+		result.put("gym", getByParam(gymType, gymId));
 		List<Order> orderList = this.orderDao.findByDay(onDay);
 		Map<String,Integer> map = new HashMap<String, Integer>();
 		for (Order o : orderList) {
@@ -79,12 +79,12 @@ public class GymServiceImpl implements GymService{
 		List<Gym> list = new ArrayList<Gym>();
 		if(gymId!=null) {
 			Gym gym= this.findById(gymId);
-			if(gym!=null ) {
+			if(gym!=null) {
 				list.add(gym);
 			}
 			return list;
 		}
-		if(type!=null) {
+		if(type!=null && !"".equals(type)) {
 			return this.findByType(type);
 		}
 		return this.getAll();
@@ -92,6 +92,6 @@ public class GymServiceImpl implements GymService{
 
 	@Override
 	public List<Gym> findByType(String type) {
-		return this.gymDao.findList("from Gym where type = "+type);
+		return this.gymDao.findList("from Gym where type = '"+type+"'");
 	}
 }

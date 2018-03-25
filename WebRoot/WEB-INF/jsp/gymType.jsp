@@ -7,7 +7,6 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <%
-	List<Gym> gymList = (List<Gym>)request.getAttribute("gymList");
 	List<GymType> gymTypeList = (List<GymType>)request.getAttribute("gymTypeList");
 %>
 <c:url value="/" var="rootUrl" scope="application"></c:url>
@@ -51,8 +50,8 @@
                 <li><a href="${rootUrl }html/stadium.jsp">场馆</a></li>
                 <li><a href="${rootUrl }html/appointment.jsp">场地预约</a></li>
                 <li><a href="${rootUrl }user/home.do">用户管理</a></li>
-                <li><a href="${rootUrl }gymType/home.do">场地类型管理</a></li>
-                <li class="active"><a href="${rootUrl }gym/home.do">场地管理</a></li>
+                <li class="active"><a href="${rootUrl }gymType/home.do">场地类型管理</a></li>
+                <li><a href="${rootUrl }gym/home.do">场地管理</a></li>
             </ul>
         </div>
     </div>
@@ -65,7 +64,7 @@
 			<div id="myTable" class="col-xs-12 jarviswidget jarviswidget-color-blueDark">
 							<header> <span>&nbsp;&nbsp;<i class="fa fa-table"></i>&nbsp;&nbsp;
 								<h2>
-									场地管理
+									场地类型管理
 								</h2>
 							</span> </header>
 	
@@ -85,25 +84,21 @@
 										width="100%"  >
 										<thead>
 											<tr>
-												<th>场馆名称</th>
-												<th>场馆类型</th>
-												<th>可预约时间</th>
-												<th>预约金额(元)</th>
+												<th>场馆类型名称</th>
+												<th>描述</th>
 												<th>操作</th>
 											</tr>
 										</thead>
 										<tbody>
-										<%for(int i =0;gymList!=null && i<gymList.size();i++){
-											Gym gym = gymList.get(i);
+										<%for(int i =0;gymTypeList!=null && i<gymTypeList.size();i++){
+											GymType gymType = gymTypeList.get(i);
 										%>
 											<tr>
-												<td><%=gym.getName() %></td>
-												<td><%=gym.getType() %></td>
-												<td><%=gym.getOnTime() %></td>
-												<td><%=gym.getMoney()+"" %></td>
+												<td><%=gymType.getName() %></td>
+												<td><%=gymType.getDesc() %></td>
 												<td>
-												<button class="btn btn-primary btn-sm" onclick="update('<%=gym.getId() %>');">修改</button>
-												<button class="btn btn-primary btn-sm" onclick="isDel('<%=gym.getId() %>');">删除</button>
+												<button class="btn btn-primary btn-sm" onclick="update('<%=gymType.getId() %>');">修改</button>
+												<button class="btn btn-primary btn-sm" onclick="isDel('<%=gymType.getId() %>');">删除</button>
 													
 												</td>
 											</tr>
@@ -119,52 +114,14 @@
 				</article>
 		<!-- END MAIN PANEL -->
 		<!-- 弹出窗口 -->
-		<div id="GymDialog" style="display:none;margin:0;">
-			<form id ="GymForm" class="form-horizontal" method="post" onSubmit="return check()" >
+		<div id="gymTypeDialog" style="display:none;margin:0;">
+			<form id ="gymTypeForm" class="form-horizontal" method="post" onSubmit="return check()" >
 				<fieldset>
 				<input type="hidden" name="id" id="id" ></input>
 					<div class="form-group">
 						<label class="col-xs-2 txt-al-mar-pad">体育馆名称</label>
 						<div class="col-xs-10">
 							<input class="form-control" name="name" id="name" required>
-						</div>
-					</div>
-					<div class="form-group">
-						<label class="col-xs-2 txt-al-mar-pad">体育馆类型</label>
-						<div class="col-xs-10">
-							<select class="form-control" name="type" id="type" required>
-							<%for(int i =0;gymTypeList!=null && i<gymTypeList.size();i++){
-								GymType type = gymTypeList.get(i);%>
-								<option value=<%=type.getId() %>><%=type.getName() %></option>
-							<%}%>
-							</select>
-						</div>
-					</div>
-					<div class="form-group">
-						<label class="col-xs-2 txt-al-mar-pad">状态</label>
-						<div class="col-xs-10">
-							<select class="form-control" name="status" id="status" required>
-								<option value=1>可用</option>
-								<option value=0>不可用</option>
-							</select>
-						</div>
-					</div>
-					<div class="form-group">
-						<label class="col-xs-2 txt-al-mar-pad">可预约时间</label>
-						<div class="col-xs-10">
-							<div class="toggle-all-container">
-               					<div class="gym_select select-box-container">
-							        <div class="toggle-all-container">
-							            <a href="javascript:void(0);" class="btn btn-md btn-default toggle-all-btn">全选/取消全选</a>
-							        </div>
-						        </div>
-						    </div>
-						</div>
-					</div>
-					<div class="form-group">
-						<label class="col-xs-2 txt-al-mar-pad">价格（元）</label>
-						<div class="col-xs-10">
-							<input type="number" class="form-control" name="money" id="money" required min=0.01>
 						</div>
 					</div>
 					<div class="form-group">
@@ -189,23 +146,18 @@
 		<script src="${rootUrl}js/dataTables.colVis.min.js"></script>
 		<script src="${rootUrl}js/dataTables.tableTools.min.js"></script>
 		<script src="${rootUrl}js/dataTables.bootstrap.min.js"></script>
-		<script src="${rootUrl}js/select.js"></script>
 		<script>
 	var isEdit = false;
 	var box;
     //将form转为AJAX提交
 	function ajaxSubmit() {
-		var form = document.getElementById("GymForm");
+		var form = document.getElementById("gymTypeForm");
 		var dataPara = getFormJson(form);
-		if(dataPara["onTime"]==null || dataPara["onTime"]==""){
-			alert("请添加预约时间！");
-			return;
-		}
 		if(!$(form).valid()){
 			return;
 		}
    		$.ajax({
-       		url: isEdit?"${rootUrl}gym/update.do":"${rootUrl}gym/save.do",
+       		url: isEdit?"${rootUrl}gymType/update.do":"${rootUrl}gymType/save.do",
        		type: "post",
        		data: dataPara,
        		dataType:"json",
@@ -222,7 +174,7 @@
 
 	function del(id) {
 		$.ajax({
-       		url: "${rootUrl}gym/del.do?id="+id,
+       		url: "${rootUrl}gymType/del.do?id="+id,
        		type: "get",
        		dataType:"json",
        		success: function(data){
@@ -238,7 +190,7 @@
 	
 	function update(id){
 		$.ajax({
-       		url: "${rootUrl}gym/get.do?id="+id,
+       		url: "${rootUrl}gymType/get.do?id="+id,
        		type: "get",
        		dataType:"json",
        		success: function(data){
@@ -251,17 +203,12 @@
 			} 
    		});
 		isEdit = false;
-		$("#GymDialog").dialog("open");
+		$("#gymTypeDialog").dialog("open");
 	}
-	function setForm(Gym){
-		$("#id").val(Gym["id"]);
-		$("#name").val(Gym["name"]);
-		$("#desc").val(Gym["desc"]);
-		$("#type").val(Gym["type"]);
-		$("#status").val(Gym["status"]);
-		$("#money").val(Gym["money"]);
-		box.reset();
-		box.setValues(Gym["onTime"]==null?[]:Gym["onTime"].split(","));
+	function setForm(gymType){
+		$("#id").val(gymType["id"]);
+		$("#name").val(gymType["name"]);
+		$("#desc").val(gymType["desc"]);
 	}
 	//将form中的值转换为键值对。
 	function getFormJson(frm) {
@@ -277,7 +224,6 @@
             	o[this.name] = this.value || '';
         	}
     	});
-    	o["onTime"] = box.getValues().join();
     	return o;
 	}
 	function isDel(id){
@@ -288,7 +234,7 @@
 	}
 
 	$(document).ready(function() {
-		$("#GymForm").validate();
+		$("#gymTypeForm").validate();
 		
 		$('#datatable_col_reorder').dataTable({
 			"sDom" : "<'dt-toolbar'<'col-xs-6 col-sm-6'f><'col-sm-6 col-xs-6 hidden-xs'T>r>"
@@ -301,13 +247,13 @@
 				"fnClick":function(nButton, oConfig, oFlash){
 					isEdit = false;
 					setForm({});
-					$("#GymDialog").dialog("open");
+					$("#gymTypeDialog").dialog("open");
 				}
 			}],
 			},
 			"autoWidth" : true
 		}); 
-		$("#GymDialog").dialog({
+		$("#gymTypeDialog").dialog({
 			autoOpen : false,
 			modal : true,
 			height:580, 
@@ -360,36 +306,6 @@
 				$('#addTime').datepicker('option', '', selectedDate);
 			}
 		});
-		box = initSelectBox('.gym_select',
-				[
-					{value:1,text:1},
-					{value:2,text:2},
-					{value:3,text:3},
-					{value:4,text:4},
-					{value:5,text:5},
-					{value:6,text:6},
-					{value:7,text:7},
-					{value:8,text:8},
-					{value:9,text:9},
-					{value:10,text:10},
-					{value:11,text:11},
-					{value:12,text:12},
-					{value:13,text:13},
-					{value:14,text:14},
-					{value:15,text:15},
-					{value:16,text:16},
-					{value:17,text:17},
-					{value:18,text:18},
-					{value:19,text:19},
-					{value:20,text:20},
-					{value:21,text:21},
-					{value:22,text:22},
-					{value:23,text:23},
-					{value:24,text:24},
-				],
-				function(a){
-			console.log(a);
-		});	
 	});
 </script>
 </div>

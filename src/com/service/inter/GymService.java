@@ -19,7 +19,7 @@ public interface GymService {
 	
 	public List<Gym> nameValid(Gym gym);
 	
-	public Map<String,Object> getData(String onDay,Long gymId);
+	public Map<String,Object> getData(String onDay,Long gymId,String gymType);
 	
 	public List<Gym> findByType(String type);
 }

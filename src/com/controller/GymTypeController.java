@@ -2,7 +2,6 @@ package com.controller;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -12,27 +11,23 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import com.model.Gym;
 import com.model.GymType;
-import com.service.inter.GymService;
 import com.service.inter.GymTypeService;
 import com.util.SystemUtil;
 /**
- * 场地管理的控制器
+ * 场地类型管理的控制器
  * @author zxy
  *
  */
 @Controller
-@RequestMapping("/gym")
-public class GymController {
+@RequestMapping("/gymType")
+public class GymTypeController {
 	//利用spring获取场地的service
-	@Autowired
-	private GymService gymService;
 	@Autowired
 	private GymTypeService gymTypeService;
 	/**
 	 * 场地管理的页面
-	 * @param Gym
+	 * @param gymType
 	 * @param request
 	 * @param response
 	 * @return
@@ -41,22 +36,20 @@ public class GymController {
 	public String home(HttpServletRequest request,
 			HttpServletResponse response){
 		//获取所有场地的信息
-		List<Gym> gymList = this.gymService.getAll();
 		List<GymType> gymTypeList = this.gymTypeService.getAll();
 		//将所有场地信息存入request中  在jsp中展现
-		request.setAttribute("gymList", gymList);
 		request.setAttribute("gymTypeList", gymTypeList);
 		//返回到指定页面
-		return "gym";		
+		return "gymType";		
 	}
 	
 	@RequestMapping("/appointment.do")
 	public String appointment(HttpServletRequest request,
 			HttpServletResponse response){
 		//获取所有场地的信息
-		List<Gym> gymList = this.gymService.getAll();
+		List<GymType> gymTypeList = this.gymTypeService.getAll();
 		//将所有场地信息存入request中  在jsp中展现
-		request.setAttribute("GymList", gymList);
+		request.setAttribute("gymTypeList", gymTypeList);
 		//返回到指定页面
 		return "appointment";		
 	}
@@ -65,24 +58,11 @@ public class GymController {
 	public String all(HttpServletRequest request,
 			HttpServletResponse response){
 		//获取所有场地的信息
-		List<Gym> gymList = this.gymService.getAll();
+		List<GymType> gymTypeList = this.gymTypeService.getAll();
 		//将所有场地信息存入request中  在jsp中展现
-		request.setAttribute("gymList", gymList);
+		request.setAttribute("gymTypeList", gymTypeList);
 		try {
-			response.getWriter().print(SystemUtil.request(0, gymList, ""));
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		return null;
-	}
-	
-	@RequestMapping("/getData.do")
-	public String getData(HttpServletRequest request,
-			HttpServletResponse response,String onDay,Long gymId,String gymType){
-		//获取所有场地的信息
-		Map<String, Object> gymList = this.gymService.getData(onDay,gymId,gymType);
-		try {
-			response.getWriter().print(SystemUtil.request(0, gymList, ""));
+			response.getWriter().print(SystemUtil.request(0, gymTypeList, ""));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -91,18 +71,18 @@ public class GymController {
 	
 	/**
 	 * 场地保存的方法
-	 * @param Gym
+	 * @param gymType
 	 * @param request
 	 * @param response
 	 * @return
 	 */
 	@RequestMapping("/save.do")
-	public String save(@ModelAttribute Gym gym,HttpServletRequest request,
+	public String save(@ModelAttribute GymType gymType,HttpServletRequest request,
 			HttpServletResponse response){
 		int code = 0;
 		String msg = "保存成功";
 		try {
-			gymService.save(gym);
+			gymTypeService.save(gymType);
 		} catch (Exception e) {
 			code = 1;
 			msg = "保存失败";
@@ -119,18 +99,18 @@ public class GymController {
 	}
 	/**
 	 * 管理员页面修改场地的方法
-	 * @param Gym
+	 * @param gymType
 	 * @param request
 	 * @param response
 	 * @return
 	 */
 	@RequestMapping("/update.do")
-	public String update(@ModelAttribute Gym gym,HttpServletRequest request,
+	public String update(@ModelAttribute GymType gymType,HttpServletRequest request,
 			HttpServletResponse response){
 		int code = 0;
 		String msg = "修改成功";
 		try {
-			gymService.update(gym);
+			gymTypeService.update(gymType);
 		} catch (Exception e) {
 			code = 1;
 			msg = "修改失败";
@@ -147,20 +127,20 @@ public class GymController {
 	}
 	/**
 	 * 场地修改自己的方法
-	 * @param Gym
+	 * @param gymType
 	 * @param request
 	 * @param response
 	 * @return
 	 */
-	@RequestMapping("/GymUpdateGym.do")
-	public String GymUpdateGym(@ModelAttribute Gym gym,HttpServletRequest request,
+	@RequestMapping("/gymTypeUpdategymType.do")
+	public String gymTypeUpdategymType(@ModelAttribute GymType gymType,HttpServletRequest request,
 			HttpServletResponse response){
 		int code = 0;
 		String msg = "修改成功";
 		try {
 			//场地名称判重
 			//根据当前场地查询
-			List<Gym> valid = this.gymService.nameValid(gym);
+			List<GymType> valid = this.gymTypeService.nameValid(gymType);
 			if(valid.size()>0){
 				//如果能查出数据   操作状态设置为1
 				code=1;
@@ -168,9 +148,9 @@ public class GymController {
 				msg = "场地名重复";
 			}else{
 				//如果查不出来则更新当前场地
-				gymService.update(gym);
+				gymTypeService.update(gymType);
 				//将当前登录场地信息清空   强制退出
-				request.getSession().setAttribute("Gym", null);
+				request.getSession().setAttribute("gymType", null);
 				request.getSession().setAttribute("login-time", null);
 			}
 		} catch (Exception e) {
@@ -191,17 +171,17 @@ public class GymController {
 	}
 	/**
 	 * 删除场地的方法
-	 * @param Gym
+	 * @param gymType
 	 * @param request
 	 * @param response
 	 * @return
 	 */
 	@RequestMapping("/del.do")
-	public String del(@ModelAttribute Gym gym,HttpServletRequest request,
+	public String del(@ModelAttribute GymType gymType,HttpServletRequest request,
 			HttpServletResponse response){
 		int code = 0;
 		try {
-			gymService.delete(gym);
+			gymTypeService.delete(gymType);
 		} catch (Exception e) {
 			code = 1;
 			e.printStackTrace();
@@ -220,16 +200,16 @@ public class GymController {
 	public String get(Long id,HttpServletRequest request,
 			HttpServletResponse response){
 		int code = 0;
-		Gym gym = null;
+		GymType gymType = null;
 		try {
-			gym = gymService.findById(id);
+			gymType = gymTypeService.findById(id);
 		} catch (Exception e) {
 			code = 1;
 			e.printStackTrace();
 		}
 		
 		try {
-			response.getWriter().print(SystemUtil.request(code, gym, null));
+			response.getWriter().print(SystemUtil.request(code, gymType, null));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
