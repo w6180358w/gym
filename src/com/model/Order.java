@@ -1,5 +1,7 @@
 package com.model;
 
+import java.util.Date;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -17,18 +19,20 @@ import com.model.base.BaseModel;
 @Table(name = "gym_order")
 public class Order extends BaseModel{
 
+	public final static Integer PAYMENT = 1;
+	public final static Integer SUCCESS = 2;
+	public final static Integer FAILURE = 3;
+	
 	private Long id;		//id
-	private Long gymId;		//场馆ID
-	private String gymName;	//场馆名称
-	private String status;	//状态 0:正在付款 1:已预定2:付款失败
+	private String gymData;	//预约场地JSON [{gymId:1,time:[1,2,3,4]},{...}]
+	private Integer status;	//状态 0:正在付款 1:已预定2:付款失败
 	private String key; 	//订单加密key 保存了预约人 预约时间 预约场地时间等
 	private String userId;	//用户ID
 	private String userName;//用户名称
 	private String onDay;	//预约日期
-	private String onTime; 	//预约时间
-	private String allMoney;	//预付价格 预约时间*单位时间价格
-	private String orderTime;	//订单申请时间
-	private String endTime;		//订单完成时间
+	private Long allMoney;	//预付价格 预约时间*单位时间价格
+	private Date orderTime;	//订单申请时间
+	private Date endTime;		//订单完成时间
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -39,25 +43,18 @@ public class Order extends BaseModel{
 	public void setId(Long id) {
 		this.id = id;
 	}
-	@Column(name = "gym_id")
-	public Long getGymId() {
-		return gymId;
+	@Column(name = "gym_data")
+	public String getGymData() {
+		return gymData;
 	}
-	public void setGymId(Long gymId) {
-		this.gymId = gymId;
-	}
-	@Column(name = "gym_name")
-	public String getGymName() {
-		return gymName;
-	}
-	public void setGymName(String gymName) {
-		this.gymName = gymName;
+	public void setGymData(String gymData) {
+		this.gymData = gymData;
 	}
 	@Column(name = "status")
-	public String getStatus() {
+	public Integer getStatus() {
 		return status;
 	}
-	public void setStatus(String status) {
+	public void setStatus(Integer status) {
 		this.status = status;
 	}
 	@Column(name = "wechat_key")
@@ -82,31 +79,24 @@ public class Order extends BaseModel{
 		this.userName = userName;
 	}
 	@Column(name = "order_time")
-	public String getOrderTime() {
+	public Date getOrderTime() {
 		return orderTime;
 	}
-	public void setOrderTime(String orderTime) {
+	public void setOrderTime(Date orderTime) {
 		this.orderTime = orderTime;
 	}
-	@Column(name = "on_time")
-	public String getOnTime() {
-		return onTime;
-	}
-	public void setOnTime(String onTime) {
-		this.onTime = onTime;
-	}
 	@Column(name = "all_money")
-	public String getAllMoney() {
+	public Long getAllMoney() {
 		return allMoney;
 	}
-	public void setAllMoney(String allMoney) {
+	public void setAllMoney(Long allMoney) {
 		this.allMoney = allMoney;
 	}
 	@Column(name = "end_time")
-	public String getEndTime() {
+	public Date getEndTime() {
 		return endTime;
 	}
-	public void setEndTime(String endTime) {
+	public void setEndTime(Date endTime) {
 		this.endTime = endTime;
 	}
 	@Column(name = "on_day")

@@ -63,7 +63,7 @@
 			<div id="myTable" class="col-xs-12 jarviswidget jarviswidget-color-blueDark">
 							<header> <span>&nbsp;&nbsp;<i class="fa fa-table"></i>&nbsp;&nbsp;
 								<h2>
-									用户管理
+									场地管理
 								</h2>
 							</span> </header>
 	
@@ -98,7 +98,7 @@
 												<td><%=gym.getName() %></td>
 												<td><%=gym.getType() %></td>
 												<td><%=gym.getOnTime() %></td>
-												<td><%=gym.getMoney() %></td>
+												<td><%=gym.getMoney()+"" %></td>
 												<td>
 												<button class="btn btn-primary btn-sm" onclick="update('<%=gym.getId() %>');">修改</button>
 												<button class="btn btn-primary btn-sm" onclick="isDel('<%=gym.getId() %>');">删除</button>

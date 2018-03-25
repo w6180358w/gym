@@ -23,7 +23,7 @@ public class Gym extends BaseModel{
 	private String type;	//类型
 	private String status;	//状态 0：不可预定 1：可预订
 	private String onTime;	//可预约时间 [0,1,2,3...] 0-23的数组 一个数字代表一个小时  0表示0点-1点 1表示1点-2点以此类推
-	private String money;	//价格（单位时间，一小时的价格）
+	private Long money;	//价格（单位时间，一小时的价格）
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -70,10 +70,10 @@ public class Gym extends BaseModel{
 		this.onTime = onTime;
 	}
 	@Column(name = "money")
-	public String getMoney() {
+	public Long getMoney() {
 		return money;
 	}
-	public void setMoney(String money) {
+	public void setMoney(Long money) {
 		this.money = money;
 	}
 	

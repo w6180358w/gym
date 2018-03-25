@@ -67,7 +67,7 @@
 					org.hibernate.hql.ast.ASTQueryTranslatorFactory
 				</prop>
 				<prop key="hibernate.id.new_generator_mappings">true</prop>
-				<prop key="hibernate.show_sql">false</prop>
+				<prop key="hibernate.show_sql">true</prop>
 				<prop key="hibernate.use_outer_join">true</prop>
 				<prop
                 key="hibernate.connection.provider_class">org.hibernate.connection.C3P0ConnectionProvider

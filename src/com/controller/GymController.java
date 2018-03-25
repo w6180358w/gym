@@ -2,6 +2,7 @@ package com.controller;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -68,6 +69,20 @@ public class GymController {
 		}
 		return null;
 	}
+	
+	@RequestMapping("/getData.do")
+	public String getData(HttpServletRequest request,
+			HttpServletResponse response,String onDay,Long gymId){
+		//获取所有场地的信息
+		Map<String, Object> gymList = this.gymService.getData(onDay,gymId);
+		try {
+			response.getWriter().print(SystemUtil.request(0, gymList, ""));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
 	/**
 	 * 场地保存的方法
 	 * @param Gym

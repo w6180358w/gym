@@ -2,6 +2,7 @@ package com.service.inter;
 
 import java.util.List;
 
+import com.bean.GymOrderBean;
 import com.model.Order;
 
 public interface OrderService {
@@ -15,5 +16,7 @@ public interface OrderService {
 	public void update(Order order);
 	
 	public void delete(Order order);
+	
+	public void approve(List<GymOrderBean> list);
 	
 }

@@ -9,8 +9,11 @@ import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 
+import com.bean.GymOrderBean;
 import com.model.Order;
 import com.service.inter.OrderService;
 import com.util.SystemUtil;
@@ -153,6 +156,35 @@ public class OrderController {
 		
 		try {
 			response.getWriter().print(SystemUtil.request(code, order, null));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+		return null;		
+	}
+	
+	/**
+	 * 场馆预约的方法
+	 * @param Order
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	@RequestMapping(value = "/approve.do", method = RequestMethod.POST, consumes = "application/json")
+	public String save(@RequestBody List<GymOrderBean> list,HttpServletRequest request,
+			HttpServletResponse response){
+		int code = 0;
+		String msg = "保存成功";
+		try {
+			orderService.approve(list);
+		} catch (Exception e) {
+			code = 1;
+			msg = "保存失败";
+			e.printStackTrace();
+		}
+		
+		try {
+			response.getWriter().print(SystemUtil.request(code, null, msg));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
