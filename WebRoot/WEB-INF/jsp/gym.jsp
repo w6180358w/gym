@@ -6,6 +6,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
+<%List<User> userList = (List<User>)request.getAttribute("userList");%>
 <%
 	List<Gym> gymList = (List<Gym>)request.getAttribute("gymList");
 	List<GymType> gymTypeList = (List<GymType>)request.getAttribute("gymTypeList");
@@ -33,30 +34,9 @@
 </head>
 
 <body>
-<div class="container">
-    <div class="row">
-        <div class="log-box">
-            <div id="logo" class="log">
-                <a href="../index.html"><img src="../images/buct.jpg" class="img-responsive" /></a>
-                <!--<a href="###">手机版</a>-->
-                <!--<span >&nbsp;|&nbsp;</span>-->
-                <!--<a href="###">意见反馈</a>-->
-            </div>
-        </div>
-    </div>
-    <div class="row">
-        <div>
-            <ul class="nav nav-tabs">
-                <li><a href="${rootUrl }index.jsp">首页</a></li>
-                <li><a href="${rootUrl }html/stadium.jsp">场馆</a></li>
-                <li><a href="${rootUrl }html/appointment.jsp">场地预约</a></li>
-                <li><a href="${rootUrl }user/home.do">用户管理</a></li>
-                <li><a href="${rootUrl }gymType/home.do">场地类型管理</a></li>
-                <li class="active"><a href="${rootUrl }gym/home.do">场地管理</a></li>
-            </ul>
-        </div>
-    </div>
-</div>
+<jsp:include page="/html/head.jsp" flush="true">     
+     <jsp:param name="nowPage" value="gym"/> 
+</jsp:include>
 <div id="nav-main" style="overflow: auto;width: 100%"></div>
 <br>
 <div class="container">
@@ -393,13 +373,6 @@
 	});
 </script>
 </div>
-<!--页脚版权信息-->
-<div>
-    <footer>
-        <button type="button" class="btn btn-primary " style="width: 100%">
-            <span class="glyphicon">北京化工大学© 版权所有  &nbsp;&nbsp;主办部门：北京化工大学信息中心</span>
-        </button>
-    </footer>
-</div>
+<jsp:include page="/html/footer.jsp" flush="true"></jsp:include> 
 </body>
 </html>

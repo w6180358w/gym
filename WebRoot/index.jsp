@@ -30,48 +30,12 @@
 </head>
 <body>
 
-<div class="container">
-    <div class="row">
-        <div class="log-box">
-            <div id="logo" class="log">
-                <a href="${rootUrl }index.jsp"><img src="${rootUrl }images/buct.jpg" class="img-responsive" /></a>
-            </div>
-        </div>
-    </div>
-    <div class="row">
-        <div>
-            <ul class="nav nav-tabs">
-                <li class="active"><a href="#">首页</a></li>
-                <li><a href="${rootUrl }html/stadium.jsp">场馆</a></li>
-                <li><a href="${rootUrl }html/appointment.jsp">场地预约</a></li>
-                <li><a href="${rootUrl }user/home.do">用户管理</a></li>
-                <li><a href="${rootUrl }gymType/home.do">场地类型管理</a></li>
-                <li><a href="${rootUrl }gym/home.do">场地管理</a></li>
-            </ul>
-        </div>
-    </div>
-</div>
+<jsp:include page="/html/head.jsp" flush="true">     
+     <jsp:param name="nowPage" value="index"/> 
+</jsp:include>
 <div id="nav-main" style="overflow: auto;width: 100%"></div>
 <br>
 <div class="container">
-    <!--<div class="row">-->
-        <!--<div class="log-box">-->
-            <!--<div id="logo" class="log">-->
-                <!--<a href="index.jsp"><img src="images/buct.jpg" class="img-responsive" /></a>-->
-                    <!--&lt;!&ndash;<a href="###">手机版</a>&ndash;&gt;-->
-                    <!--&lt;!&ndash;<span >&nbsp;|&nbsp;</span>&ndash;&gt;-->
-                    <!--&lt;!&ndash;<a href="###">意见反馈</a>&ndash;&gt;-->
-            <!--</div>-->
-        <!--</div>-->
-        <!--<div id="nav-main">-->
-            <!--<ul class="nav nav-tabs">-->
-                <!--<li class="active"><a href="#">首页</a></li>-->
-                <!--<li><a href="#">场馆</a></li>-->
-                <!--<li><a href="#">场地预约</a></li>-->
-                <!--<li><a href="#">地图</a></li>-->
-            <!--</ul>-->
-        <!--</div>-->
-    <!--</div>-->
     <div class="row">
         <div id="myCarousel" class="carousel slide">
             <!-- 轮播（Carousel）指标 -->
@@ -92,13 +56,6 @@
                     <img src="${rootUrl }images/a.jpg" alt="Third slide">
                 </div>
             </div>
-            <!--&lt;!&ndash; 轮播（Carousel）导航 &ndash;&gt;-->
-            <!--<a class="carousel-control left" href="#myCarousel"-->
-               <!--data-slide="prev">&lsaquo;-->
-            <!--</a>-->
-            <!--<a class="carousel-control right" href="#myCarousel"-->
-               <!--data-slide="next">&rsaquo;-->
-            <!--</a>-->
         </div>
     </div>
     <div class="clear"></div>
@@ -365,14 +322,7 @@
 
 </div>
 
-<!--页脚版权信息-->
-<div>
-    <footer>
-        <button type="button" class="btn btn-primary " style="width: 100%">
-            <span class="glyphicon">北京化工大学© 版权所有  &nbsp;&nbsp;主办部门：北京化工大学信息中心</span>
-        </button>
-    </footer>
-</div>
+<jsp:include page="/html/footer.jsp" flush="true"></jsp:include> 
 </body>
 <script>
     $(function() {
