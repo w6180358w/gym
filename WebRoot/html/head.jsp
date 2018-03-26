@@ -33,7 +33,7 @@
                 <li class=<%="appointment".equals(nowPage)?"active":"" %>><a href="${rootUrl }html/appointment.jsp">场地预约</a></li>
                 <li class=<%="user".equals(nowPage)?"active":"" %>><a href="${rootUrl }user/home.do">用户管理</a></li>
                 <li class=<%="gymType".equals(nowPage)?"active":"" %>><a href="${rootUrl }gymType/home.do">场地类型管理</a></li>
-                <li class=<%="tym".equals(nowPage)?"active":"" %>><a href="${rootUrl }gym/home.do">场地管理</a></li>
+                <li class=<%="gym".equals(nowPage)?"active":"" %>><a href="${rootUrl }gym/home.do">场地管理</a></li>
             </ul>
         </div>
     </div>

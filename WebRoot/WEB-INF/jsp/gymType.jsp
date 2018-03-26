@@ -235,7 +235,7 @@
 		$("#gymTypeDialog").dialog({
 			autoOpen : false,
 			modal : true,
-			height:580, 
+			height:300, 
 			width:680, 
 			buttons : [{
 				html : "取消",
