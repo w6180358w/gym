@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.model.Gym;
+import com.model.Order;
 
 public interface GymService {
 
@@ -22,4 +23,5 @@ public interface GymService {
 	public Map<String,Object> getData(String onDay,Long gymId,String gymType);
 	
 	public List<Gym> findByType(String type);
+
 }

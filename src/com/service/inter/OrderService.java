@@ -19,4 +19,5 @@ public interface OrderService {
 	
 	public void approve(List<GymOrderBean> list);
 	
+	public List<Order> findByGymId(Long gymId);
 }

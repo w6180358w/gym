@@ -96,6 +96,8 @@ function initGym(data){
 	
 	var gym = data.gym;
 	var orderMap = data.order;
+	var now = new Date();//系统当前日期（day）
+	var onDay = parseInt(param["onDay"].split("-")[2]);//已选择当前日期
 	
 	//加行
 	for(var i=0;i<time.length;i++){
@@ -107,7 +109,7 @@ function initGym(data){
 				headTr.append('<td style="text-align: center;">'+gym[j]["name"]+'</td>');
 				orderParam.push({gymId:gym[j]["id"],gymName:gym[j]["name"],time:[],money:gym[j]["money"]});
 			}
-			var status = getStatus(time[i],gym[j],orderMap);
+			var status = getStatus(time[i],gym[j],orderMap,now,onDay);
 			
 			tr.append($('<td style="text-align: center;"><span data-time="'+time[i]+'" data-index='+j+' class="label label-'+status["css"]+' gym-base">'+status["name"]+'</span></td>').find("span").on("click",labelClick).parent("td"));
 		}
@@ -115,28 +117,30 @@ function initGym(data){
 	}
 }
 //获取当前对应的可预约状态
-function getStatus(index,gym,orderMap){
-	//场馆是否已经预约的状态
-    var key = gym["id"]+"-"+index;
-    if(orderMap[key]==1){
-    	return gymStatus["pay"];
-    }
-    if(orderMap[key]==2){
-    	return gymStatus["success"];
-    }
-    
+function getStatus(index,gym,orderMap,now,onDay){
+    var nowHour = now.getHours()+1;
 	//场馆可预约状态
 	var arr = gym["onTime"].split(",");
 	for(var i = 0; i < arr.length; i++){
-		//可预约状态判断是否过期
+		//可预约状态判断是否可用
         if(index === parseInt(arr[i])){
-        	var now = new Date();
-        	if(index<(now.getHours()+1)){
+        	//是否过期
+        	if(onDay==now.getDate() && index<(nowHour)){
         		return gymStatus["expire"];
         	}
+        	//场馆是否已经预约的状态
+            var key = gym["id"]+"-"+index;
+            if(orderMap[key]==1){
+            	return gymStatus["pay"];
+            }
+            if(orderMap[key]==2){
+            	return gymStatus["success"];
+            }
+            //可预约
             return gymStatus["on"];
         }
     }
+	//不可预约
     return gymStatus["off"];
     
 }

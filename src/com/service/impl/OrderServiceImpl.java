@@ -1,5 +1,7 @@
 package com.service.impl;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -58,5 +60,13 @@ public class OrderServiceImpl implements OrderService{
 		order.setUserName("");
 		order.setStatus(Order.PAYMENT);
 		this.orderDao.save(order);
+	}
+	
+
+	@Override
+	public List<Order> findByGymId(Long gymId) {
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		String hql = "from Order where onDay >= '"+sdf.format(Calendar.getInstance().getTime())+"' and gym_data like '%\"gymId\":"+gymId+"%' and status != 3";
+		return this.orderDao.findList(hql);
 	}
 }

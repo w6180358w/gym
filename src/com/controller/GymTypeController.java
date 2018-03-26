@@ -11,7 +11,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import com.model.Gym;
 import com.model.GymType;
+import com.service.inter.GymService;
 import com.service.inter.GymTypeService;
 import com.util.SystemUtil;
 /**
@@ -25,6 +27,8 @@ public class GymTypeController {
 	//利用spring获取场地的service
 	@Autowired
 	private GymTypeService gymTypeService;
+	@Autowired
+	private GymService gymService;
 	/**
 	 * 场地管理的页面
 	 * @param gymType
@@ -175,24 +179,18 @@ public class GymTypeController {
 	 * @param request
 	 * @param response
 	 * @return
+	 * @throws Exception 
 	 */
 	@RequestMapping("/del.do")
 	public String del(@ModelAttribute GymType gymType,HttpServletRequest request,
-			HttpServletResponse response){
-		int code = 0;
-		try {
-			gymTypeService.delete(gymType);
-		} catch (Exception e) {
-			code = 1;
-			e.printStackTrace();
+			HttpServletResponse response) throws Exception{
+		List<Gym> gymList = this.gymService.findByType(gymType.getId()+"");
+		if(gymList!=null && !gymList.isEmpty()){
+			response.getWriter().print(SystemUtil.request(1, null, "删除失败，该场馆类型下存在未删除的场馆!"));
+			return null;
 		}
-		
-		try {
-			response.getWriter().print(SystemUtil.request(code, null, null));
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		
+		gymTypeService.delete(gymType);
+		response.getWriter().print(SystemUtil.request(0, null, "删除成功!"));
 		return null;		
 	}
 	

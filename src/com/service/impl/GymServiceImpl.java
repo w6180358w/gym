@@ -94,4 +94,5 @@ public class GymServiceImpl implements GymService{
 	public List<Gym> findByType(String type) {
 		return this.gymDao.findList("from Gym where type = '"+type+"'");
 	}
+
 }

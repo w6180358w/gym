@@ -14,8 +14,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.model.Gym;
 import com.model.GymType;
+import com.model.Order;
 import com.service.inter.GymService;
 import com.service.inter.GymTypeService;
+import com.service.inter.OrderService;
 import com.util.SystemUtil;
 /**
  * 场地管理的控制器
@@ -30,6 +32,8 @@ public class GymController {
 	private GymService gymService;
 	@Autowired
 	private GymTypeService gymTypeService;
+	@Autowired
+	private OrderService orderService;
 	/**
 	 * 场地管理的页面
 	 * @param Gym
@@ -195,24 +199,18 @@ public class GymController {
 	 * @param request
 	 * @param response
 	 * @return
+	 * @throws IOException 
 	 */
 	@RequestMapping("/del.do")
 	public String del(@ModelAttribute Gym gym,HttpServletRequest request,
-			HttpServletResponse response){
-		int code = 0;
-		try {
-			gymService.delete(gym);
-		} catch (Exception e) {
-			code = 1;
-			e.printStackTrace();
+			HttpServletResponse response) throws IOException{
+		List<Order> list = this.orderService.findByGymId(gym.getId());
+		if(list!=null && !list.isEmpty()){
+			response.getWriter().print(SystemUtil.request(1, null, "删除失败，该场馆已被预约!"));
+			return null;
 		}
-		
-		try {
-			response.getWriter().print(SystemUtil.request(code, null, null));
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		
+		gymService.delete(gym);
+		response.getWriter().print(SystemUtil.request(0, null, "删除成功!"));
 		return null;		
 	}
 	
