@@ -1,3 +1,4 @@
+<%@page import="com.bean.GymOrderBean"%>
 <%@ page contentType="text/html;charset=utf-8"%>
 <%@ page language="java" import="java.util.*" pageEncoding="utf-8"%>
 <%@page import="net.sf.json.*"%>
@@ -7,7 +8,7 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <%
-	List<Order> OrderList = (List<Order>)request.getAttribute("OrderList");
+	List<Order> orderList = (List<Order>)request.getAttribute("orderList");
 %>
 <c:url value="/" var="rootUrl" scope="application"></c:url>
 <c:if test="${fn:contains(rootUrl,';jsession')}">
@@ -16,285 +17,188 @@
 </c:if>
 <!DOCTYPE html>
 <html lang="en-us">
-<link rel="stylesheet" type="text/css" media="screen" href="${rootUrl }css/bootstrap.min.css">
-<link rel="stylesheet" type="text/css" media="screen" href="${rootUrl }css/font-awesome.min.css">
-<link rel="stylesheet" type="text/css" media="screen" href="${rootUrl }css/smartadmin-production-plugins.min.css">
-<link rel="stylesheet" type="text/css" media="screen" href="${rootUrl }css/smartadmin-production.min.css">
-<link rel="stylesheet" type="text/css" media="screen" href="${rootUrl }css/smartadmin-skins.min.css">
-<link rel="stylesheet" type="text/css" media="screen" href="${rootUrl }css/add-app-class.css">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="../css/bootstrap.min.css">
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" type="text/css" media="screen" href="${rootUrl }css/smartadmin-production-plugins.min.css">
+    <link rel="stylesheet" type="text/css" media="screen" href="${rootUrl }css/jquery-ui.css">
+    <link rel="stylesheet" type="text/css" media="screen" href="${rootUrl }css/add-app-class.css">
+    <link rel="stylesheet" type="text/css" media="screen" href="${rootUrl }css/select.css">
+    <script src="../js/bootstrap.min.js"></script>
+    <title>北京化工大学场馆地图</title>
+</head>
 
-	<body id="myBody">
-		<!-- MAIN PANEL -->
-		<article class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-			<div id="myTable" class="col-xs-12 jarviswidget jarviswidget-color-blueDark">
-							<header> <span>&nbsp;&nbsp;<i class="fa fa-table"></i>&nbsp;&nbsp;
-								<h2>
-									用户管理
-								</h2>
-							</span> </header>
+<body id="myBody">
+	<jsp:include page="/html/head.jsp" flush="true">     
+     <jsp:param name="nowPage" value="order"/> 
+	</jsp:include>
+	<div id="nav-main" style="overflow: auto;width: 100%"></div>
+<br>
+<div class="container">
+<!-- MAIN PANEL -->
+<article class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+	<div id="myTable" class="col-xs-12 jarviswidget jarviswidget-color-blueDark">
+		<header> <span>&nbsp;&nbsp;<i class="fa fa-table"></i>&nbsp;&nbsp;
+			<h2>
+				预约记录
+			</h2>
+		</span> </header>
 	
-							<!-- widget div-->
-							<div>
+		<!-- widget div-->
+		<div>
 	
-								<!-- widget edit box -->
-								<div class="jarviswidget-editbox">
-									<!-- This area used as dropdown edit box -->
-								</div>
-								<!-- end widget edit box -->
-	
-								<!-- widget content -->
-								<div class="widget-body no-padding table-responsive">
-									<table id="datatable_col_reorder"
-										class="table table-striped table-bordered table-hover table-line"
-										width="100%"  >
-										<thead>
-											<tr>
-												<th>姓名</th>
-												<th>加入时间</th>
-												<th>推荐人</th>
-												<th>是否会员</th>
-												<th>操作</th>
-											</tr>
-										</thead>
-										<tbody>
-										<%for(int i =0;OrderList!=null && i<OrderList.size();i++){
-											Order order = OrderList.get(i);
-										%>
-											<tr>
-												<td><%=order.getGymName() %></td>
-												<td><%=order.getOnDay() %></td>
-												<td><%=order.getUserName() %></td>
-												<td><%=order.getStatus() %></td>
-												<td>
-												<button class="btn btn-primary btn-sm" onclick="update('<%=order.getId() %>');">修改</button>
-												<button class="btn btn-primary btn-sm" onclick="isDel('<%=order.getId() %>');">删除</button>
-													
-												</td>
-											</tr>
-											<%	
-										}
-										%>
-										</tbody>
-									</table>
-	
-								</div>
-							</div>
-						</div>
-				</article>
-		<!-- END MAIN PANEL -->
-		<!-- 弹出窗口 -->
-		<div id="OrderDialog" style="display:none;margin:0;">
-			<form id ="OrderForm" class="form-horizontal" method="post" onSubmit="return check()" >
-				<fieldset>
-				<input type="hidden" name="id" id="id" ></input>
-					<div class="form-group">
-						<label class="col-xs-2 txt-al-mar-pad">姓名</label>
-						<div class="col-xs-10">
-							<input class="form-control" type="text" name="name" id="name">
-						</div>
-					</div>
-					<div class="form-group">
-						<label class="col-xs-2 txt-al-mar-pad">加入时间</label>
-						<div class="col-xs-10">
-							<input class="form-control" type="text" name="addTime" id="addTime">
-						</div>
-					</div>
-					<div class="form-group">
-						<label class="col-xs-2 txt-al-mar-pad">推荐人</label>
-						<div class="col-xs-10">
-							<input class="form-control" type="text" name="rec" id="rec">
-						</div>
-					</div>
-					<div class="form-group">
-						<label class="col-xs-2 txt-al-mar-pad">是否会员</label>
-						<div class="col-xs-10">
-							<select class="form-control" name="vip" id="vip">
-								<option value=1>是</option>
-								<option value=0>否</option>
-							</select>
-						</div>
-					</div>
-				</fieldset>
-			</form>
+			<!-- widget edit box -->
+			<div class="jarviswidget-editbox">
+				<!-- This area used as dropdown edit box -->
 			</div>
-		<div id="power" style="display:none;margin:0;">
-			<div id="power-message">
-				
+			<!-- end widget edit box -->
+	
+			<!-- widget content -->
+			<div class="widget-body no-padding table-responsive">
+				<table id="datatable_col_reorder"
+					class="table table-striped table-bordered table-hover table-line"
+					width="100%"  >
+					<thead>
+						<tr>
+							<th>预约人</th>
+							<th>预约人账号</th>
+							<th>预约场地</th>
+							<th>预约时间</th>
+							<th>预约总金额（元）</th>
+							<th>预约状态</th>
+						</tr>
+					</thead>
+					<tbody>
+					<%for(int i =0;orderList!=null && i<orderList.size();i++){
+						Order order = orderList.get(i);
+						List<GymOrderBean> beanList = JSONArray.toList(JSONArray.fromObject(order.getGymData()), GymOrderBean.class);
+					%>
+						<tr>
+							<td><%=order.getUserName()==null?"":order.getUserName() %></td>
+							<td><%=order.getUcode()==null?"":order.getUcode() %></td>
+							<td>
+								<a href="javascript:void(0);" onclick="info(<%=order.getId()%>)">
+								<%for(GymOrderBean bean : beanList){%>
+									<%="["+bean.getGymName()+"]" %>
+								<%}%>
+								</a>
+							</td>
+							<td><%=order.getOnDay() %></td>
+							<td><%=order.getAllMoney() %></td>
+							<td><%=order.getStatusName() %></td>
+						</tr>
+						<%}%>
+					</tbody>
+				</table>
+	
 			</div>
 		</div>
-		
-		<script src="${rootUrl}js/jquery-3.2.1.min.js"></script>
+	</div>
+	</article>
+</div>
+<div id="alert-gym-dialog" style="display:none;margin:0;">
+	<form id ="alert-gym-form" class="form-horizontal"></form>
+</div>		
+		<script src="${rootUrl}js/jquery-2.1.1.min.js"></script>
 		<script src="${rootUrl}js/jquery.validate.min.js"></script>
 		<script src="${rootUrl}js/jquery-ui-1.10.3.min.js"></script>
 		<script src="${rootUrl}js/jquery.dataTables.min.js"></script>
 		<script src="${rootUrl}js/dataTables.colVis.min.js"></script>
 		<script src="${rootUrl}js/dataTables.tableTools.min.js"></script>
 		<script src="${rootUrl}js/dataTables.bootstrap.min.js"></script>
+		<script src="${rootUrl}js/select.js"></script>
 		<script>
-	var isEdit = false;
-    //将form转为AJAX提交
-	function ajaxSubmit() {
-		var form = document.getElementById("OrderForm");
-		var dataPara = getFormJson(form);
-   		$.ajax({
-       		url: isEdit?"${rootUrl}order/update.do":"${rootUrl}order/save.do",
-       		type: "post",
-       		data: dataPara,
-       		dataType:"json",
-       		success: function(data){
-				if(data.code==0){
-					$("#dialog-window").dialog("close"); 
-					window.location.reload();
-				}else{
-					alert(data.msg);
-				}
-			} 
-   		});
-	}
-
-	function del(id) {
-		$.ajax({
-       		url: "${rootUrl}order/del.do?id="+id,
-       		type: "get",
-       		dataType:"json",
-       		success: function(data){
-				if(data.code==0){
-					$("#dialog-window").dialog("close"); 
-					window.location.reload();
-				}else{
-					alert(data.msg);
-				}
-			} 
-   		});
-	}
-	
-	function update(id){
-		$.ajax({
-       		url: "${rootUrl}order/get.do?id="+id,
-       		type: "get",
-       		dataType:"json",
-       		success: function(data){
-       			console.log(data);
-				if(data.code==0 && data.data!=null){
-					setForm(data.data);	
-					isEdit = true;
-				}else{
-					alert("查询失败");
-				}
-			} 
-   		});
-		isEdit = false;
-		$("#OrderDialog").dialog("open");
-	}
-	function setForm(Order){
-		$("#id").val(Order["id"]);
-		$("#name").val(Order["name"]);
-		$("#addTime").val(Order["addTime"]);
-		$("#rec").val(Order["rec"]);
-		$("#vip").val(Order["vip"]);
-	}
-	//将form中的值转换为键值对。
-	function getFormJson(frm) {
-    	var o = {};
-    	var a = $(frm).serializeArray();
-    	$.each(a, function () {
-        	if (o[this.name] !== undefined) {
-           		if (!o[this.name].push) {
-              		o[this.name] = [o[this.name]];
-           		}
-            	o[this.name].push(this.value || '');
-        	} else {
-            	o[this.name] = this.value || '';
-        	}
-    	});
-    	return o;
-	}
-	function isDel(id){
-		$("#power-message").html("<h5 class='text-center line-70'>确认删除？</h5>")  ;
-		$("#power").dialog("open");
-		$("#power").dialog({width:300,height:200});
-		$("#power").dialog({id:id});
-	}
 
 	$(document).ready(function() {
-		$("#adds").validate();
-		$("#OrderForm").validate();
-		/* BASIC ;*/
-		
 		$('#datatable_col_reorder').dataTable({
 			"sDom" : "<'dt-toolbar'<'col-xs-6 col-sm-6'f><'col-sm-6 col-xs-6 hidden-xs'T>r>"
 				+ "t"
 				+ "<'dt-toolbar-footer'<'col-sm-6 col-xs-6 hidden-xs'i><'col-sm-12 col-xs-6'p>>",
 			"oTableTools" : {
-			"aButtons" : [{
-				"sExtends" : "text",
-				"sButtonText": "新增",
-				"fnClick":function(nButton, oConfig, oFlash){
-					isEdit = false;
-					setForm({});
-					$("#OrderDialog").dialog("open");
-				}
-			}],
+			"aButtons" : [],
 			},
 			"autoWidth" : true
 		}); 
-		$("#OrderDialog").dialog({
+		
+		$("#alert-gym-dialog").dialog({
 			autoOpen : false,
+			title:"确认预约",
 			modal : true,
 			height:350, 
 			width:640, 
-			buttons : [{
-				html : "取消",
-				"class" : "btn btn-default btn-sm",
-				click : function() {
-				$(this).dialog("close");
-				}
-			}, {
-				html : "<i class='fa fa-check'></i>&nbsp; 保存",
-				"class" : "btn btn-primary btn-sm",
-				click : function() {
-					ajaxSubmit();
-				}
-			}]
-						
 		});
-		
-		$("#power").dialog({
-			autoOpen : false,
-			modal : true,
-			height:350, 
-			width:640, 
-			buttons : [{
-				html : "取消",
-				"class" : "btn btn-default btn-sm",
-				click : function() {
-				$(this).dialog("close");
-				}
-			}, {
-				html : "<i class='fa fa-check'></i>&nbsp; 确定",
-				"class" : "btn btn-primary btn-sm",
-				click : function() {
-					var id=$("#power").dialog("option","id");
-					del(id);
-				}
-			}]
-						
-		});
-		
-		
-		$.datepicker.regional["zh-CN"] = { closeText: "关闭", prevText: "&#x3c;上月", nextText: "下月&#x3e;", currentText: "今天", monthNames: ["一月", "二月", "三月", "四月", "五月", "六月", "七月", "八月", "九月", "十月", "十一月", "十二月"], monthNamesShort: ["一", "二", "三", "四", "五", "六", "七", "八", "九", "十", "十一", "十二"], dayNames: ["星期日", "星期一", "星期二", "星期三", "星期四", "星期五", "星期六"], dayNamesShort: ["周日", "周一", "周二", "周三", "周四", "周五", "周六"], dayNamesMin: ["日", "一", "二", "三", "四", "五", "六"], weekHeader: "周", dateFormat: "yy-mm-dd", firstDay: 1, isRTL: !1, showMonthAfterYear: !0, yearSuffix: "年" }
-        $.datepicker.setDefaults($.datepicker.regional["zh-CN"]);
-		$('#addTime').datepicker({
-			dateFormat : 'yy-mm-dd',
-			prevText : '<i class="fa fa-chevron-left"></i>',
-			nextText : '<i class="fa fa-chevron-right"></i>',
-			onSelect : function(selectedDate) {
-				$('#addTime').datepicker('option', '', selectedDate);
-			}
-		});
-						
 	});
+	
+	function info(id){
+		$.ajax({
+			url: "${rootUrl}order/info.do?orderId="+id,
+	   		type: "get",
+	   		dataType:"json",
+	   		success: function(data){
+				if(data.code==0 && data.data!=null){
+					initAlertForm(data.data);
+					$("#alert-gym-dialog").dialog("open");
+				}else{
+					alert("查询失败");
+				}
+			} 
+		})
+	}
+	
+	//初始化预约场地提示框
+	function initAlertForm(param){
+		var form = $("#alert-gym-form");
+		form.empty();
+		var allmoney = 0;
+		for(var i=0;i<param.length;i++){
+			var p = param[i];
+			//组装时间字符串
+			var times = p["time"].split(",");
+			var tStr = "";
+			for(var j=0;j<times.length;j++){
+				var t = times[j];
+				tStr+= (t+":00")+"-"+((t==23?0:(parseInt(t)+1))+":00&nbsp;&nbsp;");
+			}
+			//计算金额
+			var money = parseInt(p["paymoney"]);
+			
+			//总金额
+			allmoney+=money;
+			
+			form.append(
+			'<fieldset>'+
+				'<div class="form-group">'+
+					'<label class="col-xs-2 txt-al-mar-pad">场馆</label>'+
+					'<span class="col-xs-3 pa-t-7">'+p["gymName"]+'</span>'+
+					'<label class="col-xs-2 txt-al-mar-pad">预约日期</label>'+
+					'<span class="col-xs-3 pa-t-7">'+p["day"]+'</span>'+
+				'</div>'+
+				'<div class="form-group">'+
+					'<label class="col-xs-2 txt-al-mar-pad">预约时间</label>'+
+					'<span class="col-xs-10 pa-t-7">'+tStr+'</span>'+
+				'</div>'+
+				'<div class="form-group">'+
+					'<label class="col-xs-2 txt-al-mar-pad">预约金额</label>'+
+					'<span class="col-xs-10 pa-t-7">'+money+'</span>'+
+				'</div>'+
+			'</fieldset><HR>'
+			);
+		}
+		
+		form.append(
+			'<fieldset>'+
+			'<div class="form-group">'+
+				'<label class="col-xs-2 txt-al-mar-pad">总金额</label>'+
+				'<label class="col-xs-10 txt-al-mar-pad">'+allmoney+'</label>'+
+			'</div>'+
+			'</fieldset>'
+		)
+
+	}
 </script>
+<jsp:include page="/html/footer.jsp" flush="true"></jsp:include> 
 	</body>
 
 </html>

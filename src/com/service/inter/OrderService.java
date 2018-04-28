@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.bean.GymOrderBean;
 import com.model.Order;
+import com.model.User;
 
 public interface OrderService {
 
@@ -17,7 +18,11 @@ public interface OrderService {
 	
 	public void delete(Order order);
 	
-	public void approve(List<GymOrderBean> list);
+	public void approve(List<GymOrderBean> list,User user);
 	
 	public List<Order> findByGymId(Long gymId);
+	
+	public List<GymOrderBean> getInfo(Long orderId);
+	
+	public List<Order> findByUcode(String ucode);
 }

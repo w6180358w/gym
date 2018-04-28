@@ -56,3 +56,8 @@ body{
 	text-align: center;
 	cursor:pointer;
 }
+
+.head-login>a{
+	float: right;
+	margin: 10px;
+}

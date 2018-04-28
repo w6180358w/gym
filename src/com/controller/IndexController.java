@@ -5,10 +5,13 @@ import java.io.IOException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import com.model.User;
+import com.service.inter.UserService;
 import com.util.SystemUtil;
 /**
  * 登录登出和首页的控制器
@@ -22,6 +25,8 @@ public class IndexController {
 	public String userName;
 	@Value("#{configProperties['password']}")
 	public String password;
+	@Autowired
+	private UserService userService;
 	/* 点击登录按钮进行的登录操作
 	 * @param user	spring将账号密码等登录信息存入user对象中 （前台登录密码字段必须和user中的一致）
 	 * @param request
@@ -29,21 +34,37 @@ public class IndexController {
 	 * @return
 	 */
 	@RequestMapping("/doLogin.do")
-	public String doLogin(String userName,String password,HttpServletRequest request,
+	public String doLogin(String ucode,String password,HttpServletRequest request,
 			HttpServletResponse response){
+		int code = 0;
+		String msg = "登录成功";
 		try {
-			if(this.userName.equals(userName) && this.password.equals(password)) {
-				request.getSession().setAttribute("user", userName);
-				request.getSession().setAttribute("code", true);
-				return "redirect:/user/home.do"; 
+			User user = null;
+			if(this.userName.equals(ucode) && this.password.equals(password)) {
+				user = new User(ucode,password,ucode,SystemUtil.SUPERADMIN);
 			}else {
-				request.getSession().setAttribute("code", false);
-				request.getSession().setAttribute("msg", "用户名或密码错误!");
+				user = this.userService.login(ucode, password);
+			}
+			if(user==null){
+				code = 1;
+				msg = "登录失败，账号密码错误";
+			}else{
+				request.getSession().setAttribute("user", user);
+				request.getSession().setAttribute("code", true);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
+			code = 1;
+			msg = "系统错误，请联系管理员";
 		}
-		return "redirect:/index.jsp";		
+		//将操作状态返回到前台页面
+		try {
+			response.getWriter().print(SystemUtil.request(code, null, msg));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+		return null;
 	}
 	/**
 	 * 登出页面
@@ -56,6 +77,7 @@ public class IndexController {
 			HttpServletResponse response){
 		//操作状态
 		int code = 0;
+		String msg = "";
 		response.setContentType("text/javascript charset=UTF-8");
 		response.setCharacterEncoding("UTF-8");
 		try {
@@ -64,13 +86,13 @@ public class IndexController {
 			request.getSession().setAttribute("login-time",null);
 		} catch (Exception e) {
 			code = 1;
+			msg="系统错误，请联系管理员!";
 			e.printStackTrace();
 		}
 		//将操作状态返回到前台页面
 		try {
-			response.getWriter().print(SystemUtil.request(code, null, null));
+			response.getWriter().print(SystemUtil.request(code, null, msg));
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return null;		

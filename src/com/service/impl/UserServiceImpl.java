@@ -16,13 +16,11 @@ public class UserServiceImpl implements UserService{
 	UserDao userDao;
 	@Override
 	public List<User> getAll() {
-		// TODO Auto-generated method stub
 		return userDao.findAll();
 	}
 
 	@Override
 	public User findById(Long id) {
-		// TODO Auto-generated method stub
 		return userDao.findById(id);
 	}
 
@@ -42,8 +40,17 @@ public class UserServiceImpl implements UserService{
 	}
 
 	@Override
-	public List<User> nameValid(User user) {
-		return this.userDao.findList("from User where name = '"+user.getName()+"' and id !="+user.getId());
+	public User login(String ucode, String password) {
+		List<User> userList = this.userDao.findList("from User where ucode='"+ucode+"' and password='"+password+"'");
+		if(userList==null || userList.isEmpty()){
+			return null;
+		}
+		return userList.get(0);
+	}
+
+	@Override
+	public List<User> codeValid(User user) {
+		return this.userDao.findList("from User where ucode = '"+user.getUcode()+"' and id !="+user.getId());
 	}
 
 }

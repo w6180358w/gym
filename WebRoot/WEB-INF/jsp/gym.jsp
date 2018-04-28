@@ -10,6 +10,11 @@
 <%
 	List<Gym> gymList = (List<Gym>)request.getAttribute("gymList");
 	List<GymType> gymTypeList = (List<GymType>)request.getAttribute("gymTypeList");
+	Map<String,String> typeMap = new HashMap<String,String>();
+	for(GymType type : gymTypeList){
+		typeMap.put(type.getId().toString(), type.getName());
+	}
+	
 %>
 <c:url value="/" var="rootUrl" scope="application"></c:url>
 <c:if test="${fn:contains(rootUrl,';jsession')}">
@@ -28,7 +33,6 @@
     <link rel="stylesheet" type="text/css" media="screen" href="${rootUrl }css/jquery-ui.css">
     <link rel="stylesheet" type="text/css" media="screen" href="${rootUrl }css/add-app-class.css">
     <link rel="stylesheet" type="text/css" media="screen" href="${rootUrl }css/select.css">
-    <script src="../js/jquery-3.2.1.min.js"></script>
     <script src="../js/bootstrap.min.js"></script>
     <title>北京化工大学场馆地图</title>
 </head>
@@ -78,7 +82,7 @@
 										%>
 											<tr>
 												<td><%=gym.getName() %></td>
-												<td><%=gym.getType() %></td>
+												<td><%=typeMap.get(gym.getType()) %></td>
 												<td><%=gym.getOnTime() %></td>
 												<td><%=gym.getMoney()+"" %></td>
 												<td>

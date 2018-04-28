@@ -1,6 +1,7 @@
 package com.controller;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.bean.GymOrderBean;
 import com.model.Order;
+import com.model.User;
 import com.service.inter.OrderService;
 import com.util.SystemUtil;
 /**
@@ -38,8 +40,18 @@ public class OrderController {
 	@RequestMapping("/home.do")
 	public String home(HttpServletRequest request,
 			HttpServletResponse response){
-		//获取所有订单的信息
-		List<Order> orderList = this.orderService.getAll();
+		User user = (User) request.getSession().getAttribute("user");
+		List<Order> orderList = null;
+		//根据用户查询预约记录
+		if(user==null){
+			orderList = new ArrayList<Order>();
+		}else if(SystemUtil.ADMIN.equals(user.getType()) 
+				|| SystemUtil.SUPERADMIN.equals(user.getType()) ){
+			//获取所有订单的信息
+			orderList = this.orderService.getAll();
+		}else{
+			orderList = this.orderService.findByUcode(user.getUcode());
+		}
 		//将所有订单信息存入request中  在jsp中展现
 		request.setAttribute("orderList", orderList);
 		//返回到指定页面
@@ -48,8 +60,18 @@ public class OrderController {
 	@RequestMapping("/all.do")
 	public String all(HttpServletRequest request,
 			HttpServletResponse response){
-		//获取所有订单的信息
-		List<Order> orderList = this.orderService.getAll();
+		User user = (User) request.getSession().getAttribute("user");
+		List<Order> orderList = null;
+		//根据用户查询预约记录
+		if(user==null){
+			orderList = new ArrayList<Order>();
+		}else if(SystemUtil.ADMIN.equals(user.getType()) 
+				|| SystemUtil.SUPERADMIN.equals(user.getType()) ){
+			//获取所有订单的信息
+			orderList = this.orderService.getAll();
+		}else{
+			orderList = this.orderService.findByUcode(user.getUcode());
+		}
 		//将所有订单信息存入request中  在jsp中展现
 		request.setAttribute("orderList", orderList);
 		try {
@@ -174,17 +196,53 @@ public class OrderController {
 	public String save(@RequestBody List<GymOrderBean> list,HttpServletRequest request,
 			HttpServletResponse response){
 		int code = 0;
-		String msg = "保存成功";
+		String msg = "预约成功";
 		try {
-			orderService.approve(list);
+			User user = (User) request.getSession().getAttribute("user");
+			if(user==null){
+				code = 1;
+				msg = "请先登录";
+			}else{
+				orderService.approve(list,user);
+			}
 		} catch (Exception e) {
 			code = 1;
-			msg = "保存失败";
+			msg = "预约失败";
 			e.printStackTrace();
 		}
 		
 		try {
 			response.getWriter().print(SystemUtil.request(code, null, msg));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+		return null;		
+	}
+	
+	/**
+	 * 获取场馆预约信息
+	 * @param Order
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	@RequestMapping(value = "/info.do", method = RequestMethod.GET)
+	public String save(HttpServletRequest request,
+			HttpServletResponse response,Long orderId){
+		int code = 0;
+		String msg = "查询成功";
+		List<GymOrderBean> list = new ArrayList<GymOrderBean>();
+		try {
+			list = this.orderService.getInfo(orderId);
+		} catch (Exception e) {
+			code = 1;
+			msg = "查询失败";
+			e.printStackTrace();
+		}
+		
+		try {
+			response.getWriter().print(SystemUtil.request(code, list, msg));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

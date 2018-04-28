@@ -1,6 +1,7 @@
 package com.util;
 
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 
 import net.sf.json.JSONArray;
@@ -9,7 +10,18 @@ import net.sf.json.JsonConfig;
 
 public class SystemUtil {
 
-	//public static final String ADMIN = "admin";
+	public static final String USER = "user";
+	public static final String ADMIN = "admin";
+	public static final String SUPERADMIN = "superadmin";
+	
+	public static final HashSet<String> ADMIN_URL = new HashSet<String>(){{
+			add("/gym/gym/home.do");add("/gym/gym/save.do");add("/gym/gym/update.do");add("/gym/gym/del.do");add("/gym/gym/get.do");
+	}};
+	public static final HashSet<String> SUPERADMIN_URL = new HashSet<String>(){{
+		add("/gym/user/home.do");add("/gym/user/all.do");add("/gym/user/save.do");add("/gym/user/update.do");add("/gym/user/del.do");add("/gym/user/get.do");
+		add("/gym/gymType/home.do");add("/gym/gymType/save.do");add("/gym/gymType/update.do");add("/gym/gymType/del.do");add("/gym/gymType/get.do");
+	}};
+	
 	
 	public static JSONObject request(int code,List<?> data,String msg){
 		JSONObject result = new JSONObject();

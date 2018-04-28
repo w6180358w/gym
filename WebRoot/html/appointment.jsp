@@ -241,7 +241,6 @@ $(document).ready(function() {
    		dataType:"json",
    		contentType: "application/json",
    		success: function(data){
-   			console.log(data);
 			if(data.code==0 && data.data!=null){
 				initParamGymType(data.data);
 			}else{
@@ -252,7 +251,6 @@ $(document).ready(function() {
 	
 	$("#sendOrder").on("click",function(){
 		var param = toParam(orderParam);
-		console.log(param);
 		if(param==null || param==""){
 			alert("请选择预约场地!");
 			return;
@@ -278,8 +276,6 @@ $(document).ready(function() {
 			"class" : "btn btn-primary btn-sm",
 			click : function() {
 				var param = toParam(orderParam);
-				console.log(param);
-				
 				$.ajax({
 			   		url: "${rootUrl}order/approve.do",
 			   		type: "post",
@@ -287,11 +283,10 @@ $(document).ready(function() {
 			   		dataType:"json",
 			   		contentType: "application/json",
 			   		success: function(data){
-			   			console.log(data);
 						if(data.code==0 && data.data!=null){
 							window.location.reload();
 						}else{
-							alert("查询失败");
+							alert(data.msg);
 						}
 					} 
 				});
@@ -307,7 +302,6 @@ function initAlertForm(param){
 	form.empty();
 	var allmoney = 0;
 	for(var i=0;i<param.length;i++){
-		console.log(i)
 		var p = param[i];
 		//组装时间字符串
 		var times = p["time"].split(",");
@@ -315,10 +309,10 @@ function initAlertForm(param){
 		for(var j=0;j<times.length;j++){
 			var t = times[j];
 			tStr+= (t+":00")+"-"+((t==23?0:(parseInt(t)+1))+":00&nbsp;&nbsp;");
-			
 		}
 		//计算金额
-		var money = times.length*parseInt(p["money"]);
+		var money = parseInt(p["paymoney"]);
+		
 		//总金额
 		allmoney+=money;
 		
@@ -350,7 +344,7 @@ function initAlertForm(param){
 		'</div>'+
 		'</fieldset>'
 	)
-	
+
 }
 function search(initSearch){
 	//获取场馆预约列表
@@ -364,7 +358,6 @@ function search(initSearch){
 				//场馆预约列表
 				initGym(data.data);	
 				if(initSearch){
-					console.log("init")
 					//初始化场馆搜索列表
 					initParamGym(data.data);
 				}
@@ -381,7 +374,7 @@ function toParam(p){
 	for(i in p){   
 		var bean = p[i];
 		if(bean["time"]!=null && bean["time"].length>0){
-			result.push({gymId:bean["gymId"],gymName:bean["gymName"],time:bean["time"].join(),day:param["onDay"],money:bean["money"]});
+			result.push({gymId:bean["gymId"],gymName:bean["gymName"],paymoney:bean["time"].length*parseInt(bean["money"]),money:bean["money"],time:bean["time"].join(),day:param["onDay"]});
 		}
 	}
 	return result;

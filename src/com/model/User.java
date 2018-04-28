@@ -19,10 +19,19 @@ public class User extends BaseModel{
 
 	private Long id;		//id
 	private String name;	//姓名
-	private String addTime;	//加入时间
-	private String rec;//推荐人
-	private Integer vip;	//是否为vip 0:否 1：是
+	private String ucode;	//账号
+	private String password;//密码
+	private	String type;
 	
+	public User(String ucode,String password,String name,String type){
+		this.ucode = ucode;
+		this.password = password;
+		this.name = name;
+		this.type = type;
+	}
+	public User(){
+		super();
+	}
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id")
@@ -39,26 +48,26 @@ public class User extends BaseModel{
 	public void setName(String name) {
 		this.name = name;
 	}
-	@Column(name = "add_time")
-	public String getAddTime() {
-		return addTime==null?"":addTime;
+	@Column(name = "ucode")
+	public String getUcode() {
+		return ucode;
 	}
-	public void setAddTime(String addTime) {
-		this.addTime = addTime;
+	public void setUcode(String ucode) {
+		this.ucode = ucode;
 	}
-	@Column(name = "rec")
-	public String getRec() {
-		return rec==null?"":rec;
+	@Column(name = "password")
+	public String getPassword() {
+		return password;
 	}
-	public void setRec(String rec) {
-		this.rec = rec;
+	public void setPassword(String password) {
+		this.password = password;
 	}
-	@Column(name = "vip")
-	public Integer getVip() {
-		return vip==null?0:vip;
+	@Column(name = "type")
+	public String getType() {
+		return type;
 	}
-	public void setVip(Integer vip) {
-		this.vip = vip;
+	public void setType(String type) {
+		this.type = type;
 	}
 	
 }

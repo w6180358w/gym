@@ -18,8 +18,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="${rootUrl }css/bootstrap.min.css">
     <link rel="stylesheet" href="${rootUrl }css/style.css">
-    <script src="js/jquery-3.2.1.min.js"></script>
-    <script src="js/bootstrap.min.js"></script>
     <!--引用百度地图API-->
     <style type="text/css">
         html,body{margin:0;padding:0;}
@@ -29,10 +27,10 @@
     <script type="text/javascript" src="http://api.map.baidu.com/api?key=&v=1.1&services=true"></script>
 </head>
 <body>
-
 <jsp:include page="/html/head.jsp" flush="true">     
      <jsp:param name="nowPage" value="index"/> 
 </jsp:include>
+<script src="js/bootstrap.min.js"></script>
 <div id="nav-main" style="overflow: auto;width: 100%"></div>
 <br>
 <div class="container">

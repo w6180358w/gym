@@ -8,6 +8,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import com.model.base.BaseModel;
 /**
@@ -27,7 +28,7 @@ public class Order extends BaseModel{
 	private String gymData;	//预约场地JSON [{gymId:1,time:[1,2,3,4]},{...}]
 	private Integer status;	//状态 1:正在付款 2:已预定3:付款失败
 	private String key; 	//订单加密key 保存了预约人 预约时间 预约场地时间等
-	private String userId;	//用户ID
+	private String ucode;	//用户唯一标识
 	private String userName;//用户名称
 	private String onDay;	//预约日期
 	private Long allMoney;	//预付价格 预约时间*单位时间价格
@@ -54,6 +55,19 @@ public class Order extends BaseModel{
 	public Integer getStatus() {
 		return status;
 	}
+	@Transient 
+	public String getStatusName(){
+		if(Order.PAYMENT.equals(status)){
+			return "付款中";
+		}
+		if(Order.SUCCESS.equals(status)){
+			return "预约成功";
+		}
+		if(Order.FAILURE.equals(status)){
+			return "预约失败";
+		}
+		return "未知";
+	}
 	public void setStatus(Integer status) {
 		this.status = status;
 	}
@@ -64,12 +78,12 @@ public class Order extends BaseModel{
 	public void setKey(String key) {
 		this.key = key;
 	}
-	@Column(name = "user_id")
-	public String getUserId() {
-		return userId;
+	@Column(name = "user_code")
+	public String getUcode() {
+		return ucode;
 	}
-	public void setUserId(String userId) {
-		this.userId = userId;
+	public void setUcode(String ucode) {
+		this.ucode = ucode;
 	}
 	@Column(name = "user_name")
 	public String getUserName() {

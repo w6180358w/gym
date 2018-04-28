@@ -16,6 +16,8 @@ public interface UserService {
 	
 	public void delete(User user);
 	
-	public List<User> nameValid(User user);
+	public User login(String ucode,String password);
+	
+	public List<User> codeValid(User user);
 	
 }

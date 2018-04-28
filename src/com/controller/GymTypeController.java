@@ -130,50 +130,6 @@ public class GymTypeController {
 		return null;		
 	}
 	/**
-	 * 场地修改自己的方法
-	 * @param gymType
-	 * @param request
-	 * @param response
-	 * @return
-	 */
-	@RequestMapping("/gymTypeUpdategymType.do")
-	public String gymTypeUpdategymType(@ModelAttribute GymType gymType,HttpServletRequest request,
-			HttpServletResponse response){
-		int code = 0;
-		String msg = "修改成功";
-		try {
-			//场地名称判重
-			//根据当前场地查询
-			List<GymType> valid = this.gymTypeService.nameValid(gymType);
-			if(valid.size()>0){
-				//如果能查出数据   操作状态设置为1
-				code=1;
-				//提示信息
-				msg = "场地名重复";
-			}else{
-				//如果查不出来则更新当前场地
-				gymTypeService.update(gymType);
-				//将当前登录场地信息清空   强制退出
-				request.getSession().setAttribute("gymType", null);
-				request.getSession().setAttribute("login-time", null);
-			}
-		} catch (Exception e) {
-			//如果出错操作状态变为1 失败
-			code = 1;
-			//提示信息
-			msg = "修改失败";
-			e.printStackTrace();
-		}
-		
-		try {
-			response.getWriter().print(SystemUtil.request(code, null, msg));
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		
-		return null;		
-	}
-	/**
 	 * 删除场地的方法
 	 * @param gymType
 	 * @param request

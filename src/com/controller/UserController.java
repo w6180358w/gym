@@ -52,7 +52,6 @@ public class UserController {
 		try {
 			response.getWriter().print(SystemUtil.request(0, userList, ""));
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return null;
@@ -70,7 +69,13 @@ public class UserController {
 		int code = 0;
 		String msg = "保存成功";
 		try {
-			userService.save(user);
+			List<User> userList = this.userService.codeValid(user);
+			if(userList!=null && !userList.isEmpty()){
+				code = 1;
+				msg = "账号重复";
+			}else{
+				userService.save(user);
+			}
 		} catch (Exception e) {
 			code = 1;
 			msg = "保存失败";
@@ -80,7 +85,6 @@ public class UserController {
 		try {
 			response.getWriter().print(SystemUtil.request(code, null, msg));
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
@@ -99,54 +103,15 @@ public class UserController {
 		int code = 0;
 		String msg = "修改成功";
 		try {
-			userService.update(user);
-		} catch (Exception e) {
-			code = 1;
-			msg = "修改失败";
-			e.printStackTrace();
-		}
-		
-		try {
-			response.getWriter().print(SystemUtil.request(code, null, msg));
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-		return null;		
-	}
-	/**
-	 * 用户修改自己的方法
-	 * @param user
-	 * @param request
-	 * @param response
-	 * @return
-	 */
-	@RequestMapping("/userUpdateUser.do")
-	public String userUpdateUser(@ModelAttribute User user,HttpServletRequest request,
-			HttpServletResponse response){
-		int code = 0;
-		String msg = "修改成功";
-		try {
-			//用户名称判重
-			//根据当前用户查询
-			List<User> valid = this.userService.nameValid(user);
-			if(valid.size()>0){
-				//如果能查出数据   操作状态设置为1
-				code=1;
-				//提示信息
-				msg = "用户名重复";
+			List<User> userList = this.userService.codeValid(user);
+			if(userList!=null && !userList.isEmpty()){
+				code = 1;
+				msg = "账号重复";
 			}else{
-				//如果查不出来则更新当前用户
 				userService.update(user);
-				//将当前登录用户信息清空   强制退出
-				request.getSession().setAttribute("user", null);
-				request.getSession().setAttribute("login-time", null);
 			}
 		} catch (Exception e) {
-			//如果出错操作状态变为1 失败
 			code = 1;
-			//提示信息
 			msg = "修改失败";
 			e.printStackTrace();
 		}
@@ -154,7 +119,6 @@ public class UserController {
 		try {
 			response.getWriter().print(SystemUtil.request(code, null, msg));
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
