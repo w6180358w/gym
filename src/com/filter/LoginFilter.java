@@ -1,6 +1,5 @@
 package com.filter;
 import java.io.IOException;
-import java.util.Arrays;
 
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
