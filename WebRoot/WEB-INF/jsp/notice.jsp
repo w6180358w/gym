@@ -1,3 +1,5 @@
+<%@page import="java.text.SimpleDateFormat"%>
+<%@page import="com.util.SystemUtil"%>
 <%@ page contentType="text/html;charset=utf-8"%>
 <%@ page language="java" import="java.util.*" pageEncoding="utf-8"%>
 <%@page import="net.sf.json.*"%>
@@ -6,8 +8,8 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
-<%
-	List<GymType> gymTypeList = (List<GymType>)request.getAttribute("gymTypeList");
+<%List<Notice> noticeList = (List<Notice>)request.getAttribute("noticeList");
+SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 %>
 <c:url value="/" var="rootUrl" scope="application"></c:url>
 <c:if test="${fn:contains(rootUrl,';jsession')}">
@@ -23,17 +25,17 @@
 
 <body>
 <jsp:include page="/html/head.jsp" flush="true">     
-     <jsp:param name="nowPage" value="gymType"/> 
-</jsp:include>
+     <jsp:param name="nowPage" value="notice"/> 
+</jsp:include> 
+
 <div id="nav-main" style="overflow: auto;width: 100%"></div>
 <br>
 <div class="container">
-    <!-- MAIN PANEL -->
-		<article class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+    <article class="col-xs-12 col-sm-12 col-md-12 col-lg-12" style="height:100%">
 			<div id="myTable" class="col-xs-12 jarviswidget jarviswidget-color-blueDark">
 							<header> <span>&nbsp;&nbsp;<i class="fa fa-table"></i>&nbsp;&nbsp;
 								<h2>
-									场地类型管理
+									公告管理
 								</h2>
 							</span> </header>
 	
@@ -53,22 +55,25 @@
 										width="100%"  >
 										<thead>
 											<tr>
-												<th>场馆类型名称</th>
-												<th>描述</th>
+												<th>公告</th>
+												<th>创建人</th>
+												<th>创建时间</th>
+												<th>状态</th>
 												<th>操作</th>
 											</tr>
 										</thead>
 										<tbody>
-										<%for(int i =0;gymTypeList!=null && i<gymTypeList.size();i++){
-											GymType gymType = gymTypeList.get(i);
+										<%for(int i =0;noticeList!=null && i<noticeList.size();i++){
+											Notice notice = noticeList.get(i);
 										%>
 											<tr>
-												<td><%=gymType.getName() %></td>
-												<td><%=gymType.getDesc() %></td>
+												<td><%=notice.getMsg() %></td>
+												<td><%=notice.getUserName() %></td>
+												<td><%=sdf.format(notice.getCreateTime()) %></td>
+												<td><%=notice.getStatus().equals(1)?"已发布":"未发布" %></td>
 												<td>
-												<button class="btn btn-primary btn-sm" onclick="update('<%=gymType.getId() %>');">修改</button>
-												<button class="btn btn-primary btn-sm" onclick="isDel('<%=gymType.getId() %>');">删除</button>
-													
+													<button class="btn btn-primary btn-sm" onclick="update('<%=notice.getId() %>');">修改</button>
+													<button class="btn btn-primary btn-sm" onclick="isDel('<%=notice.getId() %>');">删除</button>
 												</td>
 											</tr>
 											<%	
@@ -83,20 +88,26 @@
 				</article>
 		<!-- END MAIN PANEL -->
 		<!-- 弹出窗口 -->
-		<div id="gymTypeDialog" style="display:none;margin:0;">
-			<form id ="gymTypeForm" class="form-horizontal" method="post" onSubmit="return check()" >
+		<div id="noticeDialog" style="display:none;margin:0;">
+			<form id ="noticeForm" class="form-horizontal">
 				<fieldset>
 				<input type="hidden" name="id" id="id" ></input>
+ 				<input type="hidden" name="createTime" id="createTime" ></input>
+				<input type="hidden" name="userName" id="userName" ></input>
+				<input type="hidden" name="userId" id="userId" ></input>
 					<div class="form-group">
-						<label class="col-xs-2 txt-al-mar-pad">体育馆名称</label>
+						<label class="col-xs-2 txt-al-mar-pad">公告</label>
 						<div class="col-xs-10">
-							<input class="form-control" name="name" id="name" required>
+							<input class="form-control" type="text" name="msg" id="msg" required>
 						</div>
 					</div>
 					<div class="form-group">
-						<label class="col-xs-2 txt-al-mar-pad">描述</label>
+						<label class="col-xs-2 txt-al-mar-pad">状态</label>
 						<div class="col-xs-10">
-							<textarea class="form-control" name="desc" id="desc" required></textarea>
+							<select class="form-control" name="status" id="status" required>
+								<option value=1>已发布</option>
+								<option value=0>未发布</option>
+							</select>
 						</div>
 					</div>
 				</fieldset>
@@ -110,16 +121,12 @@
 		
 		<script>
 	var isEdit = false;
-	var box;
     //将form转为AJAX提交
 	function ajaxSubmit() {
-		var form = document.getElementById("gymTypeForm");
+		var form = document.getElementById("noticeForm");
 		var dataPara = getFormJson(form);
-		if(!$(form).valid()){
-			return;
-		}
    		$.ajax({
-       		url: isEdit?"${rootUrl}gymType/update.do":"${rootUrl}gymType/save.do",
+       		url: isEdit?"${rootUrl}notice/update.do":"${rootUrl}notice/save.do",
        		type: "post",
        		data: dataPara,
        		dataType:"json",
@@ -136,7 +143,7 @@
 
 	function del(id) {
 		$.ajax({
-       		url: "${rootUrl}gymType/del.do?id="+id,
+       		url: "${rootUrl}notice/del.do?id="+id,
        		type: "get",
        		dataType:"json",
        		success: function(data){
@@ -152,10 +159,11 @@
 	
 	function update(id){
 		$.ajax({
-       		url: "${rootUrl}gymType/get.do?id="+id,
+       		url: "${rootUrl}notice/get.do?id="+id,
        		type: "get",
        		dataType:"json",
        		success: function(data){
+       			console.log(data);
 				if(data.code==0 && data.data!=null){
 					setForm(data.data);	
 					isEdit = true;
@@ -165,12 +173,15 @@
 			} 
    		});
 		isEdit = false;
-		$("#gymTypeDialog").dialog("open");
+		$("#noticeDialog").dialog("open");
 	}
-	function setForm(gymType){
-		$("#id").val(gymType["id"]);
-		$("#name").val(gymType["name"]);
-		$("#desc").val(gymType["desc"]);
+	function setForm(notice){
+		$("#id").val(notice["id"]);
+		$("#msg").val(notice["msg"]);
+		$("#createTime").val(notice["createTime"]);
+		$("#userName").val(notice["userName"]);
+		$("#userId").val(notice["userId"]); 
+		$("#status").val(notice["status"]);
 	}
 	//将form中的值转换为键值对。
 	function getFormJson(frm) {
@@ -189,14 +200,16 @@
     	return o;
 	}
 	function isDel(id){
-		$("#power-message").html("<h5 class='text-center line-70'>确认删除？</h5>")  ;
+		console.log(id)
+		$("#power-message").html("<h5 class='text-center line-70'>确认删除？</h5>");
 		$("#power").dialog("open");
 		$("#power").dialog({width:300,height:200});
 		$("#power").dialog({id:id});
 	}
 
 	$(document).ready(function() {
-		$("#gymTypeForm").validate();
+		$("#adds").validate();
+		$("#noticeForm").validate();
 		
 		$('#datatable_col_reorder').dataTable({
 			"sDom" : "<'dt-toolbar'<'col-xs-6 col-sm-6'f><'col-sm-6 col-xs-6 hidden-xs'T>r>"
@@ -209,17 +222,17 @@
 				"fnClick":function(nButton, oConfig, oFlash){
 					isEdit = false;
 					setForm({});
-					$("#gymTypeDialog").dialog("open");
+					$("#noticeDialog").dialog("open");
 				}
 			}],
 			},
 			"autoWidth" : true
 		}); 
-		$("#gymTypeDialog").dialog({
+		$("#noticeDialog").dialog({
 			autoOpen : false,
 			modal : true,
-			height:300, 
-			width:680, 
+			height:350, 
+			width:640, 
 			buttons : [{
 				html : "取消",
 				"class" : "btn btn-default btn-sm",
@@ -258,16 +271,6 @@
 						
 		});
 		
-		$.datepicker.regional["zh-CN"] = { closeText: "关闭", prevText: "&#x3c;上月", nextText: "下月&#x3e;", currentText: "今天", monthNames: ["一月", "二月", "三月", "四月", "五月", "六月", "七月", "八月", "九月", "十月", "十一月", "十二月"], monthNamesShort: ["一", "二", "三", "四", "五", "六", "七", "八", "九", "十", "十一", "十二"], dayNames: ["星期日", "星期一", "星期二", "星期三", "星期四", "星期五", "星期六"], dayNamesShort: ["周日", "周一", "周二", "周三", "周四", "周五", "周六"], dayNamesMin: ["日", "一", "二", "三", "四", "五", "六"], weekHeader: "周", dateFormat: "yy-mm-dd", firstDay: 1, isRTL: !1, showMonthAfterYear: !0, yearSuffix: "年" }
-        $.datepicker.setDefaults($.datepicker.regional["zh-CN"]);
-		$('#addTime').datepicker({
-			dateFormat : 'yy-mm-dd',
-			prevText : '<i class="fa fa-chevron-left"></i>',
-			nextText : '<i class="fa fa-chevron-right"></i>',
-			onSelect : function(selectedDate) {
-				$('#addTime').datepicker('option', '', selectedDate);
-			}
-		});
 	});
 </script>
 </div>

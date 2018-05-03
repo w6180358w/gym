@@ -47,7 +47,7 @@ public class LoginFilter implements Filter{
 			String auth = user==null?null:user.getType();
 			if(uri.indexOf("/home.do")>-1){
 				if(!isAuth(auth,uri)){
-					servletResponse.sendRedirect(servletRequest.getContextPath()+"/index.jsp");
+					servletResponse.sendRedirect(servletRequest.getContextPath()+"/html/appointment.jsp");
 				}else{
 					chain.doFilter(servletRequest, servletResponse);
 				}

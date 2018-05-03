@@ -15,16 +15,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
     <title>北京化工大学场馆预约</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="../css/bootstrap.min.css">
-    <link rel="stylesheet" href="../css/style.css">
-        <link rel="stylesheet" type="text/css" media="screen" href="${rootUrl }css/jquery-ui.css">
-    <link rel="stylesheet" type="text/css" media="screen" href="${rootUrl }css/add-app-class.css">
-    <script src="../js/jquery-2.1.1.min.js"></script>
-    <script src="../js/bootstrap.min.js"></script>
-    <script src="${rootUrl}js/jquery-ui-1.10.3.min.js"></script>
 </head>
 <body>
 <jsp:include page="/html/head.jsp" flush="true">     
@@ -32,6 +23,14 @@
 </jsp:include>
  	
     <div id="nav-main" style="overflow: auto;width: 100%"></div>
+    <br>
+    <div class="row">
+        <div class="col-md-12">
+            <marquee id="affiche" align="left" behavior="scroll" bgcolor="#ECF5FF" direction="left" loop="-1" scrollamount="10" scrolldelay="10" onMouseOut="this.start()" onMouseOver="this.stop()">
+                <font size="6" style="height: auto" id="notice"></font>
+            </marquee>
+        </div>
+    </div>
     <br>
     <div class="container">
         <div class="row">
@@ -233,6 +232,7 @@ var gymStatus = {
 $(document).ready(function() {
 	//初始化搜索条件  刚进页面只传日期
 	initParamDay();
+	initNotice();
 	search(true);
 	
 	$.ajax({
@@ -392,6 +392,26 @@ function getDay(day){
 	return result;
 }
 
+function initNotice(){
+	//获取场馆预约列表
+	$.ajax({
+   		url: "${rootUrl}notice/load.do",
+   		type: "get",
+   		dataType:"json",
+   		success: function(data){
+			if(data.code==0 && data.data!=null){
+				var el = $("#notice");
+				var msg = "";
+				data.data.forEach(function(notice){
+					msg += (notice["msg"]+"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;");
+				})
+				el.html(msg);
+			}else{
+				alert("查询失败");
+			}
+		} 
+	});
+}
 //以下为数组删除元素方法
 Array.prototype.indexOf = function(val) {
     for (var i = 0; i < this.length; i++) {

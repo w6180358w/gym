@@ -25,15 +25,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="../css/bootstrap.min.css">
-    <link rel="stylesheet" href="../css/style.css">
-    <link rel="stylesheet" type="text/css" media="screen" href="${rootUrl }css/smartadmin-production-plugins.min.css">
-    <link rel="stylesheet" type="text/css" media="screen" href="${rootUrl }css/jquery-ui.css">
-    <link rel="stylesheet" type="text/css" media="screen" href="${rootUrl }css/add-app-class.css">
     <link rel="stylesheet" type="text/css" media="screen" href="${rootUrl }css/select.css">
-    <script src="../js/bootstrap.min.js"></script>
     <title>北京化工大学场馆地图</title>
 </head>
 
@@ -166,15 +158,8 @@
 			</div>
 		</div>
 		
-		<script src="${rootUrl}js/jquery-2.1.1.min.js"></script>
-		<script src="${rootUrl}js/jquery.validate.min.js"></script>
-		<script src="${rootUrl}js/jquery-ui-1.10.3.min.js"></script>
-		<script src="${rootUrl}js/jquery.dataTables.min.js"></script>
-		<script src="${rootUrl}js/dataTables.colVis.min.js"></script>
-		<script src="${rootUrl}js/dataTables.tableTools.min.js"></script>
-		<script src="${rootUrl}js/dataTables.bootstrap.min.js"></script>
-		<script src="${rootUrl}js/select.js"></script>
-		<script>
+<script src="${rootUrl}js/select.js"></script>
+<script>
 	var isEdit = false;
 	var box;
     //将form转为AJAX提交

@@ -270,7 +270,6 @@
 				"class" : "btn btn-primary btn-sm",
 				click : function() {
 					var id=$("#power").dialog("option","id");
-					console.log(id);
 					del(id);
 				}
 			}]

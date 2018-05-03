@@ -1,5 +1,5 @@
 <%@page import="com.util.SystemUtil"%>
-<%@page import="com.model.User"%>
+<%@page import="com.model.*"%>
 <%@ page contentType="text/html;charset=utf-8"%>
 <%@ page language="java" import="java.util.*" pageEncoding="utf-8"%>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
@@ -9,6 +9,7 @@
 <%
 	String nowPage = request.getParameter("nowPage");
 	User user = (User)session.getAttribute("user");
+	List<Message> messageList = (List<Message>)session.getAttribute("messageList");
 	String auth = user==null?null:user.getType();
 %>
 <c:url value="/" var="rootUrl" scope="application"></c:url>
@@ -20,7 +21,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="${rootUrl }/css/bootstrap.min.css">
     <link rel="stylesheet" href="${rootUrl }/css/style.css">
-        <link rel="stylesheet" type="text/css" media="screen" href="${rootUrl }css/smartadmin-production-plugins.min.css">
+    <link rel="stylesheet" type="text/css" media="screen" href="${rootUrl }css/smartadmin-production-plugins.min.css">
     <link rel="stylesheet" type="text/css" media="screen" href="${rootUrl }css/jquery-ui.css">
     <link rel="stylesheet" type="text/css" media="screen" href="${rootUrl }css/add-app-class.css">
 <div class="container">
@@ -33,6 +34,9 @@
         <%if(user!=null){%>	
         <div class="col-xs-3 head-login">
         	<a href="javascript:void(0)" onclick="logout()">退出</a>
+        	<%if(auth!=null){%>	
+        	<a href="javascript:void(0)" onclick="readMsg()">未读消息(<%=messageList==null?0:messageList.size() %>)</a>
+        	<%} %>
         	<a href="javascript:void(0)"><%=user.getName() %></a>
 		</div>	
         <%}else{%>
@@ -45,12 +49,12 @@
     <div class="row">
         <div>
             <ul class="nav nav-tabs">
-                <li class=<%="index".equals(nowPage)?"active":"" %>><a href="${rootUrl }index.jsp">首页</a></li>
-                <li class=<%="stadium".equals(nowPage)?"active":"" %>><a href="${rootUrl }html/stadium.jsp">场馆</a></li>
                 <li class=<%="appointment".equals(nowPage)?"active":"" %>><a href="${rootUrl }html/appointment.jsp">场地预约</a></li>
                 <li class=<%="order".equals(nowPage)?"active":"" %>><a href="${rootUrl }order/home.do">预约记录</a></li>
             <%if(SystemUtil.ADMIN.equals(auth) || SystemUtil.SUPERADMIN.equals(auth)) {%>
                 <li class=<%="gym".equals(nowPage)?"active":"" %>><a href="${rootUrl }gym/home.do">场地管理</a></li>
+                <li class=<%="message".equals(nowPage)?"active":"" %>><a href="${rootUrl }message/home.do">消息管理</a></li>
+                <li class=<%="notice".equals(nowPage)?"active":"" %>><a href="${rootUrl }notice/home.do">公告管理</a></li>
             <%} %>
             <%if(SystemUtil.SUPERADMIN.equals(auth)) {%>
             	<li class=<%="user".equals(nowPage)?"active":"" %>><a href="${rootUrl }user/home.do">用户管理</a></li>
@@ -60,7 +64,23 @@
         </div>
     </div>
 </div>
-
+<%if(auth!=null){%>
+<div id="messageDialog" style="display:none;margin:0;">
+	<form id ="logForm" class="form-horizontal">
+	<br>
+		<fieldset>
+		<%for(Message message : messageList){ %>
+			<div class="form-group">
+				<div class="col-xs-12">
+					<%=message.getMsg() %>
+				</div>
+			</div>
+			<HR>
+		<%} %>
+		</fieldset>
+	</form>
+</div>
+<%}%>
 		<!-- 弹出窗口 -->
 <div id="logDialog" style="display:none;margin:0;">
 	<form id ="logForm" class="form-horizontal">
@@ -97,11 +117,19 @@ $(document).ready(function() {
 			}else{
 				alert("系统错误，请联系管理员！");
 			}
-			window.location = "${rootUrl}index.jsp";
+			window.location = "${rootUrl}html/appointment.jsp";
 		}
 	})
 	$("#logForm").validate();
-	
+	<%if(auth!=null){%>
+	$("#messageDialog").dialog({
+		autoOpen : false,
+		title:"管理员消息",
+		modal : true,
+		height:300, 
+		width:700
+	});
+	<%}%>
 	$("#logDialog").dialog({
 		autoOpen : false,
 		title:"管理员登录",
@@ -123,6 +151,22 @@ $(document).ready(function() {
 		}]
 	});
 });
+<%if(auth!=null){%>
+function readMsg(){
+	$.ajax({
+   		url: "${rootUrl}message/read.do",
+   		type: "post",
+   		dataType:"json",
+   		success: function(data){
+			if(data.code==0){
+				$("#messageDialog").dialog("open");
+			}else{
+				alert(data.msg);
+			}
+		} 
+	});
+}
+<%}%>
 function adminLogin() {
 	$("#logDialog").dialog("open");
 }
@@ -133,7 +177,7 @@ function logout(){
    		dataType:"json",
    		success: function(data){
 			if(data.code==0){
-				window.location = "${rootUrl}index.jsp";
+				window.location = "${rootUrl}html/appointment.jsp";
 			}else{
 				alert(data.msg);
 			}

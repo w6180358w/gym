@@ -11,6 +11,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.model.User;
+import com.service.inter.MessageService;
 import com.service.inter.UserService;
 import com.util.SystemUtil;
 /**
@@ -27,6 +28,8 @@ public class IndexController {
 	public String password;
 	@Autowired
 	private UserService userService;
+	@Autowired
+	private MessageService messageService;
 	/* 点击登录按钮进行的登录操作
 	 * @param user	spring将账号密码等登录信息存入user对象中 （前台登录密码字段必须和user中的一致）
 	 * @param request
@@ -49,8 +52,8 @@ public class IndexController {
 				code = 1;
 				msg = "登录失败，账号密码错误";
 			}else{
+				request.getSession().setAttribute("messageList", messageService.loadMessage());
 				request.getSession().setAttribute("user", user);
-				request.getSession().setAttribute("code", true);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -82,6 +85,7 @@ public class IndexController {
 		response.setCharacterEncoding("UTF-8");
 		try {
 			//直接将session中的用户和登录时间设置为空
+			request.getSession().setAttribute("messageList", null);
 			request.getSession().setAttribute("user",null);
 			request.getSession().setAttribute("login-time",null);
 		} catch (Exception e) {
