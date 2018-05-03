@@ -1,6 +1,7 @@
 package com.controller;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -59,7 +60,7 @@ public class MessageController {
 		try {
 			List<Message> messageList = (List<Message>)request.getSession().getAttribute("messageList");
 			messageService.read(messageList);
-			request.getSession().setAttribute("messageList", null);
+			request.getSession().setAttribute("messageList", new ArrayList<Message>());
 		} catch (Exception e) {
 			code = 1;
 			msg = "修改失败";
