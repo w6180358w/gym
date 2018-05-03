@@ -35,8 +35,6 @@ public class GymController {
 	private GymTypeService gymTypeService;
 	@Autowired
 	private OrderService orderService;
-	@Autowired
-	private NoticeService noticeService;
 	/**
 	 * 场地管理的页面
 	 * @param Gym
