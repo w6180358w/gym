@@ -28,7 +28,7 @@
     <div class="row">
         <div class="log-box col-xs-9">
             <div id="logo" class="log">
-                <a href="${rootUrl }index.jsp"><img src="${rootUrl }/images/buct.jpg" class="img-responsive" /></a>
+                <a href="${rootUrl }html/appointment.jsp"><img src="${rootUrl }/images/buct.jpg" class="img-responsive" /></a>
             </div>
         </div>
         <%if(user!=null){%>	
