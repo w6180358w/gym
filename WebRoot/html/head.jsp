@@ -68,11 +68,11 @@
             <%} %>
             <%if(SystemUtil.ADMIN.equals(auth) || SystemUtil.SUPERADMIN.equals(auth)) {%>
                 <li class=<%="gym".equals(nowPage)?"active":"" %>><a href="${rootUrl }gym/home.do">场地管理</a></li>
-                <li class=<%="message".equals(nowPage)?"active":"" %>><a href="${rootUrl }message/home.do">消息管理</a></li>
+               <%--  <li class=<%="message".equals(nowPage)?"active":"" %>><a href="${rootUrl }message/home.do">消息管理</a></li> --%>
                 <li class=<%="notice".equals(nowPage)?"active":"" %>><a href="${rootUrl }notice/home.do">公告管理</a></li>
             <%} %>
             <%if(SystemUtil.SUPERADMIN.equals(auth)) {%>
-            	<li class=<%="user".equals(nowPage)?"active":"" %>><a href="${rootUrl }user/home.do">用户管理</a></li>
+            	<li class=<%="user".equals(nowPage)?"active":"" %>><a href="${rootUrl }user/home.do">管理员设置</a></li>
                 <li class=<%="gymType".equals(nowPage)?"active":"" %>><a href="${rootUrl }gymType/home.do">场地类型管理</a></li>
             <%} %>
             </ul>

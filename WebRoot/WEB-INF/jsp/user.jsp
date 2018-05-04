@@ -34,7 +34,7 @@
 			<div id="myTable" class="col-xs-12 jarviswidget jarviswidget-color-blueDark">
 							<header> <span>&nbsp;&nbsp;<i class="fa fa-table"></i>&nbsp;&nbsp;
 								<h2>
-									用户管理
+									管理员设置
 								</h2>
 							</span> </header>
 	
