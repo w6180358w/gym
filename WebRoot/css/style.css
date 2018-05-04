@@ -57,7 +57,11 @@ body{
 	cursor:pointer;
 }
 
-.head-login>a{
+.head-login{
+	float: right;
+	margin: 30px;
+}
+.head-logined>a{
 	float: right;
 	margin: 10px;
 }

@@ -59,6 +59,7 @@
 							<th>预约时间</th>
 							<th>预约总金额（元）</th>
 							<th>预约状态</th>
+							<th>操作</th>
 						</tr>
 					</thead>
 					<tbody>
@@ -79,6 +80,12 @@
 							<td><%=order.getOnDay() %></td>
 							<td><%=order.getAllMoney() %></td>
 							<td><%=order.getStatusName() %></td>
+							<td>
+								<button class="btn btn-primary btn-sm" onclick="info(<%=order.getId()%>)">详情</button>
+								<%if(Order.FAILURE.equals(order.getStatus())){ %>
+								<button class="btn btn-primary btn-sm" onclick="isDel('<%=order.getId() %>');">删除</button>
+								<%} %>
+							</td>
 						</tr>
 						<%}%>
 					</tbody>
@@ -89,11 +96,36 @@
 	</div>
 	</article>
 </div>
+<div id="power" style="display:none;margin:0;">
+	<div id="power-message">
+				
+	</div>
+</div>
 <div id="alert-gym-dialog" style="display:none;margin:0;">
 	<form id ="alert-gym-form" class="form-horizontal"></form>
 </div>		
 <script>
-
+function isDel(id){
+	$("#power-message").html("<h5 class='text-center line-70'>确认删除？</h5>")  ;
+	$("#power").dialog("open");
+	$("#power").dialog({width:300,height:200});
+	$("#power").dialog({id:id});
+}
+function del(id) {
+	$.ajax({
+   		url: "${rootUrl}order/del.do?id="+id,
+   		type: "get",
+   		dataType:"json",
+   		success: function(data){
+			if(data.code==0){
+				$("#dialog-window").dialog("close"); 
+				window.location.reload();
+			}else{
+				alert(data.msg);
+			}
+		} 
+		});
+}
 	$(document).ready(function() {
 		$('#datatable_col_reorder').dataTable({
 			"sDom" : "<'dt-toolbar'<'col-xs-6 col-sm-6'f><'col-sm-6 col-xs-6 hidden-xs'T>r>"
@@ -111,6 +143,27 @@
 			modal : true,
 			height:350, 
 			width:640, 
+		});
+		$("#power").dialog({
+			autoOpen : false,
+			modal : true,
+			height:350, 
+			width:640, 
+			buttons : [{
+				html : "取消",
+				"class" : "btn btn-default btn-sm",
+				click : function() {
+				$(this).dialog("close");
+				}
+			}, {
+				html : "<i class='fa fa-check'></i>&nbsp; 确定",
+				"class" : "btn btn-primary btn-sm",
+				click : function() {
+					var id=$("#power").dialog("option","id");
+					del(id);
+				}
+			}]
+						
 		});
 	});
 	

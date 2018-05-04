@@ -148,15 +148,17 @@ public class OrderController {
 	public String del(@ModelAttribute Order order,HttpServletRequest request,
 			HttpServletResponse response){
 		int code = 0;
+		String msg =  "删除成功!";
 		try {
 			orderService.delete(order);
 		} catch (Exception e) {
 			code = 1;
+			msg = "删除失败";
 			e.printStackTrace();
 		}
 		
 		try {
-			response.getWriter().print(SystemUtil.request(code, null, null));
+			response.getWriter().print(SystemUtil.request(code, null, msg));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

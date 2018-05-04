@@ -86,7 +86,13 @@ public class GymTypeController {
 		int code = 0;
 		String msg = "保存成功";
 		try {
-			gymTypeService.save(gymType);
+			List<GymType> userList = this.gymTypeService.nameValid(gymType);
+			if(userList!=null && !userList.isEmpty()){
+				code = 1;
+				msg = "名称重复";
+			}else{
+				gymTypeService.save(gymType);
+			}
 		} catch (Exception e) {
 			code = 1;
 			msg = "保存失败";
@@ -114,7 +120,13 @@ public class GymTypeController {
 		int code = 0;
 		String msg = "修改成功";
 		try {
-			gymTypeService.update(gymType);
+			List<GymType> userList = this.gymTypeService.nameValid(gymType);
+			if(userList!=null && !userList.isEmpty()){
+				code = 1;
+				msg = "名称重复";
+			}else{
+				gymTypeService.update(gymType);
+			}
 		} catch (Exception e) {
 			code = 1;
 			msg = "修改失败";

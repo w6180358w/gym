@@ -13,7 +13,9 @@ import com.dao.inter.GymDao;
 import com.dao.inter.OrderDao;
 import com.model.Gym;
 import com.model.Order;
+import com.model.Pause;
 import com.service.inter.GymService;
+import com.service.inter.PauseService;
 
 import net.sf.json.JSONArray;
 
@@ -24,6 +26,8 @@ public class GymServiceImpl implements GymService{
 	GymDao gymDao;
 	@Autowired
 	OrderDao orderDao;
+	@Autowired
+	PauseService pauseService;
 	
 	@Override
 	public List<Gym> getAll() {
@@ -72,6 +76,13 @@ public class GymServiceImpl implements GymService{
 			}
 		}
 		result.put("order", map);
+		
+		List<Pause> pauseList = pauseService.findData(onDay);
+		Map<Long,String> pauseMap = new HashMap<Long,String>();
+		for (Pause pause : pauseList) {
+			pauseMap.put(pause.getGymId(), pause.getPauseTime());
+		}
+		result.put("pause", pauseMap);
 		return result;
 	}
 

@@ -18,6 +18,7 @@ public class SystemUtil {
 			add("/gym/gym/home.do");add("/gym/gym/save.do");add("/gym/gym/update.do");add("/gym/gym/del.do");add("/gym/gym/get.do");
 			add("/gym/notice/home.do");add("/gym/notice/save.do");add("/gym/notice/update.do");add("/gym/notice/del.do");add("/gym/notice/get.do");
 			add("/gym/message/home.do");add("/gym/message/read.do");add("/gym/message/del.do");
+			add("/gym/pause/save.do");add("/gym/pause/update.do");add("/gym/pause/getData.do");
 	}};
 	public static final HashSet<String> SUPERADMIN_URL = new HashSet<String>(){{
 		add("/gym/user/home.do");add("/gym/user/all.do");add("/gym/user/save.do");add("/gym/user/update.do");add("/gym/user/del.do");add("/gym/user/get.do");

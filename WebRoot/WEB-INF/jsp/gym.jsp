@@ -1,3 +1,4 @@
+<%@page import="java.text.SimpleDateFormat"%>
 <%@ page contentType="text/html;charset=utf-8"%>
 <%@ page language="java" import="java.util.*" pageEncoding="utf-8"%>
 <%@page import="net.sf.json.*"%>
@@ -10,6 +11,12 @@
 <%
 	List<Gym> gymList = (List<Gym>)request.getAttribute("gymList");
 	List<GymType> gymTypeList = (List<GymType>)request.getAttribute("gymTypeList");
+	SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+	Calendar cal = Calendar.getInstance();
+	String today = sdf.format(cal.getTime());	//今天
+	cal.add(Calendar.DAY_OF_YEAR, 1);
+	String tomorrow = sdf.format(cal.getTime());//明天
+	
 	Map<String,String> typeMap = new HashMap<String,String>();
 	for(GymType type : gymTypeList){
 		typeMap.put(type.getId().toString(), type.getName());
@@ -78,6 +85,7 @@
 												<td><%=gym.getOnTime() %></td>
 												<td><%=gym.getMoney()+"" %></td>
 												<td>
+												<button class="btn btn-primary btn-sm" onclick="pause('<%=gym.getId() %>');">暂停预约</button>
 												<button class="btn btn-primary btn-sm" onclick="update('<%=gym.getId() %>');">修改</button>
 												<button class="btn btn-primary btn-sm" onclick="isDel('<%=gym.getId() %>');">删除</button>
 													
@@ -143,10 +151,40 @@
 							<input type="number" class="form-control" name="money" id="money" required min=0.01>
 						</div>
 					</div>
-					<div class="form-group">
+					<!-- <div class="form-group">
 						<label class="col-xs-2 txt-al-mar-pad">描述</label>
 						<div class="col-xs-10">
 							<textarea class="form-control" name="desc" id="desc" required></textarea>
+						</div>
+					</div> -->
+				</fieldset>
+			</form>
+			</div>
+			<!-- 弹出窗口 -->
+		<div id="PauseDialog" style="display:none;margin:0;">
+			<form id ="PauseForm" class="form-horizontal" >
+				<fieldset>
+					<input type="hidden" name="p_id" id="p_id" ></input>
+					<input type="hidden" name="p_gymId" id="p_gymId" ></input>
+					<div class="form-group">
+						<label class="col-xs-2 txt-al-mar-pad">日期</label>
+						<div class="col-xs-10">
+							<select class="form-control" name="p_day" id="p_day" required>
+								<option value="<%=today%>"><%=today%></option>
+								<option value="<%=tomorrow%>"><%=tomorrow%></option>
+							</select>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-xs-2 txt-al-mar-pad">暂停时间</label>
+						<div class="col-xs-10">
+							<div class="toggle-all-container">
+               					<div class="pause_select select-box-container">
+							        <div class="toggle-all-container">
+							            <a href="javascript:void(0);" class="btn btn-md btn-default toggle-all-btn">全选/取消全选</a>
+							        </div>
+						        </div>
+						    </div>
 						</div>
 					</div>
 				</fieldset>
@@ -161,7 +199,7 @@
 <script src="${rootUrl}js/select.js"></script>
 <script>
 	var isEdit = false;
-	var box;
+	var box,pauseBox;
     //将form转为AJAX提交
 	function ajaxSubmit() {
 		var form = document.getElementById("GymForm");
@@ -189,6 +227,26 @@
    		});
 	}
 
+	function pauseSubmit() {
+   		$.ajax({
+       		url: $("#PauseDialog").dialog("option","isEdit")?"${rootUrl}pause/update.do":"${rootUrl}pause/save.do",
+       		type: "post",
+       		data: {id:$("#p_id").val(),
+       			gymId:$("#p_gymId").val(),
+       			day:$("#p_day").val(),
+       			pauseTime:pauseBox.getValues().join()},
+       		dataType:"json",
+       		success: function(data){
+				if(data.code==0){
+					$("#dialog-window").dialog("close"); 
+					window.location.reload();
+				}else{
+					alert(data.msg);
+				}
+			} 
+   		});
+	}
+	
 	function del(id) {
 		$.ajax({
        		url: "${rootUrl}gym/del.do?id="+id,
@@ -232,6 +290,11 @@
 		box.reset();
 		box.setValues(Gym["onTime"]==null?[]:Gym["onTime"].split(","));
 	}
+	function setPauseForm(pause){
+		$("#p_id").val(pause==null?null:pause["id"]);
+		pauseBox.reset();
+		pauseBox.setValues((pause==null||pause["pauseTime"]==null)?[]:pause["pauseTime"].split(","));
+	}
 	//将form中的值转换为键值对。
 	function getFormJson(frm) {
     	var o = {};
@@ -256,6 +319,12 @@
 		$("#power").dialog({id:id});
 	}
 
+	function pause(id){
+		$("#p_gymId").val(id);
+		$("#PauseDialog").dialog({id:id});
+		$("#PauseDialog").dialog("open");
+		$("#p_day").trigger("change");
+	}
 	$(document).ready(function() {
 		$("#GymForm").validate();
 		
@@ -297,6 +366,27 @@
 						
 		});
 		
+		$("#PauseDialog").dialog({
+			autoOpen : false,
+			modal : true,
+			height:580, 
+			width:680, 
+			buttons : [{
+				html : "取消",
+				"class" : "btn btn-default btn-sm",
+				click : function() {
+				$(this).dialog("close");
+				}
+			}, {
+				html : "<i class='fa fa-check'></i>&nbsp; 保存",
+				"class" : "btn btn-primary btn-sm",
+				click : function() {
+					pauseSubmit();
+				}
+			}]
+						
+		});
+		
 		$("#power").dialog({
 			autoOpen : false,
 			modal : true,
@@ -331,11 +421,6 @@
 		});
 		box = initSelectBox('.gym_select',
 				[
-					{value:1,text:1},
-					{value:2,text:2},
-					{value:3,text:3},
-					{value:4,text:4},
-					{value:5,text:5},
 					{value:6,text:6},
 					{value:7,text:7},
 					{value:8,text:8},
@@ -351,14 +436,52 @@
 					{value:18,text:18},
 					{value:19,text:19},
 					{value:20,text:20},
-					{value:21,text:21},
-					{value:22,text:22},
-					{value:23,text:23},
-					{value:24,text:24},
+					{value:21,text:21}
 				],
 				function(a){
-			console.log(a);
 		});	
+		
+		pauseBox = initSelectBox('.pause_select',
+				[
+					{value:6,text:6},
+					{value:7,text:7},
+					{value:8,text:8},
+					{value:9,text:9},
+					{value:10,text:10},
+					{value:11,text:11},
+					{value:12,text:12},
+					{value:13,text:13},
+					{value:14,text:14},
+					{value:15,text:15},
+					{value:16,text:16},
+					{value:17,text:17},
+					{value:18,text:18},
+					{value:19,text:19},
+					{value:20,text:20},
+					{value:21,text:21}
+				],
+				function(a){
+		});	
+		
+		$("#p_day").on("change",function(){
+			$.ajax({
+	       		url: "${rootUrl}pause/getData.do?gymId="+$("#p_gymId").val()+"&day="+$("#p_day").val(),
+	       		type: "get",
+	       		dataType:"json",
+	       		success: function(data){
+					if(data.code==0){
+						 if(data.data==null){
+							 $("#PauseDialog").dialog({isEdit:false});
+						 }else{
+							$("#PauseDialog").dialog({isEdit:true});
+						 }
+						 setPauseForm(data.data);
+					}else{
+						alert("查询失败");
+					} 
+				} 
+	   		});
+		});
 	});
 </script>
 </div>

@@ -25,17 +25,17 @@
 
 <!--invoice.min.css-->
 .invoice-body table td,.invoice-body table th,.invoice-client-info,.invoice-footer,.invoice-header {
-	font-family:"鐎甸偊鍠涢拏瀣⒖閸涘鎷�,Verdana, Geneva, sans-serif;
+	font-family:"閻庣敻鍋婇崰娑㈡嫃鐎ｎ喗鈷栭柛娑橆嚟閹凤拷,Verdana, Geneva, sans-serif;
 }
 *{
-	font-family:"鐎甸偊鍠涢拏瀣⒖閸涘鎷�,Verdana, Geneva, sans-serif;
+	font-family:"閻庣敻鍋婇崰娑㈡嫃鐎ｎ喗鈷栭柛娑橆嚟閹凤拷,Verdana, Geneva, sans-serif;
 }
 <!--smartadmin-production.min.css-->
 .menu-on-top aside#left-panel {
     box-shadow: 0px 1px 2px 0px rgba(0, 0, 0, 0.25); 
 }
 .ui-widget,.ui-widget button,.ui-widget input,.ui-widget select,.ui-widget textarea,.wijmo-wijmenu .wijmo-wijmenu-item input,h1,h2,h3,h4,.onoffswitch-inner:after,.onoffswitch-inner:before,.morris-hover.morris-default-style,.tooltip-inner{
-	font-family:"鐎甸偊鍠涢拏瀣⒖閸涘鎷�,Verdana, Geneva, sans-serif;
+	font-family:"閻庣敻鍋婇崰娑㈡嫃鐎ｎ喗鈷栭柛娑橆嚟閹凤拷,Verdana, Geneva, sans-serif;
 }
 .progress {
     background: #f2f2f2;
@@ -56,7 +56,7 @@
 .bg-color-red {
     background-color: #fa2c1f !important;
 }
-<!--濮掓稒顭堥璇参熼敍鍕暭-->
+<!--婵帗绋掗…鍫ヮ敇鐠囧弬鐔兼晬閸曨偒鏆�-->
 .bg-color-darken {
     background-color: #3a3632 !important;
 }
@@ -198,7 +198,7 @@ nav ul ul li a:active {
 
 <!--smartadmin-production-plugins.min.css-->
 .md-editor>textarea,span.css-emoticon,.fc-button .fc-icon,.jarviswidget-ctrls .button-icon,.jvectormap-label,.select2-search input,.select2-container-multi .select2-choices .select2-search-field input,.jqstooltip .jqsfield,.note-editor .note-codable,.note-dialog .note-help-dialog .note-shortcut td:first-child{
-	font-family:"微软雅黑",Verdana, Geneva, sans-serif;
+	font-family:"寰蒋闆呴粦",Verdana, Geneva, sans-serif;
 }
 table.dataTable thead > tr > th {
     padding-right: 15px;
@@ -228,7 +228,7 @@ table.has-columns-hidden > tbody > tr > span.responsiveExpander {
 
 
 <!--smartadmin-skins.min.css-->
-<!--婵☆垽绱曟晶锟�->
+<!--濠碘槅鍨界槐鏇熸櫠閿燂拷->
 .smart-style-1 .page-footer, .smart-style-1 .superbox-show, .smart-style-1 aside {
     background: none repeat scroll 0% 0% #3A3633;
 }
@@ -315,16 +315,16 @@ table.has-columns-hidden > tbody > tr > span.responsiveExpander {
 
 <!--smartadmin-rtl.min.css-->
 .smart-rtl .alert-dismissable .close,.smart-rtl .close{
-	font-family:"微软雅黑",Verdana, Geneva, sans-serif;
+	font-family:"寰蒋闆呴粦",Verdana, Geneva, sans-serif;
 }
 
 <!--smartadmin-skins.min.css-->
 .smart-style-3 body,body.smart-style-3,body.smart-style-4{
-	font-family:"微软雅黑",Verdana, Geneva, sans-serif;
+	font-family:"寰蒋闆呴粦",Verdana, Geneva, sans-serif;
 }
 <!--jqmini/demo.css-->
 h1,.description{
-    font-family:"微软雅黑",Verdana, Geneva, sans-serif;
+    font-family:"寰蒋闆呴粦",Verdana, Geneva, sans-serif;
 }
 <!--miniui.css-->
 .mini-modal {
@@ -426,7 +426,7 @@ textarea.mini-buttonedit-input {
     background-color: #f2f2f2;
 }
 
-<!--闁煎浜滈悾鐐▕婢跺澹夌�顕嗘嫹->
+<!--闂佺厧顨ユ禍婊堟偩閻愵剛鈻曞璺侯儑婢瑰锟介鍡樺->
 .line-pr{
 	position:relative;
 }

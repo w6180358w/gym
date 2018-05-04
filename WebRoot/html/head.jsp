@@ -24,6 +24,7 @@
     <link rel="stylesheet" type="text/css" media="screen" href="${rootUrl }css/smartadmin-production-plugins.min.css">
     <link rel="stylesheet" type="text/css" media="screen" href="${rootUrl }css/jquery-ui.css">
     <link rel="stylesheet" type="text/css" media="screen" href="${rootUrl }css/add-app-class.css">
+    <link rel="stylesheet" type="text/css" media="screen" href="${rootUrl }css/style.css">
 <div class="container">
     <div class="row">
         <div class="log-box col-xs-9">
@@ -32,17 +33,29 @@
             </div>
         </div>
         <%if(user!=null){%>	
-        <div class="col-xs-3 head-login">
+        <div class="col-xs-3 head-logined">
         	<a href="javascript:void(0)" onclick="logout()">退出</a>
-        	<%if(auth!=null){%>	
+        	<%-- <%if(auth!=null){%>	
         	<a href="javascript:void(0)" onclick="readMsg()">未读消息(<%=messageList==null?0:messageList.size() %>)</a>
-        	<%} %>
+        	<%} %> --%>
         	<a href="javascript:void(0)"><%=user.getName() %></a>
 		</div>	
         <%}else{%>
-        <div class="col-xs-3 head-login">
-        	<a href="javascript:void(0)" onclick="adminLogin()">管理员登录</a>
-			<a href="javascript:void(0)">登录</a>
+        <div class="col-xs-3">
+        	<div class="dropdown  head-login">
+			    <div class="btn-group">
+			        <a type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+			            	登录
+			            <span class="caret"></span>
+			        </a>
+			        <ul class="dropdown-menu" role="menu">
+			        	<li><a href="http://odc-ext.neusoft.edu.cn/odc">普通登录</a></li>
+			            <li><a href="javascript:void(0)" onclick="adminLogin()">管理员登录</a></li>
+			        </ul>
+			    </div>
+			</div>
+        	<!-- <a href="javascript:void(0)" onclick="adminLogin()">管理员登录</a>
+			<a href="javascript:void(0)">登录</a> -->
 		</div>
         <%} %>
     </div>
@@ -50,7 +63,9 @@
         <div>
             <ul class="nav nav-tabs">
                 <li class=<%="appointment".equals(nowPage)?"active":"" %>><a href="${rootUrl }html/appointment.jsp">场地预约</a></li>
-                <li class=<%="order".equals(nowPage)?"active":"" %>><a href="${rootUrl }order/home.do">预约记录</a></li>
+            <%if(user!=null){%>	   
+            	<li class=<%="order".equals(nowPage)?"active":"" %>><a href="${rootUrl }order/home.do">预约记录</a></li>
+            <%} %>
             <%if(SystemUtil.ADMIN.equals(auth) || SystemUtil.SUPERADMIN.equals(auth)) {%>
                 <li class=<%="gym".equals(nowPage)?"active":"" %>><a href="${rootUrl }gym/home.do">场地管理</a></li>
                 <li class=<%="message".equals(nowPage)?"active":"" %>><a href="${rootUrl }message/home.do">消息管理</a></li>
@@ -66,7 +81,7 @@
 </div>
 <%if(auth!=null){%>
 <div id="messageDialog" style="display:none;margin:0;">
-	<form id ="logForm" class="form-horizontal">
+	<form class="form-horizontal">
 	<br>
 		<fieldset>
 		<%for(Message message : messageList){ %>
@@ -94,13 +109,14 @@
 			<div class="form-group">
 				<label class="col-xs-2 txt-al-mar-pad">密码</label>
 				<div class="col-xs-10">
-					<input class="form-control" name="password" id="login_password" required>
+					<input type="password" class="form-control" name="password" id="login_password" required>
 				</div>
 			</div>
 		</fieldset>
 	</form>
 </div>
 <script src="${rootUrl}js/jquery-2.1.1.min.js"></script>
+<script src="${rootUrl}js/bootstrap.min.js"></script>
 <script src="${rootUrl}js/jquery-ui-1.10.3.min.js"></script>
 <script src="${rootUrl}js/jquery.dataTables.min.js"></script>
 <script src="${rootUrl}js/jquery.validate.min.js"></script>

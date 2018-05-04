@@ -67,11 +67,12 @@
                             </table>
                         </div>
                     </div>
-                    <div class="row">
+             		<!--   多选 -->
+                    <!-- <div class="row">  
                         <button type="button" class="btn btn-primary " style="width: 100%" id="sendOrder">
                             <span class="glyphicon">预约场地</span>
                         </button>
-                    </div>
+                    </div> -->
                 </div>
             </div>
         </div>
@@ -93,8 +94,9 @@ function initGym(data){
 	body.empty();
 	orderParam = [];
 	
-	var gym = data.gym;
-	var orderMap = data.order;
+	var gym = data.gym;			//场馆
+	var orderMap = data.order;	//预约信息
+	var pause = data.pause;		//暂停预约信息
 	var now = new Date();//系统当前日期（day）
 	var onDay = parseInt(param["onDay"].split("-")[2]);//已选择当前日期
 	
@@ -108,7 +110,7 @@ function initGym(data){
 				headTr.append('<td style="text-align: center;">'+gym[j]["name"]+'</td>');
 				orderParam.push({gymId:gym[j]["id"],gymName:gym[j]["name"],time:[],money:gym[j]["money"]});
 			}
-			var status = getStatus(time[i],gym[j],orderMap,now,onDay);
+			var status = getStatus(time[i],gym[j],orderMap,now,onDay,pause);
 			
 			tr.append($('<td style="text-align: center;"><span data-time="'+time[i]+'" data-index='+j+' class="label label-'+status["css"]+' gym-base">'+status["name"]+'</span></td>').find("span").on("click",labelClick).parent("td"));
 		}
@@ -116,17 +118,28 @@ function initGym(data){
 	}
 }
 //获取当前对应的可预约状态
-function getStatus(index,gym,orderMap,now,onDay){
+function getStatus(index,gym,orderMap,now,onDay,pause){
     var nowHour = now.getHours()+1;
+  	//是否过期
+	if(onDay==now.getDate() && index<(nowHour)){
+		return gymStatus["expire"];
+	}
+  	//是否暂停预约
+  	var paustData = pause[gym["id"]];
+  	if(paustData!=null){
+  		var pauseArr = paustData.split(",");
+  		for(var i=0;i<pauseArr.length;i++){
+  			if(index==parseInt(pauseArr[i])){
+  				return gymStatus["pause"];
+  			}
+  		}
+  	}
+  	
 	//场馆可预约状态
 	var arr = gym["onTime"].split(",");
 	for(var i = 0; i < arr.length; i++){
 		//可预约状态判断是否可用
         if(index === parseInt(arr[i])){
-        	//是否过期
-        	if(onDay==now.getDate() && index<(nowHour)){
-        		return gymStatus["expire"];
-        	}
         	//场馆是否已经预约的状态
             var key = gym["id"]+"-"+index;
             if(orderMap[key]==1){
@@ -208,7 +221,9 @@ function labelClick(){
 	}
 	var time = label.data("time");
 	var index = label.data("index");
-	//判断是选中还是消除
+	
+	//多选
+/* 	//判断是选中还是消除
 	if (label.hasClass('label-success')) {
 		//消除样式  去掉参数
 		label.removeClass('label-success');
@@ -217,15 +232,28 @@ function labelClick(){
     	//添加样式  添加参数
     	label.addClass("label-success");
     	orderParam[index]["time"].push(time);
-    }
+    } */
+	
+	orderParam[index]["time"].push(time);
+	$("#alert-gym-dialog").dialog("option",{"index": index,"time":time});
+	
+	var param = toParam(orderParam);
+	if(param==null || param==""){
+		alert("请选择预约场地!");
+		return;
+	}
+	initAlertForm(param);
+	$("#alert-gym-dialog").dialog("open");
+	
 }
-var time = [6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,1,2,3,4,5];//预约时间
+var time = [6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21];//预约时间
 var param = {gymId:null,onDay:null,gymType:null};//搜索参数
 var orderParam = [];//预约参数（前端）
 var gymStatus = {
 	"on":{css:'primary',name:'可预约'},
 	"off":{css:'default',name:'不可预约'},
 	"expire":{css:'default',name:'已过期'},
+	"pause":{css:'default',name:'暂停预约'},
 	"pay":{css:'info',name:'付款中'},
 	"success":{css:'danger',name:'已预约'}
 }
@@ -248,8 +276,8 @@ $(document).ready(function() {
 			}
 		} 
 	});
-	
-	$("#sendOrder").on("click",function(){
+	//多选
+	/* $("#sendOrder").on("click",function(){
 		var param = toParam(orderParam);
 		if(param==null || param==""){
 			alert("请选择预约场地!");
@@ -257,7 +285,7 @@ $(document).ready(function() {
 		}
 		initAlertForm(param);
 		$("#alert-gym-dialog").dialog("open");
-	});
+	}); */
 	
 	$("#alert-gym-dialog").dialog({
 		autoOpen : false,
@@ -265,6 +293,10 @@ $(document).ready(function() {
 		modal : true,
 		height:350, 
 		width:640, 
+		beforeClose: function( event, ui ) {
+			var options = $("#alert-gym-dialog").dialog( "option" );
+			orderParam[options["index"]]["time"].remove(options["time"]);
+		},
 		buttons : [{
 			html : "取消",
 			"class" : "btn btn-default btn-sm",
@@ -387,8 +419,11 @@ function getDay(day){
 	var month = (mydate.getMonth()+1);
 	str += (month<10?("0"+month):month) + "-";
 	
-	result.push(str+mydate.getDate());
-	result.push(str+(mydate.getDate()+1));
+	var day = mydate.getDate();
+	var next = day+1;
+	result.push(str+(day<10?("0"+day):day));
+	result.push(str+(next<10?("0"+next):next));
+	console.log(result);
 	return result;
 }
 

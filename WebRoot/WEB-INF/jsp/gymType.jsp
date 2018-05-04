@@ -54,7 +54,7 @@
 										<thead>
 											<tr>
 												<th>场馆类型名称</th>
-												<th>描述</th>
+												<!-- <th>描述</th> -->
 												<th>操作</th>
 											</tr>
 										</thead>
@@ -64,7 +64,7 @@
 										%>
 											<tr>
 												<td><%=gymType.getName() %></td>
-												<td><%=gymType.getDesc() %></td>
+												<%-- <td><%=gymType.getDesc() %></td> --%>
 												<td>
 												<button class="btn btn-primary btn-sm" onclick="update('<%=gymType.getId() %>');">修改</button>
 												<button class="btn btn-primary btn-sm" onclick="isDel('<%=gymType.getId() %>');">删除</button>
@@ -93,12 +93,12 @@
 							<input class="form-control" name="name" id="name" required>
 						</div>
 					</div>
-					<div class="form-group">
+					<!-- <div class="form-group">
 						<label class="col-xs-2 txt-al-mar-pad">描述</label>
 						<div class="col-xs-10">
 							<textarea class="form-control" name="desc" id="desc" required></textarea>
 						</div>
-					</div>
+					</div> -->
 				</fieldset>
 			</form>
 			</div>
@@ -218,7 +218,7 @@
 		$("#gymTypeDialog").dialog({
 			autoOpen : false,
 			modal : true,
-			height:300, 
+			height:200, 
 			width:680, 
 			buttons : [{
 				html : "取消",
