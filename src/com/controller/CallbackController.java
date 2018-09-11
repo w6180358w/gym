@@ -1,5 +1,6 @@
 package com.controller;
 
+import java.io.IOException;
 import java.util.Date;
 
 import javax.servlet.http.HttpServletRequest;
@@ -38,6 +39,8 @@ public class CallbackController {
 	@RequestMapping("/order.do")
 	public String order(HttpServletRequest request,
 			HttpServletResponse response,String id){
+		int code = 0;
+		String msg = "更新成功";
 		try {
 			if(!StringUtils.isEmpty(id)) {
 				Order order = this.orderService.findById(Long.parseLong(id));
@@ -46,14 +49,27 @@ public class CallbackController {
 					order.setEndTime(new Date());
 					this.orderService.update(order);
 				}else {
+					code = 1;
+					msg = "更新失败，订单【"+id+"】不存在!";
 					response.setStatus(500);
 				}
 			}else {
+				code = 1;
+				msg = "更新失败，订单【"+id+"】不存在!";
 				response.setStatus(500);
 			}
 		} catch (Exception e) {
+			code = 1;
+			msg = "系统错误,请联系管理员!";
 			e.printStackTrace();
 		}
+		
+		try {
+			response.getWriter().print(SystemUtil.request(code, msg));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
 		return null;
 	}
 }

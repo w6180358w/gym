@@ -36,6 +36,15 @@ public class SystemUtil {
 		return result;
 	}
 	
+	public static JSONObject request(int code,String msg){
+		JSONObject result = new JSONObject();
+		JsonConfig con = new JsonConfig();
+		con.registerJsonValueProcessor(Date.class,new JsonDateValueProcessor());
+		result.put("code", code);
+		result.put("msg", msg);
+		return result;
+	}
+	
 	public static JSONObject request(int code,Object data,String msg){
 		JSONObject result = new JSONObject();
 		JsonConfig con = new JsonConfig();
