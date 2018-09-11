@@ -13,6 +13,12 @@ public abstract interface BaseDao<T extends BaseModel> {
 	 */
 	public abstract List<T> findAll();
 	/**
+	 * 排序
+	 * @param orderHql
+	 * @return
+	 */
+	public List<T> findAllInOrder(String orderHql);
+	/**
 	 * 根据ID查询
 	 * @param id
 	 * @return

@@ -82,7 +82,11 @@
 <div id="alert-gym-dialog" style="display:none;margin:0;">
 	<form id ="alert-gym-form" class="form-horizontal"></form>
 </div>
-		
+
+<div id="gym-qc" style="display:none;margin:0;">
+	<img alt="" src="">
+</div>
+
 <script type="text/javascript">
 //初始化场馆列表
 function initGym(data){
@@ -316,7 +320,10 @@ $(document).ready(function() {
 			   		contentType: "application/json",
 			   		success: function(data){
 						if(data.code==0 && data.data!=null){
-							window.location.reload();
+							$("#alert-gym-dialog").dialog("close");
+							//显示二维码
+							$("#gym-qc").dialog("open");
+							$("#gym-qc").find("img").prop("src","${rootUrl}order/qcImage.do?orderId="+data.data);
 						}else{
 							alert(data.msg);
 						}
@@ -325,6 +332,14 @@ $(document).ready(function() {
 			}
 		}]
 					
+	});
+	
+	$("#gym-qc").dialog({
+		autoOpen : false,
+		title:"请用微信扫描二维码付款",
+		modal : true,
+		height:400, 
+		width:400
 	});
 });
 
@@ -423,7 +438,6 @@ function getDay(day){
 	var next = day+1;
 	result.push(str+(day<10?("0"+day):day));
 	result.push(str+(next<10?("0"+next):next));
-	console.log(result);
 	return result;
 }
 

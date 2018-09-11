@@ -27,7 +27,7 @@ public class Order extends BaseModel{
 	private Long id;		//id
 	private String gymData;	//预约场地JSON [{gymId:1,time:[1,2,3,4]},{...}]
 	private Integer status;	//状态 1:正在付款 2:已预定3:付款失败
-	private String key; 	//订单加密key 保存了预约人 预约时间 预约场地时间等
+	private String key; 	//付款url
 	private String ucode;	//用户唯一标识
 	private String userName;//用户名称
 	private String onDay;	//预约日期

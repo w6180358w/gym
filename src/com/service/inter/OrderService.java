@@ -18,7 +18,7 @@ public interface OrderService {
 	
 	public void delete(Order order);
 	
-	public void approve(List<GymOrderBean> list,User user);
+	public Long approve(List<GymOrderBean> list,User user) throws Exception ;
 	
 	public List<Order> findByGymId(Long gymId);
 	

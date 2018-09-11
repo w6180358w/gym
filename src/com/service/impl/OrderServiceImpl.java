@@ -3,9 +3,12 @@ package com.service.impl;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import com.bean.GymOrderBean;
@@ -13,17 +16,22 @@ import com.dao.inter.OrderDao;
 import com.model.Order;
 import com.model.User;
 import com.service.inter.OrderService;
+import com.util.HttpClientTool;
 
 import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
 
 @Service("OrderService")
 public class OrderServiceImpl implements OrderService{
 	
+    @Value("${pay.url}")
+    private String payUrl;
+    
 	@Autowired
 	OrderDao orderDao;
 	@Override
 	public List<Order> getAll() {
-		return orderDao.findAll();
+		return orderDao.findAllInOrder(" orderTime desc ");
 	}
 
 	@Override
@@ -47,7 +55,7 @@ public class OrderServiceImpl implements OrderService{
 	}
 
 	@Override
-	public void approve(List<GymOrderBean> list,User user) {
+	public Long approve(List<GymOrderBean> list,User user) throws Exception {
 		Order order = new Order();
 		Long allMoney = 0l;
 		for (GymOrderBean bean : list) {
@@ -61,6 +69,8 @@ public class OrderServiceImpl implements OrderService{
 		order.setUserName(user.getName());
 		order.setStatus(Order.PAYMENT);
 		this.orderDao.save(order);
+		order.setKey(this.getPayUrl(order));
+		return order.getId();
 	}
 	
 
@@ -79,7 +89,25 @@ public class OrderServiceImpl implements OrderService{
 
 	@Override
 	public List<Order> findByUcode(String ucode) {
-		String hql = "from Order where ucode = '"+ucode+"'";
+		String hql = "from Order where ucode = '"+ucode+"' order by orderTime desc";
 		return this.orderDao.findList(hql);
+	}
+	/**
+	 * 生成付款的url
+	 * @return
+	 */
+	private String getPayUrl(Order order) throws Exception{
+		String result = null;
+		Map<String,String> params = new HashMap<String,String>();
+		try {
+			params.put("id", order.getId()+"");
+			params.put("amount", order.getAllMoney()+"");
+			String content = HttpClientTool.doPost(payUrl, params);
+			JSONObject json = JSONObject.fromObject(content);
+			result = json.getString("url");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return result;
 	}
 }

@@ -82,6 +82,9 @@
 							<td><%=order.getStatusName() %></td>
 							<td>
 								<button class="btn btn-primary btn-sm" onclick="info(<%=order.getId()%>)">详情</button>
+								<%if(!Order.SUCCESS.equals(order.getStatus())){ %>
+								<button class="btn btn-primary btn-sm" onclick="repay('<%=order.getId() %>');">重新付款</button>
+								<%} %>
 								<%if(Order.FAILURE.equals(order.getStatus())){ %>
 								<button class="btn btn-primary btn-sm" onclick="isDel('<%=order.getId() %>');">删除</button>
 								<%} %>
@@ -104,6 +107,9 @@
 <div id="alert-gym-dialog" style="display:none;margin:0;">
 	<form id ="alert-gym-form" class="form-horizontal"></form>
 </div>		
+<div id="gym-qc" style="display:none;margin:0;">
+	<img alt="" src="">
+</div>
 <script>
 function isDel(id){
 	$("#power-message").html("<h5 class='text-center line-70'>确认删除？</h5>")  ;
@@ -124,7 +130,11 @@ function del(id) {
 				alert(data.msg);
 			}
 		} 
-		});
+	});
+}
+function repay(id){
+	$("#gym-qc").dialog("open");
+	$("#gym-qc").find("img").prop("src","${rootUrl}order/qcImage.do?orderId="+id);
 }
 	$(document).ready(function() {
 		$('#datatable_col_reorder').dataTable({
@@ -164,6 +174,13 @@ function del(id) {
 				}
 			}]
 						
+		});
+		$("#gym-qc").dialog({
+			autoOpen : false,
+			title:"请用微信扫描二维码付款",
+			modal : true,
+			height:400, 
+			width:400
 		});
 	});
 	

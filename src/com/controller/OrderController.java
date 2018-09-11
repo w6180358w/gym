@@ -2,6 +2,7 @@ package com.controller;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -18,6 +19,7 @@ import com.bean.GymOrderBean;
 import com.model.Order;
 import com.model.User;
 import com.service.inter.OrderService;
+import com.util.QRCodeFactory;
 import com.util.SystemUtil;
 /**
  * 订单管理的控制器
@@ -199,13 +201,14 @@ public class OrderController {
 			HttpServletResponse response){
 		int code = 0;
 		String msg = "预约成功";
+		Long id = null;
 		try {
 			User user = (User) request.getSession().getAttribute("user");
 			if(user==null){
 				code = 1;
 				msg = "请先登录";
 			}else{
-				orderService.approve(list,user);
+				id = orderService.approve(list,user);
 			}
 		} catch (Exception e) {
 			code = 1;
@@ -214,7 +217,7 @@ public class OrderController {
 		}
 		
 		try {
-			response.getWriter().print(SystemUtil.request(code, null, msg));
+			response.getWriter().print(SystemUtil.request(code, Arrays.asList(id), msg));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -249,6 +252,25 @@ public class OrderController {
 			e.printStackTrace();
 		}
 		
+		return null;		
+	}
+	
+	/**
+	 * 获取订单二维码
+	 * @param Order
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	@RequestMapping(value = "/qcImage.do", method = RequestMethod.GET)
+	public String qcImage(HttpServletRequest request,
+			HttpServletResponse response,Long orderId){
+		try {
+			Order order = this.orderService.findById(orderId);
+			new QRCodeFactory().CreatQrStream(order.getKey(), "png", response.getOutputStream(),null, 300);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		return null;		
 	}
 }
