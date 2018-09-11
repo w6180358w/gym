@@ -22,6 +22,21 @@ public class CallbackController {
 	@Autowired
 	OrderService orderService;
 	
+	/**
+	 * @api {post} /callBack/login.do 1.登陆回调，自动跳转到首页
+	 * @apiName login
+	 * @apiGroup callBack
+	 * 
+	 * @apiParam {String} ucode 账号
+	 * @apiParam {String} name 姓名
+	 * 
+	 * @apiParamExample {json} Request-Example:
+		{
+			"ucode" : "xxx",
+			"name" : "xxx"
+		}
+	 * 
+	 */
 	@RequestMapping("/login.do")
 	public String login(HttpServletRequest request,
 			HttpServletResponse response,User user){
@@ -35,7 +50,30 @@ public class CallbackController {
 		}
 		return null;
 	}
-	
+	/**
+	 * @api {post} /callBack/order.do 2.订单付款回调
+	 * @apiName order
+	 * @apiGroup callBack
+	 * 
+	 * @apiParam {String} id 订单ID
+	 * 
+	 * @apiParamExample {application/x-www-form-urlencoded} Request-Example:
+	 *	"id" : "xxx"}
+	 * 
+	 * @apiSuccess {Number} code 0:失败，1:成功
+	 * @apiSuccess {String} msg 操作提示
+	 * 
+	 * @apiSuccessExample {json} Success-Response:
+	 * 	{
+	 *		"code": 0,
+	 *		"msg": "更新成功"
+	 *	}	
+	 *	@apiErrorExample {json} Error-Response:
+	 * 	{
+	 * 		"code":1,
+	 * 		"msg":"更新失败，订单【1】不存在!"
+	 *  }
+	 */
 	@RequestMapping("/order.do")
 	public String order(HttpServletRequest request,
 			HttpServletResponse response,String id){
