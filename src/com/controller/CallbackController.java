@@ -30,7 +30,11 @@ public class CallbackController {
 	 * @apiParam {String} ucode 账号
 	 * @apiParam {String} name 姓名
 	 * 
-	 * @apiParamExample {json} Request-Example:
+	 * @apiHeaderExample {form} Header-Example:
+	 *     {
+	 *       "Content-Type": "application/x-www-form-urlencoded"
+	 *     }
+	 * @apiParamExample {application/x-www-form-urlencoded} Request-Example:
 		{
 			"ucode" : "xxx",
 			"name" : "xxx"
@@ -56,9 +60,12 @@ public class CallbackController {
 	 * @apiGroup callBack
 	 * 
 	 * @apiParam {String} id 订单ID
-	 * 
+	 * @apiHeaderExample {form} Header-Example:
+	 *     {
+	 *       "Content-Type": "application/x-www-form-urlencoded"
+	 *     }
 	 * @apiParamExample {application/x-www-form-urlencoded} Request-Example:
-	 *	"id" : "xxx"}
+	 *	{"id" : "xxx"}
 	 * 
 	 * @apiSuccess {Number} code 0:失败，1:成功
 	 * @apiSuccess {String} msg 操作提示
