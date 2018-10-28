@@ -40,25 +40,6 @@ public class CallbackController {
 	@Value("${login.consid}")
 	private String consid;
 	
-	/**
-	 * @api {get} /callBack/login.do 1.登陆回调，自动跳转到首页
-	 * @apiName login
-	 * @apiGroup callBack
-	 * 
-	 * @apiParam {String} ucode 账号
-	 * @apiParam {String} name 姓名
-	 * 
-	 * @apiHeaderExample {form} Header-Example:
-	 *     {
-	 *       "Content-Type": "application/x-www-form-urlencoded"
-	 *     }
-	 * @apiParamExample {application/x-www-form-urlencoded} Request-Example:
-		{
-			"ucode" : "xxx",
-			"name" : "xxx"
-		}
-	 * 
-	 */
 	@RequestMapping("/login.do")
 	public ModelAndView login(HttpServletRequest request,
 			HttpServletResponse response,CallBackBean bean){
@@ -119,7 +100,7 @@ public class CallbackController {
 	 *       "Content-Type": "application/x-www-form-urlencoded"
 	 *     }
 	 * @apiParamExample {application/x-www-form-urlencoded} Request-Example:
-	 *	{"id" : "xxx"}
+	 *	{"id" : "xxx","status":"success"}
 	 * 
 	 * @apiSuccess {Number} code 0:失败，1:成功
 	 * @apiSuccess {String} msg 操作提示
