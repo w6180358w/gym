@@ -38,15 +38,15 @@ public class HttpClientTool {
         httpClient = HttpClientBuilder.create().setDefaultRequestConfig(config).build();
     }
 
-    public static String doGet(String url, Map<String, String> params) {
+    public static String doGet(String url, Map<String, String> params) throws Exception {
         return doGet(url, params, CHARSET);
     }
 
-    public static String doGetSSL(String url, Map<String, String> params) {
+    public static String doGetSSL(String url, Map<String, String> params) throws Exception {
         return doGetSSL(url, params, CHARSET);
     }
 
-    public static String doPost(String url, Map<String, String> params) throws IOException {
+    public static String doPost(String url, Map<String, String> params) throws Exception {
         return doPost(url, params, CHARSET);
     }
 
@@ -56,11 +56,13 @@ public class HttpClientTool {
      * @param params 请求的参数
      * @param charset 编码格式
      * @return 页面内容
+     * @throws Exception 
      */
-    public static String doGet(String url, Map<String, String> params, String charset) {
+    public static String doGet(String url, Map<String, String> params, String charset) throws Exception {
         if (StringUtils.isBlank(url)) {
             return null;
         }
+        CloseableHttpResponse response = null;
         try {
             if (params != null && !params.isEmpty()) {
                 List<NameValuePair> pairs = new ArrayList<NameValuePair>(params.size());
@@ -73,8 +75,9 @@ public class HttpClientTool {
                 // 将请求参数和url进行拼接
                 url += "?" + EntityUtils.toString(new UrlEncodedFormEntity(pairs, charset));
             }
+            System.out.println("doGet:"+url);
             HttpGet httpGet = new HttpGet(url);
-            CloseableHttpResponse response = httpClient.execute(httpGet);
+            response = httpClient.execute(httpGet);
             int statusCode = response.getStatusLine().getStatusCode();
             if (statusCode != 200 && statusCode!=201) {
                 httpGet.abort();
@@ -90,6 +93,9 @@ public class HttpClientTool {
             return result;
         } catch (Exception e) {
             e.printStackTrace();
+        } finally {
+            if (response != null)
+                response.close();
         }
         return null;
     }
@@ -103,7 +109,7 @@ public class HttpClientTool {
      * @throws IOException
      */
     public static String doPost(String url, Map<String, String> params, String charset) 
-            throws IOException {
+            throws Exception {
         if (StringUtils.isBlank(url)) {
             return null;
         }
@@ -151,11 +157,13 @@ public class HttpClientTool {
      * @param params 请求的参数
      * @param charset  编码格式
      * @return 页面内容
+     * @throws Exception 
      */
-    public static String doGetSSL(String url, Map<String, String> params, String charset) {
+    public static String doGetSSL(String url, Map<String, String> params, String charset) throws Exception {
         if (StringUtils.isBlank(url)) {
             return null;
         }
+        CloseableHttpResponse response = null;
         try {
             if (params != null && !params.isEmpty()) {
                 List<NameValuePair> pairs = new ArrayList<NameValuePair>(params.size());
@@ -171,7 +179,7 @@ public class HttpClientTool {
 
             // https  注意这里获取https内容，使用了忽略证书的方式，当然还有其他的方式来获取https内容
             CloseableHttpClient httpsClient = HttpClientTool.createSSLClientDefault();
-            CloseableHttpResponse response = httpsClient.execute(httpGet);
+            response = httpsClient.execute(httpGet);
             int statusCode = response.getStatusLine().getStatusCode();
             if (statusCode != 200 && statusCode!=201) {
                 httpGet.abort();
@@ -183,10 +191,12 @@ public class HttpClientTool {
                 result = EntityUtils.toString(entity, "utf-8");
             }
             EntityUtils.consume(entity);
-            response.close();
             return result;
         } catch (Exception e) {
             e.printStackTrace();
+        } finally {
+            if (response != null)
+				response.close();
         }
         return null;
     }

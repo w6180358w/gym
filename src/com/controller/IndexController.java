@@ -8,7 +8,10 @@ import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.DigestUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.view.RedirectView;
 
 import com.model.User;
 import com.service.inter.MessageService;
@@ -22,10 +25,16 @@ import com.util.SystemUtil;
 @Controller
 @RequestMapping("/index")
 public class IndexController {
-	@Value("#{configProperties['userName']}")
+	@Value("${userName}")
 	public String userName;
-	@Value("#{configProperties['password']}")
+	@Value("${password}")
 	public String password;
+	@Value("${login.url.login}")
+	private String login;
+	@Value("${login.consid}")
+	private String consid;
+	@Value("${login.accesskey}")
+	private String accesskey;
 	@Autowired
 	private UserService userService;
 	@Autowired
@@ -107,10 +116,15 @@ public class IndexController {
 	 * @param response
 	 * @return
 	 */
-	@RequestMapping("/login.do")
-	public String login(HttpServletRequest request,
+	@RequestMapping("/thirdLogin.do")
+	public ModelAndView login(HttpServletRequest request,
 			HttpServletResponse response){
 		//直接返回到登录页
-		return "login";
+		Long now = System.currentTimeMillis()/1000;
+		String md5 = DigestUtils.md5DigestAsHex((this.accesskey+now+"123456").getBytes());
+		StringBuffer url = request.getRequestURL();  
+		String tempContextUrl = url.delete(url.length() - request.getRequestURI().length(), url.length()).append(request.getServletContext().getContextPath()).append("/").toString();  
+		String red = this.login + ("?consid="+this.consid+"&timestamp="+now+"&rand=123456&sign="+md5+"&callback="+tempContextUrl+"callBack/login.do");
+		return new ModelAndView(new RedirectView(red));
 	}
 }

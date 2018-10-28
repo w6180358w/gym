@@ -49,7 +49,7 @@
 			            <span class="caret"></span>
 			        </a>
 			        <ul class="dropdown-menu" role="menu">
-			        	<li><a href="http://odc-ext.neusoft.edu.cn/odc">普通登录</a></li>
+			        	<li><a href="${rootUrl }index/thirdLogin.do">普通登录</a></li>
 			            <li><a href="javascript:void(0)" onclick="adminLogin()">管理员登录</a></li>
 			        </ul>
 			    </div>
@@ -79,7 +79,7 @@
         </div>
     </div>
 </div>
-<%if(auth!=null){%>
+<%if(auth!=null && messageList!=null){%>
 <div id="messageDialog" style="display:none;margin:0;">
 	<form class="form-horizontal">
 	<br>
