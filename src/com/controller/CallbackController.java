@@ -113,6 +113,7 @@ public class CallbackController {
 	 * @apiGroup callBack
 	 * 
 	 * @apiParam {String} id 订单ID
+	 * @apiParam {String} status 订单状态 success成功,failure:失败
 	 * @apiHeaderExample {form} Header-Example:
 	 *     {
 	 *       "Content-Type": "application/x-www-form-urlencoded"
@@ -136,14 +137,20 @@ public class CallbackController {
 	 */
 	@RequestMapping("/order.do")
 	public String order(HttpServletRequest request,
-			HttpServletResponse response,String id){
+			HttpServletResponse response,String id,String status){
 		int code = 0;
 		String msg = "更新成功";
 		try {
 			if(!StringUtils.isEmpty(id)) {
 				Order order = this.orderService.findById(Long.parseLong(id));
 				if(order!=null) {
-					order.setStatus(Order.SUCCESS);
+					Integer stat = Order.toPayStatus(status);
+					//设置付款状态
+					order.setPayStatus(stat);
+					//订单如果不超时 设置订单状态
+					if(!order.getStatus().equals(Order.EXPIRE)) {
+						order.toStatus();
+					}
 					order.setEndTime(new Date());
 					this.orderService.update(order);
 				}else {

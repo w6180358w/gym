@@ -22,13 +22,13 @@ public class Task {
 	//订单15分钟超时 设置为付款失败状态
 	@Scheduled(cron = "0 0/1 * * * ? ") // 间隔一分钟执行
 	public void syncOrder() {
-		System.out.println("定时更新订单状态，超过"+expire+"分钟设置为付款失败");
-		List<Order> orderList = this.orderService.findByStatus(1);
+		System.out.println("定时更新订单状态，超过"+expire+"分钟设置为付款超时");
+		List<Order> orderList = this.orderService.findByStatus(Order.PAYMENT);
 		Long now = System.currentTimeMillis();
 		for (Order order : orderList) {
 			Date date = order.getOrderTime();
 			if(now-date.getTime()>(expire*60*1000)) {
-				order.setStatus(3);
+				order.setStatus(Order.EXPIRE);
 				this.orderService.update(order);
 			}
 		}

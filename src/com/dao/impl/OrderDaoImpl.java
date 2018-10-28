@@ -26,7 +26,7 @@ public class OrderDaoImpl extends BaseDaoImpl<Order> implements OrderDao{
 		cal.add(Calendar.DAY_OF_YEAR, 1);
 		
 		String end = sdf.format(cal.getTime());
-		return this.findList("from Order where onDay >= '"+start+"' and onDay <'"+end+"' and status != 3");
+		return this.findList("from Order where onDay >= '"+start+"' and onDay <'"+end+"' and status < 3");
 	}
 
 }

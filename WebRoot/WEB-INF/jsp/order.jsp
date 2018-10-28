@@ -1,3 +1,4 @@
+<%@page import="com.util.SystemUtil"%>
 <%@page import="com.bean.GymOrderBean"%>
 <%@ page contentType="text/html;charset=utf-8"%>
 <%@ page language="java" import="java.util.*" pageEncoding="utf-8"%>
@@ -9,6 +10,7 @@
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <%
 	List<Order> orderList = (List<Order>)request.getAttribute("orderList");
+	User user = (User)session.getAttribute("user");
 %>
 <c:url value="/" var="rootUrl" scope="application"></c:url>
 <c:if test="${fn:contains(rootUrl,';jsession')}">
@@ -54,11 +56,12 @@
 					<thead>
 						<tr>
 							<th>预约人</th>
-							<th>预约人账号</th>
+							<%if(user!=null && (SystemUtil.ADMIN.equals(user.getType()) || SystemUtil.SUPERADMIN.equals(user.getType()))){%><th>预约人唯一标识</th><%} %>
 							<th>预约场地</th>
 							<th>预约时间</th>
 							<th>预约总金额（元）</th>
 							<th>预约状态</th>
+							<th>付款状态</th>
 							<th>操作</th>
 						</tr>
 					</thead>
@@ -69,7 +72,7 @@
 					%>
 						<tr>
 							<td><%=order.getUserName()==null?"":order.getUserName() %></td>
-							<td><%=order.getUcode()==null?"":order.getUcode() %></td>
+							<%if(user!=null && (SystemUtil.ADMIN.equals(user.getType()) || SystemUtil.SUPERADMIN.equals(user.getType()))){%><td><%=order.getUcode()==null?"":order.getUcode() %></td><%} %>
 							<td>
 								<a href="javascript:void(0);" onclick="info(<%=order.getId()%>)">
 								<%for(GymOrderBean bean : beanList){%>
@@ -80,9 +83,10 @@
 							<td><%=order.getOnDay() %></td>
 							<td><%=order.getAllMoney() %></td>
 							<td><%=order.getStatusName() %></td>
+							<td><%=order.getPayStatusName() %></td>
 							<td>
 								<button class="btn btn-primary btn-sm" onclick="info(<%=order.getId()%>)">详情</button>
-								<%if(!Order.SUCCESS.equals(order.getStatus())){ %>
+								<%if(!Order.SUCCESS.equals(order.getStatus()) && !Order.EXPIRE.equals(order.getStatus())){ %>
 								<button class="btn btn-primary btn-sm" onclick="repay('<%=order.getId() %>');">重新付款</button>
 								<%} %>
 								<%if(Order.FAILURE.equals(order.getStatus())){ %>

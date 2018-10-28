@@ -23,10 +23,17 @@ public class Order extends BaseModel{
 	public final static Integer PAYMENT = 1;
 	public final static Integer SUCCESS = 2;
 	public final static Integer FAILURE = 3;
+	public final static Integer EXPIRE = 4;
+	
+	public final static Integer PAY_FAILURE = 1;
+	public final static Integer PAY_SUCCESS = 2;
+	
+	public final static String PAY_SUCCESS_STR = "success";
+	public final static String PAY_FAILURE_STR = "failure";
 	
 	private Long id;		//id
 	private String gymData;	//预约场地JSON [{gymId:1,time:[1,2,3,4]},{...}]
-	private Integer status;	//状态 1:正在付款 2:已预定3:付款失败
+	private Integer status;	//状态 1:正在付款 2:已预定3:付款失败4:超时
 	private String key; 	//付款url
 	private String ucode;	//用户唯一标识
 	private String userName;//用户名称
@@ -34,6 +41,7 @@ public class Order extends BaseModel{
 	private Long allMoney;	//预付价格 预约时间*单位时间价格
 	private Date orderTime;	//订单申请时间
 	private Date endTime;		//订单完成时间
+	private Integer payStatus;//付款状态1:成功 2:失败
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -65,6 +73,19 @@ public class Order extends BaseModel{
 		}
 		if(Order.FAILURE.equals(status)){
 			return "预约失败";
+		}
+		if(Order.EXPIRE.equals(status)){
+			return "付款超时";
+		}
+		return "未知";
+	}
+	@Transient 
+	public String getPayStatusName(){
+		if(Order.PAY_SUCCESS.equals(payStatus)){
+			return "付款成功";
+		}
+		if(Order.PAY_FAILURE.equals(payStatus)){
+			return "付款失败";
 		}
 		return "未知";
 	}
@@ -120,6 +141,32 @@ public class Order extends BaseModel{
 	public void setOnDay(String onDay) {
 		this.onDay = onDay;
 	}
+	@Column(name = "pay_status")
+	public Integer getPayStatus() {
+		return payStatus;
+	}
+	public void setPayStatus(Integer payStatus) {
+		this.payStatus = payStatus;
+	}
 
 	
+	public static Integer toPayStatus(String status) {
+		if(Order.PAY_SUCCESS_STR.equals(status)) {
+			return Order.PAY_SUCCESS;
+		}else {
+			return Order.PAY_FAILURE;
+		}
+	}
+	
+	/**
+	 * 设置订单状态  如果付款状态为成功  设置订单状态为已预约  否则设置为预约失败
+	 * @return
+	 */
+	public void toStatus() {
+		if(Order.PAY_SUCCESS.equals(this.getPayStatus())) {
+			this.setStatus(Order.SUCCESS);
+		}else {
+			this.setStatus(Order.FAILURE);
+		}
+	}
 }
