@@ -110,4 +110,9 @@ public class OrderServiceImpl implements OrderService{
 		}
 		return result;
 	}
+
+	@Override
+	public List<Order> findByStatus(Integer status) {
+		return this.orderDao.findList("from Order where status = "+status);
+	}
 }

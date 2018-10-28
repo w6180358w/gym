@@ -25,4 +25,6 @@ public interface OrderService {
 	public List<GymOrderBean> getInfo(Long orderId);
 	
 	public List<Order> findByUcode(String ucode);
+	
+	public List<Order> findByStatus(Integer status);
 }
