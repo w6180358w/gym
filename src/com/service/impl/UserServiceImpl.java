@@ -41,7 +41,7 @@ public class UserServiceImpl implements UserService{
 
 	@Override
 	public User login(String ucode, String password) {
-		List<User> userList = this.userDao.findList("from User where ucode='"+ucode+"' and password='"+password+"'");
+		List<User> userList = this.userDao.findList("from User where ucode=? and password=?",ucode,password);
 		if(userList==null || userList.isEmpty()){
 			return null;
 		}
@@ -50,7 +50,7 @@ public class UserServiceImpl implements UserService{
 
 	@Override
 	public List<User> codeValid(User user) {
-		return this.userDao.findList("from User where ucode = '"+user.getUcode()+"' and id !="+user.getId());
+		return this.userDao.findList("from User where ucode = ? and id !=?",user.getUcode(),user.getId());
 	}
 
 }

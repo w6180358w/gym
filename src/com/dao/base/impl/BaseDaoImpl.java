@@ -42,13 +42,13 @@ public class BaseDaoImpl<T extends BaseModel> extends HibernateDaoSupport implem
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<T> findList(String hql) {
-		return getHibernateTemplate().find(hql);
+	public List<T> findList(String hql,Object ...values) {
+		return getHibernateTemplate().find(hql, values);
 	}
 
 	@Override
-	public List<?> findListObject(String hql) {
-		return getHibernateTemplate().find(hql);
+	public List<?> findListObject(String hql,Object ...values) {
+		return getHibernateTemplate().find(hql,values);
 	}
 	
 	@Override

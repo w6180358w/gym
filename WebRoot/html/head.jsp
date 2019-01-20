@@ -25,6 +25,7 @@
     <link rel="stylesheet" type="text/css" media="screen" href="${rootUrl }css/jquery-ui.css">
     <link rel="stylesheet" type="text/css" media="screen" href="${rootUrl }css/add-app-class.css">
     <link rel="stylesheet" type="text/css" media="screen" href="${rootUrl }css/style.css">
+     <link rel="stylesheet" type="text/css" media="screen" href="${rootUrl }css/timepicker.css">
 <div class="container">
     <div class="row">
         <div class="log-box col-xs-9">

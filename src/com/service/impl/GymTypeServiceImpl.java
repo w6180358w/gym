@@ -45,7 +45,7 @@ public class GymTypeServiceImpl implements GymTypeService{
 
 	@Override
 	public List<GymType> nameValid(GymType gymType) {
-		return this.GymTypeDao.findList("from GymType where name = '"+gymType.getName()+"' and id !="+gymType.getId());
+		return this.GymTypeDao.findList("from GymType where name = ? and id !=?",gymType.getName(),gymType.getId());
 	}
 
 }

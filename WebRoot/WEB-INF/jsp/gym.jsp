@@ -135,15 +135,7 @@
 					</div>
 					<div class="form-group">
 						<label class="col-xs-2 txt-al-mar-pad">可预约时间</label>
-						<div class="col-xs-10">
-							<div class="toggle-all-container">
-               					<div class="gym_select select-box-container">
-							        <div class="toggle-all-container">
-							            <a href="javascript:void(0);" class="btn btn-md btn-default toggle-all-btn">全选/取消全选</a>
-							        </div>
-						        </div>
-						    </div>
-						</div>
+						<div class="col-xs-10 txt-al-mar-pad" id="time"></div>
 					</div>
 					<div class="form-group">
 						<label class="col-xs-2 txt-al-mar-pad">价格（元）</label>
@@ -151,12 +143,6 @@
 							<input type="number" class="form-control" name="money" id="money" required min=0.01>
 						</div>
 					</div>
-					<!-- <div class="form-group">
-						<label class="col-xs-2 txt-al-mar-pad">描述</label>
-						<div class="col-xs-10">
-							<textarea class="form-control" name="desc" id="desc" required></textarea>
-						</div>
-					</div> -->
 				</fieldset>
 			</form>
 			</div>
@@ -177,15 +163,7 @@
 					</div>
 					<div class="form-group">
 						<label class="col-xs-2 txt-al-mar-pad">暂停时间</label>
-						<div class="col-xs-10">
-							<div class="toggle-all-container">
-               					<div class="pause_select select-box-container">
-							        <div class="toggle-all-container">
-							            <a href="javascript:void(0);" class="btn btn-md btn-default toggle-all-btn">全选/取消全选</a>
-							        </div>
-						        </div>
-						    </div>
-						</div>
+						<div class="col-xs-10 txt-al-mar-pad" id="pauseTime"></div>
 					</div>
 				</fieldset>
 			</form>
@@ -197,9 +175,9 @@
 		</div>
 		
 <script src="${rootUrl}js/select.js"></script>
+<script src="${rootUrl}js/jquery-timepicker.js"></script>
 <script>
 	var isEdit = false;
-	var box,pauseBox;
     //将form转为AJAX提交
 	function ajaxSubmit() {
 		var form = document.getElementById("GymForm");
@@ -287,13 +265,21 @@
 		$("#type").val(Gym["type"]);
 		$("#status").val(Gym["status"]);
 		$("#money").val(Gym["money"]);
-		box.reset();
-		box.setValues(Gym["onTime"]==null?[]:Gym["onTime"].split(","));
+		$("#time").empty();
+		var time = Gym["onTime"] || JSON.stringify([{'start':'','end':''}]);
+		time = JSON.parse(time);
+		time.forEach(function(t){
+			addTimePicker(true,t.start,t.end);
+		});
 	}
 	function setPauseForm(pause){
 		$("#p_id").val(pause==null?null:pause["id"]);
-		pauseBox.reset();
-		pauseBox.setValues((pause==null||pause["pauseTime"]==null)?[]:pause["pauseTime"].split(","));
+		$("#pauseTime").empty();
+		var time = (!!pause && !!pause["onTime"])?pause["onTime"]:JSON.stringify([{'start':'','end':''}]);
+		time = JSON.parse(time);
+		time.forEach(function(t){
+			addTimePicker(false,t.start,t.end);
+		});
 	}
 	//将form中的值转换为键值对。
 	function getFormJson(frm) {
@@ -309,7 +295,17 @@
             	o[this.name] = this.value || '';
         	}
     	});
-    	o["onTime"] = box.getValues().join();
+    	var times = [];
+    	$("#time").find("div[key=group]").each(function(){
+    		var start = $(this).find("input[name=timeStart]").val();
+    		var end = $(this).find("input[name=timeEnd]").val();
+    		times.push({
+    			id:start.replace(":","")+end.replace(":","")+uuid(16,16),
+    			start:start,
+    			end:end
+    		});
+    	});
+    	o["onTime"] = JSON.stringify(times);
     	return o;
 	}
 	function isDel(id){
@@ -325,8 +321,65 @@
 		$("#PauseDialog").dialog("open");
 		$("#p_day").trigger("change");
 	}
+	
+	//添加时间区域
+	function addTimePicker(isTime,start,end){
+		var time = isTime?$("#time"):$("#pauseTime");
+		time.find("button.add").remove();
+		var view = $(
+			'<div class="form-group" key="group">'+
+			'	<div class="col-xs-4">'+
+			'		<input name="timeStart" class="form-control" required readOnly value="'+(start || "")+'">'+
+			'	</div>'+
+			'	<div class="col-xs-1">'+
+			'		-'+
+			'	</div>'+
+			'	<div class="col-xs-4" >'+
+			'		<input name="timeEnd" class="form-control" required readOnly value="'+(end || "")+'">'+
+			'	</div>'+
+			'	<div class="col-xs-3" >'+
+			'		<button type="button" class="btn btn-primary btn-sm del">-</button>'+
+			'		<button type="button" class="btn btn-primary btn-sm add">+</button>'+
+			'	</div>'+
+			'</div>'
+		);
+		
+		time.append(view);
+		view.find("input").hunterTimePicker();
+		if(isTime) view.find("input").rules("add",{required:true});
+		view.find("button.del").click(function(){
+			delTimePicker(isTime,this);
+		});
+		view.find("button.add").click(function(){
+			addTimePicker(isTime);
+		});
+	}
+	//删除时间区域
+	function delTimePicker(isTime,el){
+		var time = isTime?$("#time"):$("#pauseTime");
+		var times = time.find('div[key=group]');
+		var prev = $(el).parents('div[key=group]').prev();
+		if(times.length>1 || prev.length>0){
+			$(el).parents('div[key=group]').remove();
+			if( time.find('button.add').length==0){
+				prev.find("button.del").parent("div.col-xs-3").append(
+					'<button type="button" class="btn btn-primary btn-sm add">+</button>'
+				)
+				prev.find("button.add").click(function(){
+					addTimePicker(isTime);
+				});
+			}
+		}else{
+			$(el).parents('div[key=group]').find("input").val("");
+		}
+	}
 	$(document).ready(function() {
 		$("#GymForm").validate();
+		$("#time").find("input").hunterTimePicker({
+		     callback: function(e){
+		        //console.log(e);
+		     }
+		});
 		
 		$('#datatable_col_reorder').dataTable({
 			"sDom" : "<'dt-toolbar'<'col-xs-6 col-sm-6'f><'col-sm-6 col-xs-6 hidden-xs'T>r>"
@@ -419,49 +472,6 @@
 				$('#addTime').datepicker('option', '', selectedDate);
 			}
 		});
-		box = initSelectBox('.gym_select',
-				[
-					{value:6,text:6},
-					{value:7,text:7},
-					{value:8,text:8},
-					{value:9,text:9},
-					{value:10,text:10},
-					{value:11,text:11},
-					{value:12,text:12},
-					{value:13,text:13},
-					{value:14,text:14},
-					{value:15,text:15},
-					{value:16,text:16},
-					{value:17,text:17},
-					{value:18,text:18},
-					{value:19,text:19},
-					{value:20,text:20},
-					{value:21,text:21}
-				],
-				function(a){
-		});	
-		
-		pauseBox = initSelectBox('.pause_select',
-				[
-					{value:6,text:6},
-					{value:7,text:7},
-					{value:8,text:8},
-					{value:9,text:9},
-					{value:10,text:10},
-					{value:11,text:11},
-					{value:12,text:12},
-					{value:13,text:13},
-					{value:14,text:14},
-					{value:15,text:15},
-					{value:16,text:16},
-					{value:17,text:17},
-					{value:18,text:18},
-					{value:19,text:19},
-					{value:20,text:20},
-					{value:21,text:21}
-				],
-				function(a){
-		});	
 		
 		$("#p_day").on("change",function(){
 			$.ajax({
@@ -471,7 +481,7 @@
 	       		success: function(data){
 					if(data.code==0){
 						 if(data.data==null){
-							 $("#PauseDialog").dialog({isEdit:false});
+							$("#PauseDialog").dialog({isEdit:false});
 						 }else{
 							$("#PauseDialog").dialog({isEdit:true});
 						 }
@@ -483,6 +493,35 @@
 	   		});
 		});
 	});
+	
+	function uuid(len, radix) {
+	    var chars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz'.split('');
+	    var uuid = [], i;
+	    radix = radix || chars.length;
+	 
+	    if (len) {
+	      // Compact form
+	      for (i = 0; i < len; i++) uuid[i] = chars[0 | Math.random()*radix];
+	    } else {
+	      // rfc4122, version 4 form
+	      var r;
+	 
+	      // rfc4122 requires these characters
+	      uuid[8] = uuid[13] = uuid[18] = uuid[23] = '-';
+	      uuid[14] = '4';
+	 
+	      // Fill in random data.  At i==19 set the high bits of clock sequence as
+	      // per rfc4122, sec. 4.1.5
+	      for (i = 0; i < 36; i++) {
+	        if (!uuid[i]) {
+	          r = 0 | Math.random()*16;
+	          uuid[i] = chars[(i == 19) ? (r & 0x3) | 0x8 : r];
+	        }
+	      }
+	    }
+	 
+	    return uuid.join('');
+	}
 </script>
 </div>
 <jsp:include page="/html/footer.jsp" flush="true"></jsp:include> 

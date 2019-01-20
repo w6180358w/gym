@@ -4,7 +4,7 @@ public class GymOrderBean {
 
 	private Long gymId;		//场馆ID
 	
-	private String time;	//预约时间（小时）
+	private String time;	//预约场次字符串start+end+16位随机数
 	
 	private String gymName;	//场馆名称
 	

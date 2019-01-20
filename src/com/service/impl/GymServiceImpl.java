@@ -56,7 +56,7 @@ public class GymServiceImpl implements GymService{
 
 	@Override
 	public List<Gym> nameValid(Gym gym) {
-		return this.gymDao.findList("from Gym where name = '"+gym.getName()+"' and id !="+gym.getId());
+		return this.gymDao.findList("from Gym where name = ? and id !=?",gym.getName(),gym.getId());
 	}
 
 	@SuppressWarnings({ "unchecked", "deprecation" })
@@ -69,10 +69,8 @@ public class GymServiceImpl implements GymService{
 		for (Order o : orderList) {
 			List<GymOrderBean> beans = JSONArray.toList(JSONArray.fromObject(o.getGymData()), GymOrderBean.class);
 			for (GymOrderBean bean : beans) {
-				String[] times = bean.getTime().split(",");
-				for (String time : times) {
-					map.put(bean.getGymId()+"-"+time,o.getStatus());
-				}
+				String time = bean.getTime();
+				map.put(bean.getGymId()+"-"+time,o.getStatus());
 			}
 		}
 		result.put("order", map);
@@ -103,7 +101,7 @@ public class GymServiceImpl implements GymService{
 
 	@Override
 	public List<Gym> findByType(String type) {
-		return this.gymDao.findList("from Gym where type = '"+type+"'");
+		return this.gymDao.findList("from Gym where type = ?",type);
 	}
 
 }

@@ -77,8 +77,8 @@ public class OrderServiceImpl implements OrderService{
 	@Override
 	public List<Order> findByGymId(Long gymId) {
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-		String hql = "from Order where onDay >= '"+sdf.format(Calendar.getInstance().getTime())+"' and gym_data like '%\"gymId\":"+gymId+"%' and status != 3";
-		return this.orderDao.findList(hql);
+		String hql = "from Order where onDay >= ? and gym_data like '%\"gymId\":"+gymId+"%' and status != 3";
+		return this.orderDao.findList(hql,sdf.format(Calendar.getInstance().getTime()));
 	}
 
 	@Override
@@ -89,8 +89,8 @@ public class OrderServiceImpl implements OrderService{
 
 	@Override
 	public List<Order> findByUcode(String ucode) {
-		String hql = "from Order where ucode = '"+ucode+"' order by orderTime desc";
-		return this.orderDao.findList(hql);
+		String hql = "from Order where ucode = ? order by orderTime desc";
+		return this.orderDao.findList(hql,ucode);
 	}
 	/**
 	 * 生成付款的url
@@ -113,6 +113,6 @@ public class OrderServiceImpl implements OrderService{
 
 	@Override
 	public List<Order> findByStatus(Integer status) {
-		return this.orderDao.findList("from Order where status = "+status);
+		return this.orderDao.findList("from Order where status = ?",status);
 	}
 }

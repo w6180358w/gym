@@ -29,14 +29,14 @@ public abstract interface BaseDao<T extends BaseModel> {
 	 * @param hql
 	 * @return
 	 */
-	public abstract List<T> findList(String hql);
+	public abstract List<T> findList(String hql,Object ...values);
 	
 	/**
 	 * 根据hql查询
 	 * @param hql
 	 * @return
 	 */
-	public abstract List<?> findListObject(String hql);
+	public abstract List<?> findListObject(String hql,Object ...values);
 	
 	/**
 	 * 分页查询

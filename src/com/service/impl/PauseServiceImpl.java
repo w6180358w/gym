@@ -30,14 +30,14 @@ public class PauseServiceImpl implements PauseService{
 
 	@Override
 	public List<Pause> findData(String day) {
-		String hql = "from Pause where day ='"+day+"'";
-		return this.pauseDao.findList(hql);
+		String hql = "from Pause where day =?";
+		return this.pauseDao.findList(hql,day);
 	}
 
 	@Override
 	public Pause getData(Long gymId, String day) {
-		String hql = "from Pause where gymId = "+gymId+" and day ='"+day+"'";
-		List<Pause> list = this.pauseDao.findList(hql);
+		String hql = "from Pause where gymId = ? and day =?";
+		List<Pause> list = this.pauseDao.findList(hql,gymId,day);
 		if(list!=null && !list.isEmpty()) {
 			return list.get(0);
 		}
