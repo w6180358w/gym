@@ -153,7 +153,7 @@ function getStatus(time,gym,orderMap,now,onDay,pause){
 	}
   	//是否暂停预约
   	var pauseTimeId = pause[gym["id"]];
-  	if(pauseTimeId==time.id){
+  	if(!!pauseTimeId && pauseTimeId.indexOf(time.id)>-1){
   		return gymStatus["pause"];
   	}
   	

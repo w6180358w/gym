@@ -1,6 +1,8 @@
 package com.controller;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -10,6 +12,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import com.bean.PauseBean;
 import com.model.Pause;
 import com.service.inter.PauseService;
 import com.util.SystemUtil;
@@ -86,7 +89,7 @@ public class PauseController {
 	public String get(Long gymId,String day,HttpServletRequest request,
 			HttpServletResponse response){
 		int code = 0;
-		Pause pause = null;
+		List<PauseBean> pause = new ArrayList<PauseBean>();
 		try {
 			pause = pauseService.getData(gymId,day);
 		} catch (Exception e) {

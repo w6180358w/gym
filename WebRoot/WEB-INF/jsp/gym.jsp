@@ -70,7 +70,6 @@
 											<tr>
 												<th>场馆名称</th>
 												<th>场馆类型</th>
-												<th>可预约时间</th>
 												<th>预约金额(元)</th>
 												<th>操作</th>
 											</tr>
@@ -82,7 +81,6 @@
 											<tr>
 												<td><%=gym.getName() %></td>
 												<td><%=typeMap.get(gym.getType()) %></td>
-												<td><%=gym.getOnTime() %></td>
 												<td><%=gym.getMoney()+"" %></td>
 												<td>
 												<button class="btn btn-primary btn-sm" onclick="pause('<%=gym.getId() %>');">暂停预约</button>
@@ -206,13 +204,20 @@
 	}
 
 	function pauseSubmit() {
+		var ids = [];
+		$("#pauseTime").find("input[name=timeId]").each(function(index,el){
+			var checkbox = $(el);
+			if(checkbox.is(":checked")){
+				ids.push(checkbox.val())
+			}
+		});
    		$.ajax({
        		url: $("#PauseDialog").dialog("option","isEdit")?"${rootUrl}pause/update.do":"${rootUrl}pause/save.do",
        		type: "post",
        		data: {id:$("#p_id").val(),
        			gymId:$("#p_gymId").val(),
        			day:$("#p_day").val(),
-       			pauseTime:pauseBox.getValues().join()},
+       			pauseTime:ids.join()},
        		dataType:"json",
        		success: function(data){
 				if(data.code==0){
@@ -269,16 +274,31 @@
 		var time = Gym["onTime"] || JSON.stringify([{'start':'','end':''}]);
 		time = JSON.parse(time);
 		time.forEach(function(t){
-			addTimePicker(true,t.start,t.end);
+			addTimePicker(t.start,t.end);
 		});
 	}
 	function setPauseForm(pause){
-		$("#p_id").val(pause==null?null:pause["id"]);
+		pause = pause || [];
 		$("#pauseTime").empty();
-		var time = (!!pause && !!pause["onTime"])?pause["onTime"]:JSON.stringify([{'start':'','end':''}]);
-		time = JSON.parse(time);
-		time.forEach(function(t){
-			addTimePicker(false,t.start,t.end);
+		pause.forEach(function(p){
+			$("#p_id").val(p.id);
+			if(!!p.id){
+				$("#PauseDialog").dialog({isEdit:true});
+			 }else{
+				 $("#PauseDialog").dialog({isEdit:false});
+			 }
+			//渲染
+			var view = $(
+					'<div class="form-group" key="group">'+
+					'	<div class="col-xs-1"><input type="checkbox" '+p.status+' name="timeId" value="'+p.timeId+'"></div>'+
+					'	<div class="col-xs-6" >'+
+					'		<span class="col-xs-5" >'+p.start+'</span>'+
+					'		<span class="col-xs-1" >-</span>'+
+					'		<span class="col-xs-5" >'+p.end+'</span>'+
+					'	</div>'+
+					'</div>'
+				);
+			$("#pauseTime").append(view);
 		});
 	}
 	//将form中的值转换为键值对。
@@ -323,40 +343,40 @@
 	}
 	
 	//添加时间区域
-	function addTimePicker(isTime,start,end){
-		var time = isTime?$("#time"):$("#pauseTime");
+	function addTimePicker(start,end){
+		var time = $("#time");
 		time.find("button.add").remove();
 		var view = $(
 			'<div class="form-group" key="group">'+
 			'	<div class="col-xs-4">'+
-			'		<input name="timeStart" class="form-control" required readOnly value="'+(start || "")+'">'+
+			'		<input name="timeStart" class="form-control time" required readOnly value="'+(start || "")+'">'+
 			'	</div>'+
 			'	<div class="col-xs-1">'+
 			'		-'+
 			'	</div>'+
 			'	<div class="col-xs-4" >'+
-			'		<input name="timeEnd" class="form-control" required readOnly value="'+(end || "")+'">'+
+			'		<input name="timeEnd" class="form-control time" required readOnly value="'+(end || "")+'">'+
 			'	</div>'+
 			'	<div class="col-xs-3" >'+
-			'		<button type="button" class="btn btn-primary btn-sm del">-</button>'+
-			'		<button type="button" class="btn btn-primary btn-sm add">+</button>'+
+			'	<button type="button" class="btn btn-primary btn-sm del">-</button>'+
+			'	<button type="button" class="btn btn-primary btn-sm add">+</button>'+
 			'	</div>'+
 			'</div>'
 		);
 		
 		time.append(view);
-		view.find("input").hunterTimePicker();
-		if(isTime) view.find("input").rules("add",{required:true});
+		view.find("input.time").hunterTimePicker();
+		view.find("input.time").rules("add",{required:true});
 		view.find("button.del").click(function(){
-			delTimePicker(isTime,this);
+			delTimePicker(this);
 		});
 		view.find("button.add").click(function(){
-			addTimePicker(isTime);
+			addTimePicker();
 		});
 	}
 	//删除时间区域
-	function delTimePicker(isTime,el){
-		var time = isTime?$("#time"):$("#pauseTime");
+	function delTimePicker(el){
+		var time = $("#time");
 		var times = time.find('div[key=group]');
 		var prev = $(el).parents('div[key=group]').prev();
 		if(times.length>1 || prev.length>0){
@@ -366,7 +386,7 @@
 					'<button type="button" class="btn btn-primary btn-sm add">+</button>'
 				)
 				prev.find("button.add").click(function(){
-					addTimePicker(isTime);
+					addTimePicker();
 				});
 			}
 		}else{
@@ -480,11 +500,6 @@
 	       		dataType:"json",
 	       		success: function(data){
 					if(data.code==0){
-						 if(data.data==null){
-							$("#PauseDialog").dialog({isEdit:false});
-						 }else{
-							$("#PauseDialog").dialog({isEdit:true});
-						 }
 						 setPauseForm(data.data);
 					}else{
 						alert("查询失败");
