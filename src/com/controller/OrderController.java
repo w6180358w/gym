@@ -1,8 +1,11 @@
 package com.controller;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -14,13 +17,17 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.bean.GymOrderBean;
 import com.model.Order;
 import com.model.User;
 import com.service.inter.OrderService;
+import com.service.inter.POIService;
 import com.util.QRCodeFactory;
 import com.util.SystemUtil;
+
+import net.sf.json.JSONArray;
 /**
  * 订单管理的控制器
  * @author zxy
@@ -32,6 +39,9 @@ public class OrderController {
 	//利用spring获取订单的service
 	@Autowired
 	private OrderService orderService;
+	
+	@Autowired
+	private POIService<Order> poiService;
 	/**
 	 * 订单管理的页面
 	 * @param Order
@@ -272,5 +282,80 @@ public class OrderController {
 			e.printStackTrace();
 		}
 		return null;		
+	}
+	
+	/**
+	 * 退款的方法
+	 * @param Order
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	@RequestMapping("/refund.do")
+	@ResponseBody
+	public String refund(Long id,HttpServletRequest request,
+			HttpServletResponse response){
+		int code = 0;
+		String msg =  "退款成功!";
+		try {
+			Order order = this.orderService.findById(id);
+			if(order!=null) {
+				List<GymOrderBean> data = JSONArray.toList(JSONArray.fromObject(order.getGymData()),GymOrderBean.class);
+				GymOrderBean o = data.get(0);
+				Date now = new Date();
+				Long nowHour = Long.valueOf(new SimpleDateFormat("HH").format(now));
+				if(new SimpleDateFormat("yyyy-MM-dd").format(now).equals(order.getOnDay()) && Long.valueOf(o.getTime().substring(0, 2))-nowHour<=1) {
+					return SystemUtil.request(1, Arrays.asList(id), "距开场不足一小时,不允许退款!").toString();
+				}
+				order.setStatus(Order.REFUND);
+				this.orderService.update(order);
+			}
+		} catch (Exception e) {
+			code = 1;
+			msg = "退款失败";
+			e.printStackTrace();
+		}
+		
+		return SystemUtil.request(code, Arrays.asList(id), msg).toString();
+	}
+	
+	
+	/**
+	 * 退款的方法
+	 * @param Order
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	@RequestMapping("/export.do")
+	@ResponseBody
+	public String export(Long id,HttpServletRequest request,
+			HttpServletResponse response){
+		int code = 0;
+		String msg =  "退款成功!";
+		try {
+			List<Order> order = this.orderService.find7Refund();
+			for (Order o : order) {
+				List<GymOrderBean> list = JSONArray.toList(JSONArray.fromObject(o.getGymData()),GymOrderBean.class);
+				GymOrderBean bean = list.get(0);
+				String data = bean.getTime();
+				o.setGymData(data.substring(0, 2)+":"+data.substring(2,4)+" - "+data.substring(4,6)+":"+data.substring(6,8));
+			}
+			String[] dataFields = new String[]{"id","ucode","userName","onDay","gymData","allMoney"};
+			String[] columns = new String[]{"订单编号","用户唯一标识","用户名称","预约日期","预约时间","付款金额"};
+			
+			response.setContentType("application/x-download");
+	        response.setCharacterEncoding("UTF-8");  
+	        response.setHeader("Content-Disposition", "attachment; filename=order.xlsx");  
+	        
+			poiService.exportExcel(order, dataFields,response.getOutputStream(), columns, "yyyy-MM-dd");
+			
+		} catch (Exception e) {
+			code = 1;
+			msg = "退款失败";
+			e.printStackTrace();
+		}
+		
+		return SystemUtil.request(code, Arrays.asList(id), msg).toString();
 	}
 }

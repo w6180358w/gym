@@ -24,6 +24,7 @@ public class Order extends BaseModel{
 	public final static Integer SUCCESS = 2;
 	public final static Integer FAILURE = 3;
 	public final static Integer EXPIRE = 4;
+	public final static Integer REFUND = 5;
 	
 	public final static Integer PAY_FAILURE = 1;
 	public final static Integer PAY_SUCCESS = 2;
@@ -33,7 +34,7 @@ public class Order extends BaseModel{
 	
 	private Long id;		//id
 	private String gymData;	//预约场地JSON [{gymId:1,time:[1,2,3,4]},{...}]
-	private Integer status;	//状态 1:正在付款 2:已预定3:付款失败4:超时
+	private Integer status;	//状态 1:正在付款 2:已预定3:付款失败4:超时 5.已退款
 	private String key; 	//付款url
 	private String ucode;	//用户唯一标识
 	private String userName;//用户名称
@@ -76,6 +77,9 @@ public class Order extends BaseModel{
 		}
 		if(Order.EXPIRE.equals(status)){
 			return "付款超时";
+		}
+		if(Order.REFUND.equals(status)){
+			return "已退款";
 		}
 		return "未知";
 	}

@@ -86,7 +86,10 @@
 							<td><%=order.getPayStatusName() %></td>
 							<td>
 								<button class="btn btn-primary btn-sm" onclick="info(<%=order.getId()%>)">详情</button>
-								<%if(!Order.SUCCESS.equals(order.getStatus()) && !Order.EXPIRE.equals(order.getStatus())){ %>
+								<%if(!Order.REFUND.equals(order.getStatus()) && Order.PAY_SUCCESS.equals(order.getPayStatus())){ %>
+								<button class="btn btn-primary btn-sm" onclick="isFund('<%=order.getId() %>');">退款</button>
+								<%} %>
+								<%if(!Order.SUCCESS.equals(order.getStatus()) && !Order.EXPIRE.equals(order.getStatus()) && !Order.REFUND.equals(order.getStatus())){ %>
 								<button class="btn btn-primary btn-sm" onclick="repay('<%=order.getId() %>');">重新付款</button>
 								<%} %>
 								<%if(Order.FAILURE.equals(order.getStatus())){ %>
@@ -108,6 +111,11 @@
 				
 	</div>
 </div>
+<div id="refund" style="display:none;margin:0;">
+	<div id="refund-message">
+				
+	</div>
+</div>
 <div id="alert-gym-dialog" style="display:none;margin:0;">
 	<form id ="alert-gym-form" class="form-horizontal"></form>
 </div>		
@@ -115,6 +123,12 @@
 	<img alt="" src="">
 </div>
 <script>
+function isFund(id){
+	$("#refund-message").html("<h5 class='text-center line-70'>确认退款？</h5>")  ;
+	$("#refund").dialog("open");
+	$("#refund").dialog({width:300,height:200});
+	$("#refund").dialog({id:id});
+}
 function isDel(id){
 	$("#power-message").html("<h5 class='text-center line-70'>确认删除？</h5>")  ;
 	$("#power").dialog("open");
@@ -141,12 +155,24 @@ function repay(id){
 	$("#gym-qc").find("img").prop("src","${rootUrl}order/qcImage.do?orderId="+id);
 }
 	$(document).ready(function() {
-		$('#datatable_col_reorder').dataTable({
+		var table = $('#datatable_col_reorder').DataTable({
 			"sDom" : "<'dt-toolbar'<'col-xs-6 col-sm-6'f><'col-sm-6 col-xs-6 hidden-xs'T>r>"
 				+ "t"
 				+ "<'dt-toolbar-footer'<'col-sm-6 col-xs-6 hidden-xs'i><'col-sm-12 col-xs-6'p>>",
 			"oTableTools" : {
-			"aButtons" : [],
+			"aButtons" : [{
+				"sExtends" : "text",
+				"sButtonText": "导出",
+				"fnClick":function(nButton, oConfig, oFlash){
+					var form = document.createElement("form");
+				    form.style.display = 'none';
+				    form.action = "${rootUrl}order/export.do";
+				    form.method = "post";
+				    document.body.appendChild(form);
+				    form.submit();
+				    form.remove();
+				}
+			}],
 			},
 			"autoWidth" : true
 		}); 
@@ -175,6 +201,40 @@ function repay(id){
 				click : function() {
 					var id=$("#power").dialog("option","id");
 					del(id);
+				}
+			}]
+						
+		});
+		$("#refund").dialog({
+			autoOpen : false,
+			modal : true,
+			height:350, 
+			width:640, 
+			buttons : [{
+				html : "取消",
+				"class" : "btn btn-default btn-sm",
+				click : function() {
+				$(this).dialog("close");
+				}
+			}, {
+				html : "<i class='fa fa-check'></i>&nbsp; 确定",
+				"class" : "btn btn-primary btn-sm",
+				click : function() {
+					var id=$("#refund").dialog("option","id");
+					$.ajax({
+				   		url: "${rootUrl}order/refund.do?id="+id,
+				   		type: "get",
+				   		dataType:"json",
+				   		success: function(data){
+							if(data.code==0){
+								alert("请于7个工作日到后勤进行退款!");
+								$("#dialog-window").dialog("close"); 
+								window.location.reload();
+							}else{
+								alert(data.msg);
+							}
+						} 
+					});
 				}
 			}]
 						
@@ -212,12 +272,8 @@ function repay(id){
 		for(var i=0;i<param.length;i++){
 			var p = param[i];
 			//组装时间字符串
-			var times = p["time"].split(",");
-			var tStr = "";
-			for(var j=0;j<times.length;j++){
-				var t = times[j];
-				tStr+= (t+":00")+"-"+((t==23?0:(parseInt(t)+1))+":00&nbsp;&nbsp;");
-			}
+			var times = p["time"].substring(0,8);
+			var tStr = times.substring(0,2)+":"+times.substring(2,4)+"&nbsp;-&nbsp;"+times.substring(4,6)+":"+times.substring(6,8);
 			//计算金额
 			var money = parseInt(p["paymoney"]);
 			

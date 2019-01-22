@@ -27,4 +27,10 @@ public interface OrderService {
 	public List<Order> findByUcode(String ucode);
 	
 	public List<Order> findByStatus(Integer status);
+	
+	/**
+	 * 获取7天内退款订单
+	 * @return
+	 */
+	public List<Order> find7Refund();
 }

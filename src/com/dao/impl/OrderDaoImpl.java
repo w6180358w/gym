@@ -29,4 +29,13 @@ public class OrderDaoImpl extends BaseDaoImpl<Order> implements OrderDao{
 		return this.findList("from Order where onDay >= ? and onDay <? and status < 3",start,end);
 	}
 
+	@Override
+	public List<Order> find7Refund() {
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		Calendar cal = Calendar.getInstance();
+		cal.add(Calendar.DAY_OF_YEAR, -7);
+		
+		return this.findList("from Order where onDay >= ? and status = 5",sdf.format(cal.getTime()));
+	}
+
 }
