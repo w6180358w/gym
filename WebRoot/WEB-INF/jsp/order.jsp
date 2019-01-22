@@ -160,19 +160,23 @@ function repay(id){
 				+ "t"
 				+ "<'dt-toolbar-footer'<'col-sm-6 col-xs-6 hidden-xs'i><'col-sm-12 col-xs-6'p>>",
 			"oTableTools" : {
-			"aButtons" : [{
-				"sExtends" : "text",
-				"sButtonText": "导出",
-				"fnClick":function(nButton, oConfig, oFlash){
-					var form = document.createElement("form");
-				    form.style.display = 'none';
-				    form.action = "${rootUrl}order/export.do";
-				    form.method = "post";
-				    document.body.appendChild(form);
-				    form.submit();
-				    form.remove();
-				}
-			}],
+				"aButtons" : [
+				<%if(user!=null && !SystemUtil.USER.equals(user.getType())){%>
+					{
+						"sExtends" : "text",
+						"sButtonText": "导出",
+						"fnClick":function(nButton, oConfig, oFlash){
+								var form = document.createElement("form");
+							    form.style.display = 'none';
+							    form.action = "${rootUrl}order/export.do";
+							    form.method = "post";
+							    document.body.appendChild(form);
+							    form.submit();
+							    form.remove();
+						}
+					}
+				<%} %>
+				]
 			},
 			"autoWidth" : true
 		}); 
